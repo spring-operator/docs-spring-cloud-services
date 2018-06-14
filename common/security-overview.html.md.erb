@@ -121,9 +121,9 @@ This endpoint returns service instance details such as service name, plan ID, or
 
 This endpoint gets or modifies environment variables for the service instance's backing application. Environment variables that can be viewed or modified with this endpoint must be whitelisted; this whitelisting can only be modified by the Operator or the developers of Spring Cloud Services. Each service type has its own whitelist, and the only service type with whitelisted environment variables is Config Server. The Config Server's whitelisted environment variables specify the repository type, the URI of the repository, and the username and password used to access the repository. Any POST to this endpoint will result in a restart of the backing application, regardless of whether any environment variables were actually modified.
 
-*GET /dashboard/instance/{serviceInstanceId}/health*
+*GET /dashboard/instance/{serviceInstanceId}/actuator/health*
 
-This endpoint returns the response of the ```/health``` endpoint on the backing application. The ```/health``` endpoint is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
+This endpoint returns the response of the ```/actuator/health``` endpoint on the backing application. This endpoint is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
 
 <a id="sb-entry-point-caching-si-permission-check"></a>*Caching the Service Instance Permission Check*
 
@@ -133,7 +133,7 @@ Caching the permission check in this manner avoids the load and extra round trip
 
 <a id="sb-entry-point-actuator-endpoints"></a>**Actuator Endpoints**
 
-[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and an authenticated session. The token is obtained from UAA via the OAuth 2 Authorization Code flow as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#oauth2-flow); the token is then used to make a request to the [CC ```/v2/apps/:guid/env``` endpoint](https://apidocs.cloudfoundry.org/219/apps/get_the_env_for_an_app.html), which can only be accessed by Space Developers in the space that hosts the SB. The GUID used in the request is extracted from the ```VCAP_APPLICATION``` environment variable, whose value is given by the CC. The only user that can access these endpoints is the Operator.
+[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and an authenticated session. The token is obtained from UAA via the OAuth 2 Authorization Code flow as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#oauth2-flow); the token is then used to make a request to the [CC ```/v2/apps/:guid/env``` endpoint](https://apidocs.cloudfoundry.org/219/apps/get_the_env_for_an_app.html), which can only be accessed by Space Developers in the space that hosts the SB. The GUID used in the request is extracted from the ```VCAP_APPLICATION``` environment variable, whose value is given by the CC. The only user that can access these endpoints is the Operator.
 
 This Actuator SSO flow is used by other components that already use [Dashboard SSO](#sb-entry-point-service-broker-dashboard), as no additional dependencies are required to enable this.
 
@@ -196,7 +196,7 @@ The Worker listens for messages posted to the p-rabbitmq service instance. The S
 
 **Actuator Endpoints**
 
-[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and OAuth 2 authentication.
+[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and OAuth 2 authentication.
 
 #### External Dependencies
 
@@ -400,7 +400,7 @@ Other than checking for the claims mentioned in the previous section, no other a
 
 **Actuator Endpoints**
 
-[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require OAuth 2 authentication, with the exception of ```/health``` as described above; the ```health``` endpoint can also be accessed anonymously to receive less-detailed information.
+[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) are enabled and require OAuth 2 authentication, with the exception of ```/actuator/health```, which can also be accessed anonymously to receive less-detailed information.
 
 #### External Dependencies
 

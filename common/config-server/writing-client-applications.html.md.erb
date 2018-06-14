@@ -115,7 +115,7 @@ As noted in the [Configuration Clients](/spring-cloud-services/config-server/bac
 
 ## <a id="view-client-application-configuration"></a>View Client Application Configuration
 
-<a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> adds an `env` endpoint to the application and maps it to `/env`. This endpoint displays the application's profiles and property sources from the Spring ```ConfigurableEnvironment```. (See ["Endpoints"](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) in the "Spring Boot Actuator" section of the Spring Boot Reference Guide.) In the case of an application which is bound to a Config Server service instance, `env` will display properties provided by the instance.
+<a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> adds an `env` endpoint to the application and maps it to `/actuator/env`. This endpoint displays the application's profiles and property sources from the Spring ```ConfigurableEnvironment```. (See ["Endpoints"](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) in the "Spring Boot Actuator" section of the Spring Boot Reference Guide.) In the case of an application which is bound to a Config Server service instance, `env` will display properties provided by the instance.
 
 To use Actuator, you must add the `spring-boot-starter-actuator` dependency to your project. If using Maven, <a href="https://github.com/spring-cloud-services-samples/cook/blob/1.5.x/pom.xml#L63-L66">add to `pom.xml`</a>:
 
@@ -132,10 +132,10 @@ If using Gradle, <a href="https://github.com/spring-cloud-services-samples/cook/
 compile("org.springframework.boot:spring-boot-starter-actuator")
 ```
 
-You can now visit `/env` to see the application environment's properties (the following shows an excerpt of an example response):
+You can now visit `/actuator/env` to see the application environment's properties (the following shows an excerpt of an example response):
 
 <pre class="terminal">
-$ curl http://cookie.apps.wise.com/env
+$ curl http://cookie.apps.wise.com/actuator/env
 {
   "profiles":[
     "dev","cloud"
@@ -157,7 +157,7 @@ $ curl http://cookie.apps.wise.com/env
 
 ## <a id="refresh-client-application-configuration"></a>Refresh Client Application Configuration
 
-Spring Boot Actuator also adds a `refresh` endpoint to the application. This endpoint is mapped to `/refresh`, and a POST request to the `refresh` endpoint refreshes any beans which are annotated with `@RefreshScope`. You can thus use `@RefreshScope` to refresh properties which were initialized with values provided by the Config Server.
+Spring Boot Actuator also adds a `refresh` endpoint to the application. This endpoint is mapped to `/actuator/refresh`, and a POST request to the `refresh` endpoint refreshes any beans which are annotated with `@RefreshScope`. You can thus use `@RefreshScope` to refresh properties which were initialized with values provided by the Config Server.
 
 The `Menu.java` class is <a href="https://github.com/spring-cloud-services-samples/cook/blob/1.5.x/src/main/java/cook/Menu.java#L4-L12">marked as a `@Component` and also annotated with `@RefreshScope`</a>.
 
@@ -186,7 +186,7 @@ $ git commit -am "new special"
 
 $ git push
 
-$ curl -X POST http://cookie.apps.wise.com/refresh
+$ curl -X POST http://cookie.apps.wise.com/actuator/refresh
 ["cook.special"]
 
 $ curl http://cookie.apps.wise.com/restaurant

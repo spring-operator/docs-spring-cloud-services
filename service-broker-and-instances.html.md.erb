@@ -124,16 +124,16 @@ Look for the backing application named as described above, with the prefix speci
 <a id="get-service-instance-information"></a>
 #### Get Service Instance Information
 
-Each backing application for a service instance has the [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/info`. You can obtain version and other information about a service instance by accessing this endpoint.
+Each backing application for a service instance has the [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/actuator/info`. You can obtain version and other information about a service instance by accessing this endpoint.
 
 Locate a backing application for a service instance as described in the [Access Service Instance Backing Applications in Apps Manager](#access-service-instance-backing-applications-in-apps-manager) section. In Apps Manager, on the page for the backing application, click the **Route** tab and copy the route for the application.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/backing-application-route.png") %>
 
-Append `/info` to the route for the application. In the example above, the resulting URI would be:
+Append `/actuator/info` to the route for the application. In the example above, the resulting URI would be:
 
 ```
-https://config-021b3d73-3ffc-4cb8-a105-26f5aaa54dff.wise.com/info
+https://config-021b3d73-3ffc-4cb8-a105-26f5aaa54dff.wise.com/actuator/info
 ```
 
 Visit the URI in a browser or request it from another client (e.g. curl at a command line). The response is JSON, as in the following example for a Config Server service instance:
@@ -369,17 +369,17 @@ The SB application, the Worker application, the Service Registry's Eureka backin
 
 2. From the **Route** tab, copy the value of the application's route, as described in the [Get Service Instance Information](#get-service-instance-information) section.
 
-3. In a terminal where you have already authenticated to PCF using `cf auth` or `cf login`, send the request to the Actuator endpoint (e.g., using cURL), appending the endpoint ID to the route URL; e.g., for the `health` endpoint, this would be something like `https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/health`. The current OAuth 2 token can be obtained using the `cf oauth-token` command. In the example below, the response from `cf oauth-token` is used directly inside the header string.
+3. In a terminal where you have already authenticated to PCF using `cf auth` or `cf login`, send the request to the Actuator endpoint (e.g., using cURL), appending `/actuator/` and the endpoint ID to the route URL; e.g., for the `health` endpoint, this would be something like `https://config-[GUID].apps.wise.com/actuator/health`. The current OAuth 2 token can be obtained using the `cf oauth-token` command. In the example below, the response from `cf oauth-token` is used directly inside the header string.
 
     <pre class="terminal">
-    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/health -H "Authorization: $(cf oauth-token)"
+    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/actuator/health -H "Authorization: $(cf oauth-token)"
     {"status":"UP","git":{"status":"UP","default":{"status":"UP","repository":{"uri":"https://github.com/pivotal-cf/p-spring-cloud-services-acceptance"}},"app1":{"status":"UP","repository":{"uri":"https://github.com/pivotal-cf/p-spring-cloud-services-acceptance"}},"app2":{"status":"UP","repository":{"uri":"https://github.com/pivotal-cf/p-spring-cloud-services-acceptance"}}},"diskSpace":{"status":"UP","total":1056858112,"free":886517760,"threshold":10485760},"refreshScope":{"status":"UP"}}
     </pre>
 
     You also can send a request to each application's `health` Actuator endpoint without the authorization header. In that case, the response JSON object will contain only the summary status:
 
     <pre class="terminal">
-    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/health
+    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/actuator/health
     {"status":"UP"}
     </pre>
 
