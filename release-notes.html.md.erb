@@ -16,7 +16,7 @@ owner: Spring Cloud Services
      }
 </style>
 
-Release notes for [Spring Cloud Services for Pivotal Cloud Foundry](https://network.pivotal.io/products/p-spring-cloud-services)
+Release notes for [Spring Cloud Services for Pivotal Cloud Foundry](https://network.pivotal.io/products/p-spring-cloud-services) (PCF)
 
 <p class='note'><strong>Important</strong>: The service broker applications in Spring Cloud Services 1.5 use the <code>system</code> org's system domain, and expect this domain to be a shared domain (the default setting). If you make the <code>system</code> org's system domain private, Spring Cloud Services 1.5 will fail to push applications to the <code>system</code> org.</p>
 
@@ -60,6 +60,15 @@ For each Circuit Breaker Dashboard service instance, you must:
 See below for known issues in Spring Cloud Services 1.5.x.
 
 * Passwords created by Spring Cloud Services do not support changes made to the UAA password policy.
+* Spring Cloud Services releases 1.5.5 and previous are not compatible with PCF Ops Manager 2.2.
+
+## <a id="1-5-6"></a>1.5.6
+
+**Release Date: 2nd July 2018**
+
+Fixes included in this release:
+
+* Resolved an incompatibility with PCF Ops Manager 2.2.
 
 ## <a id="1-5-5"></a>1.5.5
 
