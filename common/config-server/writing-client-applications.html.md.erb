@@ -7,7 +7,13 @@ owner: Spring Cloud Services
 
 _Refer to the <a href="https://github.com/spring-cloud-services-samples/cook/tree/1.5.x">"Cook" sample application</a> to follow along with the code in this topic._
 
-To use a Spring Boot application as a client for a Config Server instance, you must add the dependencies listed in the <a href="/spring-cloud-services/client-dependencies.html">Client Dependencies</a> topic to your application's build file. Be sure to include the dependencies for <a href="/spring-cloud-services/client-dependencies.html#config-server">Config Server</a> as well.
+To use a Spring Boot app as a client for a Config Server instance, you must add the dependencies listed below.
+
+<%= partial '../general-dependencies' %>
+
+Your app must also declare the Spring Cloud Services Config Server starter as a dependency.
+
+<%= partial '../config-server-dependency' %>
 
 <p class='note'><strong>Important</strong>: Because of a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud&reg; Config Client starter will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
 

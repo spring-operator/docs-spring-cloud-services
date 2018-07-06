@@ -1,15 +1,23 @@
 <p class='note'><strong>Important</strong>: Ensure that the ordering of the Maven BOM dependencies listed below is preserved in your application's build file. Dependency resolution is affected in both Maven and Gradle by the order in which dependencies are declared.</p>
 
-To work with Spring Cloud Services service instances, your client application must include the `spring-cloud-services-dependencies` and `spring-cloud-dependencies` BOMs. Unless you are using the `spring-boot-starter-parent` or Spring Boot Gradle plugin, you must also specify the `spring-boot-dependencies` BOM as a dependency. See below for compatible Spring Boot and Spring Cloud versions to use with a given Spring Cloud Services release.
+To work with Spring Cloud Services service instances, your client application must include the `spring-cloud-services-dependencies` and `spring-cloud-dependencies` BOMs. Unless you are using the `spring-boot-starter-parent` or Spring Boot Gradle plugin, you must also specify the `spring-boot-dependencies` BOM as a dependency. See below for compatible Spring Boot, Spring Cloud, and Spring Cloud Services client dependency versions to use with a given Spring Cloud Services tile release.
 
-| Spring Cloud Services | Spring Boot  | Spring Cloud |
-|-----------------------|--------------|--------------|
-| 1.0.x                 | 1.2.x        | Angel.x      |
-| 1.1.x                 | 1.3.x--1.4.x | Brixton.x    |
-| 1.2.x                 | 1.3.x--1.4.x | Brixton.x    |
-| 1.3.x                 | 1.3.x--1.4.x | Camden.x     |
-| 1.4.x *               | 1.5.x        | Dalston.x    |
-| 1.5.x *               | 1.5.x        | Edgware.x    |
+| Spring Cloud Services Tile | Spring Boot  | Spring Cloud | Spring Cloud Services Client |
+|----------------------------|--------------|--------------|------------------------------|
+| 1.0.x                      | 1.2.x        | Angel.x      | 1.0.x                        |
+| 1.1.x                      | 1.3.x--1.4.x | Brixton.x    | 1.1.x                        |
+| 1.2.x                      | 1.3.x--1.4.x | Brixton.x    | 1.2.x                        |
+| 1.3.x                      | 1.3.x--1.4.x | Camden.x     | 1.4.x                        |
+| 1.4.x                      | 1.5.x        | Dalston.x    | 1.5.x                        |
+| 1.5.x                      | 1.5.x        | Edgware.x    | 1.6.x                        |
+| 1.5.x                      | 2.0.x        | Finchley.x   | 2.0.x                        |
+
+The build file examples given below contain version placeholders for the versions of Spring Boot, Spring Cloud, and the Spring Cloud Services client dependencies. See below for how to replace them, depending on whether your client application uses Spring Boot 2 and Spring Cloud Finchley or Spring Boot 1.5 and Spring Cloud Edgware:
+
+| If using...             | ...use <code>[BOOT]</code>  | ...use <code>[CLOUD]</code>   | ...use <code>[SCS]</code>  |
+|-------------------------|-----------------------------|-------------------------------|----------------------------|
+| Boot 2, Cloud Finchley  | <code>2.0.3.RELEASE</code>  | <code>Finchley.RELEASE</code> | <code>2.0.0.RELEASE</code> |
+| Boot 1.5, Cloud Edgware | <code>1.5.13.RELEASE</code> | <code>Edgware.SR3</code>      | <code>1.6.1.RELEASE</code> |
 
 If using Maven, include in `pom.xml`:
 
@@ -17,7 +25,7 @@ If using Maven, include in `pom.xml`:
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.13.RELEASE</version>
+    <version>[BOOT]</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -26,14 +34,14 @@ If using Maven, include in `pom.xml`:
         <dependency>
             <groupId>io.pivotal.spring.cloud</groupId>
             <artifactId>spring-cloud-services-dependencies</artifactId>
-            <version>1.6.1.RELEASE</version>
+            <version>[SCS]</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-dependencies</artifactId>
-            <version>Edgware.SR3</version>
+            <version>[CLOUD]</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -49,7 +57,7 @@ If not using the `spring-boot-starter-parent`, include in the `<dependencyManage
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-dependencies</artifactId>
-            <version>1.5.13.RELEASE</version>
+            <version>[BOOT]</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -71,7 +79,7 @@ buildscript {
     }
     dependencies {
         classpath("io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE")
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.13.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:[BOOT]")
     }
 }
 
@@ -81,8 +89,8 @@ apply plugin: "io.spring.dependency-management"
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Edgware.SR3"
-        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:1.6.1.RELEASE"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:[CLOUD]"
+        mavenBom "io.pivotal.spring.cloud:spring-cloud-services-dependencies:[SCS]"
     }
 }
 
@@ -98,7 +106,7 @@ If not using the Spring Boot Gradle plugin, include in the `dependencyManagement
 ```groovy
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:1.5.13.RELEASE"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:[BOOT]"
     }
 }
 ```

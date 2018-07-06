@@ -7,7 +7,13 @@ owner: Spring Cloud Services
 
 _Refer to the sample applications in the <a href="https://github.com/spring-cloud-services-samples/traveler/tree/1.5.x">&#8220;traveler&#8221; repository</a> to follow along with the code in this topic._
 
-To use a circuit breaker in a Spring application with a Circuit Breaker Dashboard service instance, you must add the dependencies listed in the <a href="/spring-cloud-services/client-dependencies.html">Client Dependencies</a> topic to your application's build file. Be sure to include the dependencies for <a href="/spring-cloud-services/client-dependencies.html#circuit-breaker-dashboard">Circuit Breaker Dashboard</a> as well.
+To use Spring Cloud Netflix Hystrix circuit breakers in a Spring Boot app with a Circuit Breaker Dashboard instance, you must add the dependencies listed below.
+
+<%= partial '../general-dependencies' %>
+
+Your app must also declare the Spring Cloud Services Circuit Breaker Dashboard starter as a dependency.
+
+<%= partial '../circuit-breaker-dashboard-dependency' %>
 
 ## <a id="use-a-circuit-breaker"></a>Use a Circuit Breaker
 

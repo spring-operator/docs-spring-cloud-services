@@ -7,7 +7,13 @@ owner: Spring Cloud Services
 
 _Refer to the sample applications in the <a href="https://github.com/spring-cloud-services-samples/greeting/tree/1.5.x">"greeting" repository</a> to follow along with the code in this topic._
 
-To use a Spring application with a Service Registry service instance, you must add the dependencies listed in the <a href="/spring-cloud-services/client-dependencies.html">Client Dependencies</a> topic to your application's build file. Be sure to include the dependencies for <a href="/spring-cloud-services/client-dependencies.html#service-registry">Service Registry</a> as well.
+To use a Spring Boot app as a client for a Service Registry instance, you must add the dependencies listed below.
+
+<%= partial '../general-dependencies' %>
+
+Your app must also declare the Spring Cloud Services Service Registry starter as a dependency.
+
+<%= partial '../service-registry-dependency' %>
 
 <% if vars.product_name == 'PCF' %>
  <%= partial vars.scs_sr_self_signed_ssl %>
