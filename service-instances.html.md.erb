@@ -1,0 +1,296 @@
+---
+title: Service Instances
+owner: Spring Cloud Services
+---
+
+<strong><%= modified_date %></strong>
+
+See below for information about Spring Cloud&reg; Services' deployment model and other information which may be useful in operating its services or client apps.
+
+<p class='note'><strong>Note</strong>: Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which operators can make deployment changes, view credentials, and manage user roles in Ops Manager. Therefore, your role permissions might not allow you to perform every procedure in this operator guide. For more information about roles in Ops Manager, see <a href="https://docs.pivotal.io/pivotalcf/2-0/opsguide/config-rbac.html#about">Understand Roles in Ops Manager</a>.</p>
+
+## <a id="service-instance-management"></a>Service Instance Management
+
+A service instance is backed by one or more Spring Boot apps deployed by the spring-cloud-broker-worker app in the "p-spring-cloud-services" org to the "instances" space.
+
+A service instance is assigned a GUID at provision time. Backing apps for services include the GUID in their names:
+
+**Config Server**
+
+* config-[GUID]: A [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server app.
+
+**Service Registry**
+
+* eureka-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Eureka server app.
+
+**Circuit Breaker Dashboard**
+
+* hystrix-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Hystrix server app.
+* turbine-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Turbine app.
+* **rabbitmq-[GUID]**: A [RabbitMQ for PCF](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/ops1.png") %>
+
+### <a id="access-service-instance-backing-applications-in-apps-manager"></a>Access Service Instance Backing Applications in Apps Manager
+
+To view a backing app for a service instance in Pivotal Cloud Foundry&reg; Apps Manager, get the service instance's GUID and look for the corresponding app in the "instances" space.
+
+Target the org and space of the service instance.
+
+<pre class="terminal">
+$ cf target -o myorg -s development
+
+API endpoint:   https://api.cf.wise.com (API version: 2.43.0)
+User:           admin
+Org:            myorg
+Space:          development
+
+$ cf services
+Getting services in org myorg / space development as admin...
+OK
+
+name             service             plan       bound apps   last operation
+config-server    p-config-server     standard   cook         update succeeded
+</pre>
+
+Run `cf service` with the `CF_TRACE` environment variable set to `true`. Copy the value of `resources.metadata.guid`, which is the service instance GUID.
+
+<pre class="terminal">
+$ CF_TRACE=true cf service config-server
+
+REQUEST: [2016-06-27T20:45:24-05:00]
+[...]
+
+RESPONSE: [2016-06-27T20:45:25-05:00]
+[...]
+
+{
+  "total_results": 1,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "51711835-4626-4823-b5a1-e5d91012f3f2",
+</pre>
+
+Log into Apps Manager as an admin user and select the "p-spring-cloud-services" org. The apps are deployed in the "instances" space.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/instance-apps-apps-manager-org.png") %>
+
+Look for the backing app named as described above, with the prefix specific to the service type and the service instance GUID.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/instance-apps-apps-manager-space.png") %>
+
+<a id="get-service-instance-information"></a>
+#### Get Service Instance Information
+
+Each backing app for a service instance has the [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/actuator/info`. You can obtain version and other information about a service instance by accessing this endpoint.
+
+Locate a backing app for a service instance as described in the [Access Service Instance Backing Applications in Apps Manager](#access-service-instance-backing-applications-in-apps-manager) section. In Apps Manager, on the page for the backing app, click the **Route** tab and copy the route for the app.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/backing-application-route.png") %>
+
+Append `/actuator/info` to the route for the app. In the example above, the resulting URI would be:
+
+```
+https://config-021b3d73-3ffc-4cb8-a105-26f5aaa54dff.wise.com/actuator/info
+```
+
+Visit the URI in a browser or request it from another client (for example curl at a command line). The response is JSON, as in the following example for a Config Server service instance:
+
+```json
+{
+  "version":"5",
+  "git":{
+    "commit":{
+      "time":1478639430000,
+      "id":"6e139ee"
+    },
+    "branch":"HEAD"
+  }
+}
+```
+
+The response may include additional fields depending on the service type, as in the following example for a Service Registry service instance:
+
+```
+{
+  "issuer": "https://p-spring-cloud-services.uaa.wise.com/oauth/token",
+  "version": "5",
+  "nodeCount": "1",
+  "git": {
+    "commit": {
+      "time": 1478639430000,
+      "id": "6e139ee"
+    },
+    "branch": "HEAD"
+  },
+  "peers": []
+}
+```
+
+In addition to the version of the service instance (`version`), this response includes the OAuth 2 token issuer URI for the service instance (`issuer`), the number of nodes provisioned for the service instance (`nodeCount`), the list of peer service instances, if any (`peers`), and information about the Spring Cloud Services Git repository at build time for the service instance (`git`).
+
+<p class='note'><strong>Note</strong>: Fields such as those for Git repository information are for diagnostic purposes and intended to provide <a href="https://pivotal.io/support">Pivotal Support</a> with information to help in troubleshooting.</p>
+
+## <a id="uaa-identity-zones-and-clients"></a>UAA Identity Zones and Clients
+
+Spring Cloud Services uses the multi-tenancy capabilities of the Cloud Foundry User Account and Authentication server (UAA). It creates a new Identity Zone ("the Spring Cloud Services Identity Zone") for all authorization from Config Server and Service Registry service instances to client apps which have bindings to these service instances.
+
+Within the platform Identity Zone ("the UAA Identity Zone"), Spring Cloud Services creates a `p-spring-cloud-services` UAA client for the spring-cloud-broker app and a `p-spring-cloud-services-worker` UAA client for the spring-cloud-broker-worker app. In the Spring Cloud Services Identity Zone, it creates a `p-spring-cloud-services-worker` UAA client for the spring-cloud-broker-worker app.
+
+In the UAA Identity Zone, it also creates the following clients, where `[GUID]` is the service instance's GUID:
+
+* A `eureka-[GUID]` UAA client per Service Registry service instance.
+* A `hystrix-[GUID]` UAA client per Circuit Breaker Dashboard service instance.
+
+In the Spring Cloud Services Identity Zone, it also creates the following clients, where `[GUID]` is the service instance's GUID:
+
+* A `config-server-[GUID]` UAA client per Config Server service instance.
+* A `eureka-[GUID]` UAA client per Service Registry service instance.
+
+### <a id="get-access-token-for-direct-requests-to-a-service-instance"></a>Get Access Token for Direct Requests to a Service Instance
+
+<%= partial 'common/get_access_token_for_direct_requests_to_a_service_instance' %>
+
+### <a id="using-credhub-for-service-instance-credentials"></a>Using CredHub for Service Instance Credentials
+
+If the Spring Cloud Services tile has been [configured to use the Pivotal Application Service (PAS) CredHub to secure service instance credentials](./tile-configuration.html#secure-service-instance-credentials-with-credhub), an app's `VCAP_SERVICES` environment variable will not include credentials for bound service instances. The environment variable will instead contain a CredHub reference for the service instance's credentials, as in the following example:
+
+```
+{
+ "VCAP_SERVICES": {
+  "p-config-server": [
+   {
+    "credentials": {
+     "credhub-ref": "/c/p-spring-cloud-services/p-config-server/019e0b47-b06a-4291-a8b8-4a2a90c645f5/credentials-json"
+    },
+    "label": "p-config-server",
+    "name": "config-server",
+    "plan": "standard",
+    "provider": null,
+    "syslog_drain_url": null,
+    "tags": [
+     "configuration",
+     "spring-cloud"
+    ],
+    "volume_mounts": []
+   }
+  ]
+ }
+}
+```
+
+Service instance credentials secured using the PAS CredHub are securely provided to the bound app at runtime. For more information about CredHub, see the [documentation](https://docs.pivotal.io/pivotalcf/credhub/index.html).
+
+## <a id="service-instances-dashboard"></a>The Service Instances Dashboard
+
+To view the status of individual service instances, visit the Service Instances dashboard. You can access it at the following URL, where `SCS_BROKER_URL` is the URL of the spring-cloud-broker app (spring-cloud-broker):
+
+```
+SCS_BROKER_URL/admin/serviceInstances
+```
+
+Locate the spring-cloud-broker app as described in [Access Broker Applications in Apps Manager](./service-broker.html#access-broker-applications-in-apps-manager). The Service Instances dashboard is also linked to on the main page of the spring-cloud-broker app.
+
+The dashboard shows the version and status of each service instance, as well as other information including the number of apps that are bound to the instance. It also provides an **Upgrade** button for each service instance and an **Upgrade Service Instances** button; these buttons may be enabled if any service instances shown in the dashboard are not at the version included with the currently-installed Spring Cloud Services product. For more information about upgrading service instances, see [Service Instance Upgrades](./common/service-instance-upgrades.html).
+
+<%= image_tag("/spring-cloud-services/images/operator-information/si-dashboard.png") %>
+
+You can click the **Instance Name** of a listed service instance to view the instance's dashboard. Click the **+** icon beside the count of an instance's **Bound Apps** or **Service Keys** to view the names of the apps or service keys that are bound to that instance.
+
+<p class='note'><strong>Note</strong>: The Service Instances dashboard is updated frequently (close to real-time). If using the cf CLI, you may notice a discrepancy between the status given for a service instance by the cf CLI (for example by the <code>cf service</code> command) versus that given by the Service Instances dashboard. The status retrieved by the cf CLI is not updated as frequently and may take time to match that shown on the Service Instances dashboard.</p>
+
+## <a id="application-health-and-status"></a>Application Health and Status
+
+For more visibility into how Spring Cloud Services service instances backing apps are behaving, or for troubleshooting purposes, you may wish to access those apps directly. See below for information about accessing their output.
+
+### <a id="backing-application-logs"></a>Read Backing Application Logs
+
+To access logs for service instance backing apps, target the "p-spring-cloud-services" org and its "instances" space:
+
+<pre class="terminal">
+$ cf target -o p-spring-cloud-services -s instances
+
+API endpoint:   https://api.cf.wise.com (API version: 2.43.0)
+User:           admin
+Org:            p-spring-cloud-services
+Space:          instances
+$ cf apps
+Getting apps in org p-spring-cloud-services / space instances as admin...
+OK
+
+name                                           requested state   instances   memory   disk   urls
+config-86b38ce0-eed8-4c01-adb4-1a651a6178e2    started           1/1         1G       1G     config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com
+eureka-493b6b17-512a-4961-8f85-6178251fe2fa    started           1/1         1G       1G     eureka-493b6b17-512a-4961-8f85-6178251fe2fa.apps.wise.com
+hystrix-ff835bde-5b3a-4623-a57f-8d88028b6376   started           1/1         1G       1G     hystrix-ff835bde-5b3a-4623-a57f-8d88028b6376.apps.wise.com
+turbine-ff835bde-5b3a-4623-a57f-8d88028b6376   started           1/1         1G       1G     turbine-ff835bde-5b3a-4623-a57f-8d88028b6376.apps.wise.com
+</pre>
+
+Then you can use ```cf logs``` to tail logs for a backing app.
+
+<pre class="terminal">
+$ cf logs config-86b38ce0-eed8-4c01-adb4-1a651a6178e2
+Connected, tailing logs for app config-86b38ce0-eed8-4c01-adb4-1a651a6178e2 in org p-spring-cloud-services / space instances as admin...
+</pre>
+
+If the backing app is not running properly then detailed health information will be written to its log on each GET request sent to its `health` Actuator endpoint. No health details are logged if the backing app is healthy.
+
+<pre class="terminal">
+2017-05-04T13:37:17.43+0100 [APP/PROC/WEB/0]OUT 2017-05-04 12:37:17.431  INFO 14 --- [nio-8080-exec-7] i.p.s.c.h.ConfigServerHealthEndpoint     : Health status: DOWN. Health details: {git=DOWN {default=DOWN {repository={uri=https://github.com/spring-cloud-samples/cook-config}, error=https://github.com/spring-cloud-samples/cook-config: Authentication is required but no credentials have been configured}}, diskSpace=UP {total=1056858112, free=889167872, threshold=10485760}, refreshScope=UP {}}
+2017-05-04T13:37:17.43+0100 [RTR/0]      OUT config-80593543-d141-424d-bcb9-1aa583be2356.olive.springapps.io - [2017-05-04T12:37:17.067+0000] "GET /health HTTP/1.1" 503 0 390 "-" "Java/1.8.0_121" "10.194.42.254:56706" "10.194.42.143:60820" x_forwarded_for:"10.194.42.143, 10.194.42.254" x_forwarded_proto:"https" vcap_request_id:"c04a99a8-c222-4e59-4acf-a9cfff62a3d5" response_time:0.369370172 app_id:"ee476250-6418-4e35-b3a4-9686947961d2" app_index:"0" x_b3_traceid:"2cfc3caf6fa0fa22" x_b3_spanid:"2cfc3caf6fa0fa22" x_b3_parentspanid:"-"
+</pre>
+
+### <a id="access-actuator-endpoints"></a>Access Actuator Endpoints
+
+Service instance backing apps use [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these apps; some of the added endpoints are summarized below.
+
+| Endpoint ID           | Endpoint Function                                                                    |
+|-----------------------|--------------------------------------------------------------------------------------|
+| <code>env</code>      | Displays profiles, properties, and property sources from the application environment |
+| <code>health</code>   | Displays information about the health and status of the app                          |
+| <code>metrics</code>  | Displays metrics information from the app                                            |
+| <code>mappings</code> | Displays list of <code>@RequestMapping</code> paths in the app                       |
+| <code>shutdown</code> | Gracefully shuts down the app (disabled in Spring Cloud Services)                    |
+
+See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
+
+#### Invoking Actuator Endpoints
+
+The Service Registry's Eureka backing app, the Config Server's backing app, and the Circuit Breaker Dashboard's Hystrix backing app all use OAuth 2 authentication. To access Actuator endpoints on one of these apps, you must supply a valid OAuth 2 token in the request header.
+
+1. Log in to Apps Manager as an admin user and navigate to the relevant app, as described in the [Access Service Instance Backing Applications in Apps Manager](#access-service-instance-backing-applications-in-apps-manager) section.
+
+    <%= image_tag("/spring-cloud-services/images/operator-information/hystrix.png") %>
+
+2. From the **Route** tab, copy the value of the app's route, as described in the [Get Service Instance Information](#get-service-instance-information) section.
+
+3. In a terminal where you have already authenticated to PCF using `cf auth` or `cf login`, send the request to the Actuator endpoint (for example using cURL), appending `/actuator/` and the endpoint ID to the route URL; for example, for the `health` endpoint, this would be something like `https://config-[GUID].apps.wise.com/actuator/health`. The current OAuth 2 token can be obtained using the `cf oauth-token` command. In the example below, the response from `cf oauth-token` is used directly inside the header string.
+
+    <pre class="terminal">
+    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/actuator/health -H "Authorization: $(cf oauth-token)"
+    {"status":"UP","git":{"status":"UP","default":{"status":"UP","repository":{"uri":"https://github.com/pivotal-cf/p-spring-cloud-services-acceptance"}},"app1":{"status":"UP","repository":{"uri":"https://github.com/pivotal-cf/p-spring-cloud-services-acceptance"}},"app2":{"status":"UP","repository":{"uri":"https://github.com/pivotal-cf/p-spring-cloud-services-acceptance"}}},"diskSpace":{"status":"UP","total":1056858112,"free":886517760,"threshold":10485760},"refreshScope":{"status":"UP"}}
+    </pre>
+
+    You also can send a request to each app's `health` Actuator endpoint without the authorization header. In that case, the response JSON object will contain only the summary status:
+
+    <pre class="terminal">
+    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com/actuator/health
+    {"status":"UP"}
+    </pre>
+
+    Sending an unauthenticated request to any of the other Actuator endpoints will return a response indicating insufficient authorization.
+
+## <a id="capacity-requirements"></a>Capacity Requirements
+
+Below are usage requirements of the apps backing a single service instance (SI) of each Spring Cloud Services service type.
+
+| Service Type              | Memory Limit / SI   | Disk Limit / SI  |
+|---------------------------|---------------------|------------------|
+| Config Server             | 1 GB                | 1 GB             |
+| Service Registry          | 1 GB                | 1 GB             |
+| Circuit Breaker Dashboard | 2 GB                | 2 GB             |
+
+Spring Cloud Services service types may also be backed by non-SCS service instances. For example, a Circuit Breaker Dashboard service instance uses a [RabbitMQ for PCF](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance for communication between its two backing apps.

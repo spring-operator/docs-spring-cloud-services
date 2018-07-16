@@ -1,0 +1,150 @@
+---
+title: The Service Broker
+owner: Spring Cloud Services
+---
+
+<strong><%= modified_date %></strong>
+
+See below for information about Spring Cloud&reg; Services' deployment model and other information which may be useful in operating its services or client apps.
+
+<p class='note'><strong>Note</strong>: Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which operators can make deployment changes, view credentials, and manage user roles in Ops Manager. Therefore, your role permissions might not allow you to perform every procedure in this operator guide. For more information about roles in Ops Manager, see <a href="https://docs.pivotal.io/pivotalcf/2-0/opsguide/config-rbac.html#about">Understand Roles in Ops Manager</a>.</p>
+
+The Spring Cloud Services service broker's functionality is divided between the following two Spring Boot apps, which are deployed in the "system" org to the "p-spring-cloud-services" space.
+
+* spring-cloud-broker: Implements the Service Broker API.
+* spring-cloud-broker-worker: Acts on provision, deprovision, bind, and unbind requests.
+
+The broker relies on two other Pivotal products, [MySQL for PCF](https://network.pivotal.io/products/p-mysql) (or [MySQL for PCF v2](https://network.pivotal.io/products/pivotal-mysql)) and [RabbitMQ&reg; for PCF](https://network.pivotal.io/products/pivotal-rabbitmq-service), for the following service instances.
+
+* **spring-cloud-broker-db**: A MySQL database used by the spring-cloud-broker app.
+* **spring-cloud-broker-rmq**: A RabbitMQ queue used for communication between the spring-cloud-broker app and the spring-cloud-broker-worker app.
+
+<p class='note'><strong>Note</strong>: As of version 1.9, RabbitMQ for PCF can be configured to provide a dedicated cluster for use by Spring Cloud Services. See the <a href="https://docs.pivotal.io/rabbitmq-cf/replicator.html#scs-isolation">Running SCS on a Dedicated RabbitMQ Cluster</a> section in the <a href="https://docs.pivotal.io/rabbitmq-cf/">RabbitMQ for PCF documentation</a>.</p>
+
+You can obtain the broker username and password from the Spring Cloud Services tile in Pivotal Cloud Foundry&reg; Operations Manager. Click the Spring Cloud Services tile, and in the **Credentials** tab, follow the link to the Broker Credentials.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/broker-credentials.png") %>
+
+## <a id="broker-upgrades"></a>Broker Upgrades
+
+The Spring Cloud Services product upgrade process checks before redeploying the service broker to see whether the broker apps' version has changed. If the version has not changed, the upgrade process will continue without redeploying either the spring-cloud-broker app or the spring-cloud-broker-worker app.
+
+The spring-cloud-broker and spring-cloud-broker-worker apps are deployed using a [blue-green deployment strategy](http://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
+
+## <a id="access-broker-applications-in-apps-manager"></a>Access Broker Applications in Apps Manager
+
+To view the broker apps in Pivotal Cloud Foundry&reg; Apps Manager, log into Apps Manager as an admin user and select the "system" org.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/broker-apps-apps-manager-org.png") %>
+
+The apps are deployed in the "p-spring-cloud-services" space.
+
+<%= image_tag("/spring-cloud-services/images/operator-information/broker-apps-apps-manager-space.png") %>
+
+## <a id="application-health-and-status"></a>Application Health and Status
+
+For more visibility into how the Spring Cloud Services broker apps are behaving, or for troubleshooting purposes, you may wish to access them directly. See below for information about accessing their output.
+
+### <a id="checking-broker-application-health"></a>Checking Broker Application Health
+
+The service broker and worker apps use Cloud Foundry's HTTP health check. The Cloud Foundry Cloud Controller accesses a `/healthcheck` endpoint on the broker and worker apps. This endpoint is indicative of overall health of the service broker, including the service broker app, the worker app, and the MySQL database and RabbitMQ server used to store service instance information and facilitate communication between the apps.
+
+If the broker topology is in a healthy state, the `/healthcheck` endpoint responds with HTTP status 200 and the following JSON output:
+
+```
+{
+  "status": "UP"
+}
+```
+
+If the broker apps are functional but the broker cannot verify the health of one or both of the dependent services, the endpoint may respond with the following JSON output:
+
+```
+{
+  "status": "UNKNOWN"
+}
+```
+
+If the broker topology is in a unhealthy state, the `/healthcheck` endpoint responds with HTTP status 503 and the following JSON output:
+
+```
+{
+  "status": "DOWN"
+}
+```
+
+The JSON response from the `/healthcheck` endpoint on the service broker Spring Boot app can be used with monitoring tools to ensure the broker's health. The Cloud Controller uses only the HTTP status code to determine the broker's health.
+
+### <a id="broker-application-logs"></a>Read Broker Application Logs
+
+To access logs for the spring-cloud-broker and spring-cloud-broker-worker apps, target the "system" org and its "p-spring-cloud-services" space:
+
+<pre class="terminal">
+$ cf target -o system -s p-spring-cloud-services
+
+API endpoint:   https://api.cf.example.com (API version: 2.43.0)
+User:           admin
+Org:            system
+Space:          p-spring-cloud-services
+Ben-Kleins-MacBook-Pro:Work bklein$ cf apps
+Getting apps in org system / space p-spring-cloud-services as admin...
+OK
+
+name                         requested state   instances   memory   disk   urls
+spring-cloud-broker          started           1/1         1G       1G     spring-cloud-broker.apps.example.com
+spring-cloud-broker-worker   started           1/1         1G       1G     spring-cloud-broker-worker.apps.example.com
+</pre>
+
+Then you can use ```cf logs``` to tail logs for either the spring-cloud-broker app:
+
+<pre class="terminal">
+$ cf logs spring-cloud-broker
+Connected, tailing logs for app spring-cloud-broker in org system / space p-spring-cloud-services as admin...
+</pre>
+
+or the spring-cloud-broker-worker app:
+
+<pre class="terminal">
+$ cf logs spring-cloud-broker-worker
+Connected, tailing logs for app spring-cloud-broker-worker in org system / space p-spring-cloud-services as admin...
+</pre>
+
+### <a id="access-actuator-endpoints"></a>Access Actuator Endpoints
+
+The spring-cloud-broker and spring-cloud-broker-worker apps use [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these apps; some of the added endpoints are summarized below.
+
+| Endpoint ID           | Endpoint Function                                                                    |
+|-----------------------|--------------------------------------------------------------------------------------|
+| <code>env</code>      | Displays profiles, properties, and property sources from the application environment |
+| <code>health</code>   | Displays information about the health and status of the app                          |
+| <code>metrics</code>  | Displays metrics information from the app                                            |
+| <code>mappings</code> | Displays list of <code>@RequestMapping</code> paths in the app                       |
+| <code>shutdown</code> | Gracefully shuts down the app (disabled in Spring Cloud Services)                    |
+
+See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
+
+#### Invoking Actuator Endpoints
+
+The spring-cloud-broker and spring-cloud-broker-worker apps use OAuth 2 authentication. To access Actuator endpoints on one of these apps, you must supply a valid OAuth 2 token in the request header.
+
+1. Log in to Apps Manager as an admin user and navigate to the spring-cloud-broker app or spring-cloud-broker-worker app as described in the [Access Broker Applications in Apps Manager](#access-broker-applications-in-apps-manager) section.
+
+    <%= image_tag("/spring-cloud-services/images/operator-information/broker-app-route.png") %>
+
+2. From the **Route** tab, copy the value of the app's route.
+
+3. In a terminal where you have already authenticated to PCF using `cf auth` or `cf login`, send the request to the Actuator endpoint (for example, using cURL), appending `/actuator/` and the endpoint ID to the route URL; for example, for the `health` endpoint, this would be something like `https://spring-cloud-broker.apps.example.com/actuator/health`. The current OAuth 2 token can be obtained using the `cf oauth-token` command. In the example below, the response from `cf oauth-token` is used directly inside the header string.
+
+    <pre class="terminal">
+    $ curl -k https://spring-cloud-broker.apps.example.com/actuator/health -H "Authorization: $(cf oauth-token)"
+    {"status":"UP","details":{"rabbit":{"status":"UP","details":{"version":"3.6.15"}},"diskSpace":{"status":"UP","details":{"total":1073741824,"free":884682752,"threshold":10485760}},"db":{"status":"UP","details":{"database":"MySQL","hello":1}},"refreshScope":{"status":"UP"}}}
+    </pre>
+
+    You also can send a request to each app's `health` Actuator endpoint without the authorization header. In that case, the response JSON object will contain only the summary status:
+
+    <pre class="terminal">
+    $ curl -k https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.example.com/actuator/health
+    {"status":"UP"}
+    </pre>
+
+    Sending an unauthenticated request to any of the other Actuator endpoints will return a response indicating insufficient authorization.

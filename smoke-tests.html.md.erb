@@ -29,7 +29,7 @@ The smoke tests are run in the "Smoke Tests" BOSH errand. They follow the steps 
 
   1. Wait for the service instance to be provisioned.
 
-  1. Create a service key for the service instance (this approximates the binding of an application to the service instance).
+  1. Create a service key for the service instance (this approximates the binding of an app to the service instance).
 
   1. Delete the service key.
 
@@ -50,15 +50,15 @@ In a PCF deployment on Microsoft Azure, idle timeout settings may lead to networ
 	https://api.system.wise.com:443: Connection timed out (Read failed)
 ```
 
-Check the idle timeout settings for any Azure resource with a public IP address, particularly all Azure Load Balancers (see [Configure TCP idle timeout settings for Azure Load Balancer](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-tcp-idle-timeout) in the Microsoft Azure documentation). The default idle timeout setting is 4 minutes. Change this to 30 minutes (see the [Azure Networking Connection Idle for more than Four minutes](https://discuss.pivotal.io/hc/en-us/articles/115005583008-Azure-Networking-Connection-Idle-for-more-than-Four-minutes) article in the [Pivotal Knowledge Base](https://discuss.pivotal.io/hc/)).
+Check the idle timeout settings for any Azure resource with a public IP address, particularly all Azure Load Balancers (see [Configure TCP idle timeout settings for Azure Load Balancer](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-tcp-idle-timeout) in the Microsoft Azure documentation). The default idle timeout setting is 4 minutes. Change this to 30 minutes (see the [Azure Networking Connection Idle for more than Four minutes](https://discuss.pivotal.io/hc/en-us/articles/115005583008-Azure-Networking-Connection-Idle-for-more-than-Four-minutes) article in the Pivotal Knowledge Base.
 
 ### <a id="troubleshooting-app-push-timeout"></a> Application Push Timeouts
 
-Deployment of backing applications for service instances may time out. The smoke tests give a log message similar to the following:
+Deployment of backing apps for service instances may time out. The smoke tests give a log message similar to the following:
 
 ```
 + echo 'Timed out waiting for service instance to provision: circuit-breaker' 
 Timed out waiting for service instance to provision: circuit-breaker
 ```
 
-Check the setting of the [Spring Cloud Services "App push timeout" tile configuration option](http://docs.pivotal.io/spring-cloud-services/tile-configuration.html#set-push-timeout-for-backing-applications). The default setting is 4 minutes. Change this to a value greater than the number of minutes required to provision a Spring Cloud Services service instance. For example, if you see that the smoke tests are requiring 7 minutes to provision a service instance, change this setting to 8 minutes.
+Check the setting of the [Spring Cloud Services "App push timeout" tile configuration option](./tile-configuration.html#set-push-timeout-for-backing-applications). The default setting is 4 minutes. Change this to a value greater than the number of minutes required to provision a Spring Cloud Services service instance. For example, if you see that the smoke tests are requiring 7 minutes to provision a service instance, change this setting to 8 minutes.

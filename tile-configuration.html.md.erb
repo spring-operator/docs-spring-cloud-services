@@ -15,19 +15,19 @@ The Spring Cloud Services tile includes settings for various options. You can co
 
 ### <a id="configure-service-instance-limit"></a>Configure Service Instance Limit
 
-By default, the Spring Cloud Services broker will only provision up to 100 service instances. This service instance limit is also used to determine the memory quota for the org in which service instance backing applications are deployed; the org's memory quota will be equal to 1.5G times the service instance limit. You can configure this limit in the Spring Cloud Services tile settings.
+By default, the Spring Cloud Services broker will only provision up to 100 service instances. This service instance limit is also used to determine the memory quota for the org in which service instance backing apps are deployed; the org's memory quota will be equal to 1.5G times the service instance limit. You can configure this limit in the Spring Cloud Services tile settings.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/configure-service-instance-limit.png") %>
 
-In the **Service Instance Limit** field, enter the new service instance limit. The broker will provision up to as many service instances as you specified.
+In the **Service instance limit** field, enter the new service instance limit. The broker will provision up to as many service instances as you specified.
 
 ### <a id="set-push-timeout-for-backing-applications"></a>Set Push Timeout for Backing Applications
 
-By default, the Spring Cloud Services service broker allows four (4) minutes for a service instance backing application to be staged and start. To use another timeout interval, you can specify a different number of minutes in the Spring Cloud Services tile settings.
+By default, the Spring Cloud Services service broker allows four (4) minutes for a service instance backing app to be staged and start. To use another timeout interval, you can specify a different number of minutes in the Spring Cloud Services tile settings.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/configure-app-push-timeout.png") %>
 
-In the **App push timeout** field, enter the desired number of minutes. The broker will allow the specified number of minutes for service instance backing applications to start.
+In the **App push timeout** field, enter the desired number of minutes. The broker will allow the specified number of minutes for service instance backing apps to start.
 
 ### <a id="set-custom-domain-for-service-instances"></a>Set Custom Domain for Service Instances
 
@@ -41,15 +41,15 @@ In the **Service instances domain** field, enter the desired domain. The broker 
 
 ### <a id="set-buildpack-for-service-instances"></a>Set Buildpack for Service Instances
 
-By default, the Spring Cloud Services service broker stages service instance backing applications using the buildpack chosen by the platform's buildpack detection; normally, this will be the highest-priority Java buildpack. To cause the broker to use a particular Java buildpack regardless of priority, you can set the name of the buildpack to use in the Spring Cloud Services tile settings.
+By default, the Spring Cloud Services service broker stages service instance backing apps using the buildpack chosen by the platform's buildpack detection; normally, this will be the highest-priority Java buildpack. To cause the broker to use a particular Java buildpack regardless of priority, you can set the name of the buildpack to use in the Spring Cloud Services tile settings.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/configure-buildpack.png") %>
 
-In the **Buildpack** field, enter the name of the desired Java buildpack. The broker will use the selected buildpack to stage service instance backing applications.
+In the **Buildpack** field, enter the name of the desired Java buildpack. The broker will use the selected buildpack to stage service instance backing apps.
 
 ### <a id="skip-ssl-certificate-validation"></a>Skip SSL Certificate Validation
 
-By default, Spring Cloud Services checks the Pivotal Application Service (PAS) or Elastic Runtime SSL certificate for the domains listed in [Requirements](/spring-cloud-services/index.html#requirements). You can disable this validation by selecting the **Do not validate that SSL certificates are properly configured** checkbox. This setting does not disable SSL certificate validation for application instances running on PCF.
+By default, Spring Cloud Services checks the Pivotal Application Service (PAS) or Elastic Runtime SSL certificate for the domains listed in [Requirements](./common/index.html#requirements). You can disable this validation by selecting the **Do not validate that SSL certificates are properly configured** checkbox. This setting does not disable SSL certificate validation for app instances running on PCF.
 
 <p class="note warning"><strong>WARNING: </strong> Disabling Spring Cloud Services' validation of the PAS SSL certificate is an extreme action that should not be taken unless absolutely necessary, and can cause unexpected behavior across your installation of Spring Cloud Services. Do not disable this validation unless you are completely certain that you must do so.</p>
 
@@ -75,7 +75,7 @@ In the **Persistence store service** and **Persistence store service plan** fiel
 
 Spring Cloud Services can store its service instances' credentials in the Runtime CredHub. You can enable this behavior by selecting the **Secure service instance credentials** checkbox.
 
-<p class="note"><strong>Important: </strong> To use CredHub with Spring Cloud Services, you must be using Pivotal Application Service (PAS) 2.0 or later, have <a href="http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html">configured the Runtime CredHub</a>, and have at least one job instance configured in the PAS tile's Resource Config settings tab.</p>
+<p class="note"><strong>Important: </strong> To use CredHub with Spring Cloud Services, you must be using Pivotal Application Service (PAS) 2.0 or later, have <a href="http://docs.pivotal.io/pivotalcf/opsguide/secure-si-creds.html">configured the Runtime CredHub</a>, and have at least one CredHub job instance configured in the PAS tile's Resource Config settings tab.</p>
 
 <%= image_tag("/spring-cloud-services/images/operator-information/secure-si-credentials.png") %>
 
@@ -83,7 +83,7 @@ With the checkbox selected, Spring Cloud Services will secure credentials for ne
 
 ## <a id="lifecycle-errand-configuration"></a>Lifecycle Errand Configuration
 
-The Spring Cloud Services tile includes four lifecycle errands. You can view these by visiting the Installation Dashboard of Pivotal Cloud Foundry&reg; Operations Manager, clicking the Spring Cloud Services tile, and then navigating to the **Errands** pane.
+The Spring Cloud Services tile includes four lifecycle errands. You can view these in Ops Manager by visiting the Installation Dashboard, clicking the Spring Cloud Services tile, and then navigating to the **Errands** pane.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/errands.png") %>
 
@@ -91,4 +91,4 @@ Spring Cloud Services includes three post-deploy errands and one pre-delete erra
 
 <p class='note'><strong>Important</strong>: To ensure that your PCF installation receives important updates to the tile, Pivotal recommends that all Spring Cloud Services lifecycle errands be set to <strong>On</strong>.</p>
 
-In the post-deploy errands, **Broker Deployer** pushes the Spring Cloud Services service broker and worker applications to PCF. **Broker Registrar** registers the service broker with the Cloud Controller and makes its service plans available to all orgs. **Smoke Tests** runs several tests to ensure service availability and correct configuration. The pre-delete errand, **Broker Deregistrar**, deletes all orgs and spaces specific to Spring Cloud Services and deregisters the broker from the Cloud Controller.
+In the post-deploy errands, **Broker Deployer** pushes the Spring Cloud Services service broker and worker apps to PCF. **Broker Registrar** registers the service broker with the Cloud Controller and makes its service plans available to all orgs. **Smoke Tests** runs several tests to ensure service availability and correct configuration. The pre-delete errand, **Broker Deregistrar**, deletes all orgs and spaces specific to Spring Cloud Services and deregisters the broker from the Cloud Controller.

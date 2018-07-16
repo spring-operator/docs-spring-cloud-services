@@ -11,15 +11,11 @@ Follow the below steps to upgrade the Spring Cloud Services product.
 
 1. Download the latest version of Spring Cloud Services from [Pivotal Network](https://network.pivotal.io/).
 
-1. In the Installation Dashboard of [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF) Operations Manager, click **Import a Product** on the left sidebar to upload the `p-spring-cloud-services-<version>.pivotal` file.
-
-    <%= image_tag("./images/upgrades/pre-upload.png") %>
+1. In the Installation Dashboard of [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF) Operations Manager, click **Import a Product** on the left sidebar to upload the `.pivotal` file.
 
 1. After uploading the file, click the **+** button beside the version number under **Spring Cloud Services** in the product list.
 
-    <%= image_tag("./images/upgrades/pre-upgrade.png") %>
-
-1. Click the Spring Cloud Services tile. In the **Errands** tab, ensure that all of the Spring Cloud Services errands are enabled.
+1. Click the Spring Cloud Services tile. In the **Errands** tab, ensure that all of the Spring Cloud Services errands are set to **On**.
 
     <%= image_tag("./images/upgrades/errands.png") %>
 
@@ -31,27 +27,17 @@ Follow the below steps to upgrade the Spring Cloud Services product.
     upgrades/stemcell.png
 %>
 
-1. Return to the Installation Dashboard and click **Apply changes** on the right sidebar.
-
-    <%= image_tag("./images/upgrades/post-upgrade.png") %>
-
-1. The upgrade process may take 20 to 30 minutes.
-
-    <%= image_tag("./images/upgrades/applying-changes.png") %>
+1. Return to the Installation Dashboard and click **Apply changes** on the right sidebar. The upgrade process may take 20 to 30 minutes.
 
 1. When the upgrade process is complete, you will see the dialog shown below. Click **Return to Installation Dashboard**.
 
     <%= image_tag("./images/upgrades/changes-applied.png") %>
 
-1. Congratulations! You have successfully upgraded Spring Cloud Services.
-
-    <%= image_tag("./images/upgrades/installation-dashboard.png") %>
-
 ## <a id="service-instance-upgrade-steps"></a>Service Instance Upgrade Steps
 
-After upgrading the Spring Cloud Services product, you can follow the below steps to upgrade an individual service instance or to upgrade all service instances. You can also use the Cloud Foundry Command Line Interface tool (cf CLI) to upgrade an individual service instance; see the [Service Instance Upgrades](/spring-cloud-services/service-instance-upgrades.html) topic for more information.
+After upgrading the Spring Cloud Services product, you can follow the below steps to upgrade an individual service instance or to upgrade all service instances. You can also use the Cloud Foundry Command Line Interface tool (cf CLI) to upgrade an individual service instance; see [Service Instance Upgrades](./common/service-instance-upgrades.html) for more information.
 
-1. To see the current version of a service instance, visit the Service Instances dashboard. (See the [Service Instances Dashboard](/spring-cloud-services/service-broker-and-instances.html#service-instances-dashboard) section of the [The Service Broker and Instances](/spring-cloud-services/service-broker-and-instances.html) topic.)
+1. To see the current version of a service instance, visit the Service Instances dashboard. (See the [Service Instances Dashboard](./service-instances.html#service-instances-dashboard) section of [Service Instances](./service-instances.html).)
 
     <%= image_tag("./images/upgrades/si-dashboard-pre-upgrade.png") %>
 
@@ -61,7 +47,7 @@ After upgrading the Spring Cloud Services product, you can follow the below step
 
     <%= image_tag("./images/upgrades/si-dashboard-upgrade-service-instances.png") %>
 
-1. Wait while any backing applications belonging to the service instance or instances are upgraded. The dashboard will show the `UPDATING` status for an instance while it is being upgraded.
+1. Wait while any backing apps belonging to the service instance or instances are upgraded. The dashboard will show the `UPDATING` status for an instance while it is being upgraded.
 
     <%= image_tag("./images/upgrades/si-dashboard-upgrading-instances.png") %>
 

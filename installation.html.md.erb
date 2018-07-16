@@ -16,7 +16,7 @@ owner: Spring Cloud Services
 
 <strong><%= modified_date %></strong>
 
-Ensure that you have or have completed all items listed in <a href="./index.html#requirements">Requirements</a>. Then follow the below steps to install Spring Cloud Services.
+Ensure that you have or have completed all items listed in <a href="../common/index.html#requirements">Requirements</a>. Then follow the below steps to install Spring Cloud Services.
 
 <p class="note"><strong>Important: </strong> Spring Cloud Services requires one of the <a href="https://network.pivotal.io/products/p-mysql">MySQL for PCF</a> or <a href="https://network.pivotal.io/products/pivotal-mysql">MySQL for PCF v2</a> products. Install one of these products before installing Spring Cloud Services.</p>
 
@@ -26,13 +26,13 @@ Ensure that you have or have completed all items listed in <a href="./index.html
 
 1. In the Installation Dashboard of [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF) Operations Manager, click **Import a Product** on the left sidebar to upload the Spring Cloud Services `.pivotal` file.
 
-1. Hover over **Spring Cloud Services** in the **Available Products** list and click the **Add &#187;** button.
+1. In the left sidebar, under **Spring Cloud Services**, click the <strong>&#43;</strong> button next to the version number.
 
 1. When the **Spring Cloud Services** tile appears in the **Installation Dashboard**, click it. In the **Settings** tab, click **Assign AZs and Networks**.
 
     <%= image_tag("./images/installation/azs-and-networks.png") %>
 
-    Select the availability zones for the tile to use. In the **Network** section, select the PAS (or ERT) network.
+    Select the availability zones for the tile to use. In the **Network** section, select the PAS (or ERT) network. When finished, click **Save**.
 
 1. Still in the **Settings** tab, click **Spring Cloud Services** to configure settings for Spring Cloud Services. For information about configuring these settings, see [Tile Configuration Options](./tile-configuration.html#tile-configuration-options).
 

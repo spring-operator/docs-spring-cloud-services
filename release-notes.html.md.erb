@@ -18,48 +18,48 @@ owner: Spring Cloud Services
 
 Release notes for [Spring Cloud Services for Pivotal Cloud Foundry](https://network.pivotal.io/products/p-spring-cloud-services)
 
-<p class='note'><strong>Important</strong>: The service broker applications in Spring Cloud Services 2.0 use the <code>system</code> org's system domain, and expect this domain to be a shared domain (the default setting). If you make the <code>system</code> org's system domain private, Spring Cloud Services 2.0 will fail to push applications to the <code>system</code> org.</p>
+<p class='note'><strong>Important</strong>: The service broker apps in Spring Cloud Services 2.0 use the <code>system</code> org's system domain, and expect this domain to be a shared domain (the default setting). If you make the <code>system</code> org's system domain private, Spring Cloud Services 2.0 will fail to push apps to the <code>system</code> org.</p>
 
 ## <a id="2-0-0-migrating-from-1-5-x"></a>Migrating from 1.5.x
 
-For each client application, you must:
+For each client app, you must:
 
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
+* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](./common/client-dependencies.html))
 
 ## <a id="2-0-0-migrating-from-1-4-x"></a>Migrating from 1.4.x
 
-For each client application, you must:
+For each client app, you must:
 
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
+* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](./common/client-dependencies.html))
 
 ## <a id="2-0-0-migrating-from-1-3-x"></a>Migrating from 1.3.x
 
-For each client application, you must:
+For each client app, you must:
 
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
+* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](./common/client-dependencies.html))
 
 ## <a id="2-0-0-migrating-from-1-2-x"></a>Migrating from 1.2.x
 
-For each client application, you must:
+For each client app, you must:
 
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
+* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](./common/client-dependencies.html))
 
 ## <a id="2-0-0-migrating-from-1-1-x"></a>Migrating from 1.1.x
 
-For each client application, you must:
+For each client app, you must:
 
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
+* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](./common/client-dependencies.html))
 
 ## <a id="2-0-0-migrating-from-1-0-x"></a>Migrating from 1.0.x
 
-For each client application, you must:
+For each client app, you must:
 
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
-* Update the build file to use the Maven BOM dependencies for Spring Boot and Spring Cloud (see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html))
+* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](./common/client-dependencies.html))
+* Update the build file to use the Maven BOM dependencies for Spring Boot and Spring Cloud (see [Client Dependencies](./common/client-dependencies.html))
 
 For each Circuit Breaker Dashboard service instance, you must:
 
-* Upgrade the service instance (see [Service Instance Upgrades](/spring-cloud-services/2-0/common/service-instance-upgrades.html)), then unbind, rebind, and restart each of the service instance's client applications (this is due to a change in how service instance credentials are managed)
+* Upgrade the service instance (see [Service Instance Upgrades](./common/service-instance-upgrades.html)), then unbind, rebind, and restart each of the service instance's client apps (this is due to a change in how service instance credentials are managed)
 
 ## <a id="2-0-0"></a>2.0.0
 
@@ -68,5 +68,5 @@ For each Circuit Breaker Dashboard service instance, you must:
 Enhancements included in this release:
 
 * The Spring Cloud Services broker has been upgraded to Spring Boot 2.0.4 and Spring Cloud Finchley.RELEASE.
-* Service instances are now based on Spring Cloud Finchley.RELEASE, and client applications can use Spring Boot 1.5.x–2.0.4 and Spring Cloud Edgware.x–Finchley.RELEASE. For more information about client application dependencies, see [Client Dependencies](/spring-cloud-services/2-0/common/client-dependencies.html).
-* Operators can now configure a custom domain for the Spring Cloud Services service broker to use in creating service instance backing application routes. For more information, see [Set Custom Domain for Service Instances](/spring-cloud-services/2-0/tile-configuration.html#set-custom-domain-for-service-instances).
+* Service instances are now based on Spring Cloud Finchley.RELEASE, and client apps can use Spring Boot 1.5.x–2.0.4 and Spring Cloud Edgware.x–Finchley.RELEASE. For more information about client app dependencies, see [Client Dependencies](./common/client-dependencies.html).
+* Operators can now configure a custom domain for the Spring Cloud Services service broker to use in creating service instance backing app routes. For more information, see [Set Custom Domain for Service Instances](./tile-configuration.html#set-custom-domain-for-service-instances).

@@ -9,7 +9,7 @@ owner: Spring Cloud Services
 
 [HashiCorp Vault](https://www.vaultproject.io) is a secrets management tool, which encrypts and stores credentials, API keys, and other secrets for use in distributed systems. It provides support for access control lists, secret revocation, auditing, and leases and renewals, and includes special capabilities for common infrastructure and systems such as AWS, MySQL, and RabbitMQ, among others. For more information about Vault, see the [documentation](https://www.vaultproject.io/docs/index.html).
 
-Spring Cloud Config provides a Vault backend so that the Spring Cloud Config Server can serve configuration stored in Vault. The Spring Cloud Services Config Server supports this backend and can serve configuration stored in Vault to client applications which have been given access to the Vault server (this includes provision of a Vault access token for the client application).
+Spring Cloud Config provides a Vault backend so that the Spring Cloud Config Server can serve configuration stored in Vault. The Spring Cloud Services Config Server supports this backend and can serve configuration stored in Vault to client apps which have been given access to the Vault server (this includes provision of a Vault access token for the client app).
 
 <p class='note'><strong>Important</strong>: Spring Cloud Services does not provide a HashiCorp Vault server. You must provide your own Vault server in order to use Config Server with Vault.</p>
 
@@ -35,7 +35,7 @@ General parameters used to configure a Config Server configuration source are li
 
 The value of `defaultKey` is masked in the Config Server dashboard.
 
-For information about writing a client application that accesses configuration values from a Config Server which has been configured to use Vault, see the [Use a HashiCorp Vault Server](/spring-cloud-services/config-server/writing-client-applications.html#use-a-hashicorp-vault-server) section of the [Writing Client Applications](/spring-cloud-services/config-server/writing-client-applications.html) topic.
+For information about writing a client app that accesses configuration values from a Config Server which has been configured to use Vault, see the [Use a HashiCorp Vault Server](./writing-client-applications.html#use-a-hashicorp-vault-server) section of [Writing Client Applications](./writing-client-applications.html).
 
 ## <a id="proxy-repository-access"></a>HTTP(S) Proxy Repository Access
 

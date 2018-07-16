@@ -7,7 +7,7 @@ owner: Spring Cloud Services
 
 _Refer to the <a href="https://github.com/spring-cloud-services-samples/cook/tree/master">"Cook" sample app</a> to follow along with the code in this topic._
 
-To use a Spring Boot app as a client for a Config Server instance, you must add the dependencies listed in the <a href="../client-dependencies.html">Client Dependencies</a> topic to your app's build file. Be sure to include the dependencies for <a href="../client-dependencies.html#config-server">Config Server</a> as well.
+To use a Spring Boot app as a client for a Config Server instance, you must add the dependencies listed in <a href="../client-dependencies.html">Client Dependencies</a> to your app's build file. Be sure to include the dependencies for <a href="../client-dependencies.html#config-server">Config Server</a> as well.
 
 <p class='note'><strong>Important</strong>: Because of a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud&reg; Config Client starter will by default cause all app endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
 
@@ -215,7 +215,7 @@ On the Config Server, the decryption features are disabled, so encrypted propert
 
 To use the decryption features in a client app, you must use a Java buildpack which contains the Java Cryptography Extension (JCE) Unlimited Strength policy files. These files are contained in the Cloud Foundry Java buildpack from version 3.7.1.
 
-<p class="tip">If you cannot use version 3.7.1 or later, you can add the JCE Unlimited Strength policy files to an earlier version of the Cloud Foundry Java buildpack. Fork the <a href="https://github.com/cloudfoundry/java-buildpack">buildpack on GitHub</a>, then download the policy files from Oracle and place them in the buildpack's <code>resources/open_jdk_jre/lib/security</code> directory. Follow the instructions in the <a href="http://docs.pivotal.io/pivotalcf/adminguide/buildpacks.html">Managing Custom Buildpacks</a> topic to add this buildpack to Pivotal Cloud Foundry. Be sure that it has the lowest position of all enabled Java buildpacks.</p>
+<p class="tip">If you cannot use version 3.7.1 or later, you can add the JCE Unlimited Strength policy files to an earlier version of the Cloud Foundry Java buildpack. Fork the <a href="https://github.com/cloudfoundry/java-buildpack">buildpack on GitHub</a>, then download the policy files from Oracle and place them in the buildpack's <code>resources/open_jdk_jre/lib/security</code> directory. Follow the instructions in <a href="http://docs.pivotal.io/pivotalcf/adminguide/buildpacks.html">Managing Custom Buildpacks</a> to add this buildpack to Pivotal Cloud Foundry. Be sure that it has the lowest position of all enabled Java buildpacks.</p>
 
 You must also include [Spring Security RSA](https://github.com/dsyer/spring-security-rsa) as a dependency.
 
@@ -331,7 +331,7 @@ The `CookController` has a [`dessertMenu()` method](https://github.com/spring-cl
 
 ## <a id="use-a-hashicorp-vault-server"></a>Use a HashiCorp Vault Server
 
-You can configure the Config Server to use a HashiCorp Vault server as a configuration source, as described in the [Configuring with Vault](/spring-cloud-services/config-server/configuring-with-vault.html) topic. To consume configuration from the Vault server via the service instance, your client app must be given a Vault token. You can give the token to an app by setting the `SPRING_CLOUD_CONFIG_TOKEN` environment variable on the app. The Spring Cloud Services Connectors for Config Server will automatically renew the app's token for as long as the app is running.
+You can configure the Config Server to use a HashiCorp Vault server as a configuration source, as described in [Configuring with Vault](./configuring-with-vault.html). To consume configuration from the Vault server via the service instance, your client app must be given a Vault token. You can give the token to an app by setting the `SPRING_CLOUD_CONFIG_TOKEN` environment variable on the app. The Spring Cloud Services Connectors for Config Server will automatically renew the app's token for as long as the app is running.
 
 <p class='note'><strong>Important</strong>: If the app is entirely stopped (i.e., no instances continue to run) and its Vault token expires, you will need to create a new token for the app and re-set the <code>SPRING_CLOUD_CONFIG_TOKEN</code> environment variable.</p>
 
@@ -352,7 +352,7 @@ TIP: Use 'cf restage cook' to ensure your env variable changes take effect
 $ cf restage cook
 </pre>
 
-The Spring Cloud Services Connectors for Config Server renew the application token for as long as the app continues to run. For more information about the token renewal performed by the connectors, see the [HashiCorp Vault Token Renewal](/spring-cloud-services/config-server/connectors.html#hashicorp-vault-token-renewal) section of the [Spring Cloud Connectors](/spring-cloud-services/config-server/connectors.html) topic.
+The Spring Cloud Services Connectors for Config Server renew the app token for as long as the app continues to run. For more information about the token renewal performed by the connectors, see the [HashiCorp Vault Token Renewal](./connectors.html#hashicorp-vault-token-renewal) section of [Spring Cloud Connectors](./connectors.html).
 
 ### <a id="renew-vault-token-manually"></a>Renew Vault Token Manually
 
@@ -438,7 +438,7 @@ ttl                  997
 
 The Spring Cloud Config Client starter has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your app has other security configuration, this will cause all app endpoints to be protected by HTTP Basic authentication.
 
-If you do not yet want to address application security, you may turn off Basic authentication using [a class that extends Spring Security's `WebSecurityConfigurerAdapter` and is annotated with the Spring `@Configuration` annotation](https://github.com/spring-cloud-services-samples/cook/blob/master/src/main/java/cook/SecurityConfiguration.java). The sample application disables all default security for the `development` profile only, using the `@Profile` annotation:
+If you do not yet want to address application security, you may turn off Basic authentication using [a class that extends Spring Security's `WebSecurityConfigurerAdapter` and is annotated with the Spring `@Configuration` annotation](https://github.com/spring-cloud-services-samples/cook/blob/master/src/main/java/cook/SecurityConfiguration.java). The sample app disables all default security for the `development` profile only, using the `@Profile` annotation:
 
 ```java
 @Configuration

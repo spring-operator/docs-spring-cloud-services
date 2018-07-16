@@ -27,7 +27,7 @@ The following abbreviations, example values, and terms are used in this topic as
 
 * **CF**: Cloud Foundry.
 
-* **CF Application**: An application in Cloud Foundry; the `application` in ```cf push application```.
+* **CF Application**: An app in Cloud Foundry; the `app` in ```cf push app```.
 
 * **Dashboard SSO**: [Cloud Foundry's Dashboard Single Sign-On](http://docs.cloudfoundry.org/services/dashboard-sso.html).
 
@@ -37,7 +37,7 @@ The following abbreviations, example values, and terms are used in this topic as
 
 * **FQDN**: Fully Qualified Domain Name.
 
-* **Instance Record**: In Eureka, the core domain object; represents a CF Application that has registered with a Spring Cloud Services Service Registry service instance. An Instance Record is used to map a Virtual Hostname to a physical route (e.g. hostname, IP address, and port). An Instance Record can have metadata associated with it.
+* **Instance Record**: In Eureka, the core domain object; represents a CF Application that has registered with a Spring Cloud Services Service Registry service instance. An Instance Record is used to map a Virtual Hostname to a physical route (for example, hostname, IP address, and port). An Instance Record can have metadata associated with it.
 
 * **Operator**: A user of Pivotal Cloud Foundry&reg; Operations Manager.
 
@@ -51,19 +51,19 @@ The following abbreviations, example values, and terms are used in this topic as
 
 All components in SCS force HTTPS for all inbound requests. Because SSL terminates at the load balancer, requests are deemed to originate over HTTPS by inspecting the ```X-Forwarded-For```, ```X-Forwarded-Proto```, and ```X-Forwarded-Port``` headers. More on how this is implemented can be found in the [Spring Boot documentation](http://docs.spring.io/spring-boot/docs/current/reference/html/howto-security.html#howto-enable-https).
 
-All outbound HTTP requests made by SCS components are also made over HTTPS. These requests nearly always contain credentials, and are made to other components within the Cloud Foundry environment. In an environment that uses self-signed certificates in the HA proxy configuration, outbound HTTPS requests to other components would fail because the self-signed certificate would not be trusted by the JVM's default truststore (e.g. ```cacerts```). To get around this, all components use the [cloudfoundry-certificate-truster](http://central.maven.org/maven2/io/pivotal/spring/cloud/cloudfoundry-certificate-truster/1.0.1.RELEASE/) to add the CF environment's SSL certificate to the JVM's truststore on application startup.
+All outbound HTTP requests made by SCS components are also made over HTTPS. These requests nearly always contain credentials, and are made to other components within the Cloud Foundry environment. In an environment that uses self-signed certificates in the HA proxy configuration, outbound HTTPS requests to other components would fail because the self-signed certificate would not be trusted by the JVM's default truststore (for example ```cacerts```). To get around this, all components use the [cloudfoundry-certificate-truster](http://central.maven.org/maven2/io/pivotal/spring/cloud/cloudfoundry-certificate-truster/1.0.1.RELEASE/) to add the CF environment's SSL certificate to the JVM's truststore on app startup.
 
 The SSL certificate used by the CF environment must also include Subject Alternative Names (SANs) for domain wildcards ```*.login.domain.com``` and ```*.uaa.domain.com```. This is needed for the correct operation [of Multi-tenant UAA](http://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html), which relies on subdomains of UAA.
 
 ## <a id="multi-tenant-uaa"></a>A Note on Multi-Tenant UAA
 
-SCS uses the multi-tenancy features of UAA to implement ["the principle of least privilege"](https://en.wikipedia.org/wiki/Principle_of_least_privilege). This is required because SCS creates and deletes OAuth clients when applications bind and unbind to service instances. These clients must also have non-empty authorities. In order to create clients with arbitrary authorities, the actor must have the scopes ```uaa.admin``` and ```clients.write```; essentially they must be the admin.
+SCS uses the multi-tenancy features of UAA to implement ["the principle of least privilege"](https://en.wikipedia.org/wiki/Principle_of_least_privilege). This is required because SCS creates and deletes OAuth clients when apps bind and unbind to service instances. These clients must also have non-empty authorities. In order to create clients with arbitrary authorities, the actor must have the scopes ```uaa.admin``` and ```clients.write```; essentially they must be the admin.
 
-Making admin-level credentials (e.g. the UAA admin client) accessible to an application is dangerous and should be avoided. For example, if one were to break into that application and get those credentials, the credentials could be used to affect the entire CF environment. This is why SCS operates in two UAA domains (also called Identity Zones).
+Making admin-level credentials (for example the UAA admin client) accessible to an app is dangerous and should be avoided. For example, if one were to break into that app and get those credentials, the credentials could be used to affect the entire CF environment. This is why SCS operates in two UAA domains (also called Identity Zones).
 
-The platform Identity Zone (e.g. ```uaa.domain.com```) contains the users of SCS (e.g. Space Developers) and the [Dashboard SSO](http://docs.cloudfoundry.org/services/dashboard-sso.html) clients used by each Service Instance. An admin-level client is not required for creating and deleting SSO clients because the SSO client's scope values are fixed and only the most basic ```uaa.resource``` authority is needed by the SSO client.
+The platform Identity Zone (for example ```uaa.domain.com```) contains the users of SCS (for example Space Developers) and the [Dashboard SSO](http://docs.cloudfoundry.org/services/dashboard-sso.html) clients used by each Service Instance. An admin-level client is not required for creating and deleting SSO clients because the SSO client's scope values are fixed and only the most basic ```uaa.resource``` authority is needed by the SSO client.
 
-The other Identity Zone is specific to SCS (e.g. ```p-spring-cloud-services.uaa.domain.com```). This Identity Zone contains no users, but it contains the clients used by bound applications to access protected resources on SCS service instances. These clients require dynamic authority values, which can only be created by an admin-level actor. This admin-level actor (the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client) also exists in the Spring Cloud Services Identity Zone, but because it exists in this Identity Zone, it cannot affect anything in the platform Identity Zone. If these credentials were leaked, the damage would be limited to SCS.
+The other Identity Zone is specific to SCS (for example ```p-spring-cloud-services.uaa.domain.com```). This Identity Zone contains no users, but it contains the clients used by bound apps to access protected resources on SCS service instances. These clients require dynamic authority values, which can only be created by an admin-level actor. This admin-level actor (the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client) also exists in the Spring Cloud Services Identity Zone, but because it exists in this Identity Zone, it cannot affect anything in the platform Identity Zone. If these credentials were leaked, the damage would be limited to SCS.
 
 The following diagram illustrates the OAuth clients used by SCS and the Identity Zones in which they exist.
 
@@ -71,7 +71,7 @@ The following diagram illustrates the OAuth clients used by SCS and the Identity
 
 ## <a id="components"></a>Spring Cloud Services Overview
 
-Before continuing, you should familiarize yourself with the following diagram, which shows the direct lines of communication between application components.
+Before continuing, you should familiarize yourself with the following diagram, which shows the direct lines of communication between app components.
 
 <%= image_tag("component-communication.png") %>
 
@@ -111,23 +111,23 @@ The Spring Cloud Service Broker is responsible for receiving Service Broker API 
 
 Dashboard endpoints require HTTPS and an authenticated session. Unauthenticated requests are redirected to UAA to initiate the OAuth 2 Authorization Code flow as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#oauth2-flow); for the flow to complete, the user must be authenticated with UAA. Once the token is obtained, the session is authenticated. The token is then used to access the CC API to check permissions on the service instance being accessed, as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#checking-user-permissions). This flow is typical of Dashboard Single Sign-On for Service Instances.
 
-The service instance ID used in the permission check is the first GUID that is present in the URL, and this value is also used by the rest of the SB application to identify the service instance that the user is trying to access.
+The service instance ID used in the permission check is the first GUID that is present in the URL, and this value is also used by the rest of the SB app to identify the service instance that the user is trying to access.
 
 *GET /dashboard/instance/{serviceInstanceId}*
 
-This endpoint returns service instance details such as service name, plan ID, org, and space, as well as credentials that need to be propagated to applications bound to this service instance. Because the service instance permission check is performed, this endpoint is only accessible to Space Developers who can bind applications to this service instance. Once an application is bound to this service instance, a Space Developer can see the same credentials returned by this endpoint in the bound application's binding credentials (e.g. via Pivotal Cloud Foundry Applications Manager.)
+This endpoint returns service instance details such as service name, plan ID, org, and space, as well as credentials that need to be propagated to apps bound to this service instance. Because the service instance permission check is performed, this endpoint is only accessible to Space Developers who can bind apps to this service instance. Once an app is bound to this service instance, a Space Developer can see the same credentials returned by this endpoint in the bound app's binding credentials (for example via Pivotal Cloud Foundry Applications Manager.)
 
 <a id="sb-entry-point-dashboard-env"></a>*GET|POST /dashboard/instance/{serviceInstanceId}/env*
 
-This endpoint gets or modifies environment variables for the service instance's backing application. Environment variables that can be viewed or modified with this endpoint must be whitelisted; this whitelisting can only be modified by the Operator or the developers of Spring Cloud Services. Each service type has its own whitelist, and the only service type with whitelisted environment variables is Config Server. The Config Server's whitelisted environment variables specify the repository type, the URI of the repository, and the username and password used to access the repository. Any POST to this endpoint will result in a restart of the backing application, regardless of whether any environment variables were actually modified.
+This endpoint gets or modifies environment variables for the service instance's backing app. Environment variables that can be viewed or modified with this endpoint must be whitelisted; this whitelisting can only be modified by the Operator or the developers of Spring Cloud Services. Each service type has its own whitelist, and the only service type with whitelisted environment variables is Config Server. The Config Server's whitelisted environment variables specify the repository type, the URI of the repository, and the username and password used to access the repository. Any POST to this endpoint will result in a restart of the backing app, regardless of whether any environment variables were actually modified.
 
 *GET /dashboard/instance/{serviceInstanceId}/actuator/health*
 
-This endpoint returns the response of the ```/actuator/health``` endpoint on the backing application. This endpoint is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
+This endpoint returns the response of the ```/actuator/health``` endpoint on the backing app. This endpoint is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
 
 <a id="sb-entry-point-caching-si-permission-check"></a>*Caching the Service Instance Permission Check*
 
-The service instance permission check is cached in session (if available). The cache is used only during GET, HEAD, and OPTIONS requests, with the exception of the ```/instances/{service_instance_guid}/env``` endpoint. Any request for this endpoint does not use the cache, because this endpoint exposes application environment variables---and, in the case of Config Server, the username and password used to access the Config Server's backing repository.
+The service instance permission check is cached in session (if available). The cache is used only during GET, HEAD, and OPTIONS requests, with the exception of the ```/instances/{service_instance_guid}/env``` endpoint. Any request for this endpoint does not use the cache, because this endpoint exposes app environment variables---and, in the case of Config Server, the username and password used to access the Config Server's backing repository.
 
 Caching the permission check in this manner avoids the load and extra round trip to the CC for doing the permission check, while still checking permissions before performing any critical operation.
 
@@ -145,7 +145,7 @@ The SB uses a [p-mysql](https://network.pivotal.io/products/p-mysql) service ins
 
 <a id="sb-dependency-p-rabbitmq"></a>**p-rabbitmq**
 
-The SB uses a [p-rabbitmq](https://network.pivotal.io/products/pivotal-rabbitmq-service) service instance to communicate with the spring-cloud-broker-worker application (the Worker). The messages passed propagate the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html) to the Worker, as well as getting and setting application environment variables for service instance backing applications in the "instances" space. The credentials for accessing the p-rabbitmq service instance are provided through the SB's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
+The SB uses a [p-rabbitmq](https://network.pivotal.io/products/pivotal-rabbitmq-service) service instance to communicate with the spring-cloud-broker-worker app (the Worker). The messages passed propagate the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html) to the Worker, as well as getting and setting app environment variables for service instance backing apps in the "instances" space. The credentials for accessing the p-rabbitmq service instance are provided through the SB's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
 
 <a id="sb-dependency-cloud-controller"></a>**The Cloud Controller**
 
@@ -159,7 +159,7 @@ The SB communicates with UAA via HTTPS to enable Dashboard SSO. All requests to 
 
 <p class='note'><strong>Note</strong>: CredHub support requires Pivotal Application Service (PAS) 2.0 or later.</p>
 
-If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the SB uses the runtime CredHub to store the JSON payload generated for each service instance binding created. Because the binding GUID used in the credential name is generated at binding request time, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the SB and either the bound application or the Cloud Controller have the permissions to view this credential in the runtime CredHub.
+If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the SB uses the runtime CredHub to store the JSON payload generated for each service instance binding created. Because the binding GUID used in the credential name is generated at binding request time, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the SB and either the bound app or the Cloud Controller have the permissions to view this credential in the runtime CredHub.
 
 #### OAuth Clients
 
@@ -178,7 +178,7 @@ This client is used for SSO with UAA. The scopes allow the SB to access the Clou
 
 ### <a id="spring-cloud-broker-worker"></a>Spring Cloud Service Broker Worker
 
-The Spring Cloud Service Broker Worker (the Worker) is responsible for managing service instance backing applications. Some of this work is done asynchronously from the requests that initiate it.
+The Spring Cloud Service Broker Worker (the Worker) is responsible for managing service instance backing apps. Some of this work is done asynchronously from the requests that initiate it.
 
 #### Deployment Details
 
@@ -206,7 +206,7 @@ The Worker uses a p-rabbitmq service instance to receive messages from the SB. T
 
 **The Cloud Controller**
 
-The Worker communicates to the CC via HTTPS to carry out management tasks for service instance backing apps. All backing applications reside in the "p-spring-cloud-services" org, "instances" space. The Worker uses its own [user credentials](#worker-user-p-spring-cloud-services) to obtain a token for accessing the CC API and acts as a Space Developer in the "instances" space.
+The Worker communicates to the CC via HTTPS to carry out management tasks for service instance backing apps. All backing apps reside in the "p-spring-cloud-services" org, "instances" space. The Worker uses its own [user credentials](#worker-user-p-spring-cloud-services) to obtain a token for accessing the CC API and acts as a Space Developer in the "instances" space.
 
 The URI to the CC is set at installation time in the Worker's environment variables, under the name ```CF_TARGET```, which is set at installation time and can only be modified by the Operator.
 
@@ -220,13 +220,13 @@ The Worker uses the client management APIs of UAA to create and delete clients i
 
 _Service Instance Backing Application Credentials_
 
-If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the Worker, when creating a service instance, relies on the runtime CredHub to generate basic access authentication credentials or OAuth 2.0 credentials for a service instance's backing application(s). Because the GUID used in the credential name is generated at the time of the service instance creation request, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the Worker has permissions to view this credential in the runtime CredHub.
+If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the Worker, when creating a service instance, relies on the runtime CredHub to generate basic access authentication credentials or OAuth 2.0 credentials for a service instance's backing app(s). Because the GUID used in the credential name is generated at the time of the service instance creation request, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the Worker has permissions to view this credential in the runtime CredHub.
 
-After CredHub generates the credential and passes it to the Worker, the Worker does not access the credential unless and until the service instance backing application is deleted. If the application is deleted, the Worker deletes the credential from CredHub.
+After CredHub generates the credential and passes it to the Worker, the Worker does not access the credential unless and until the service instance backing app is deleted. If the app is deleted, the Worker deletes the credential from CredHub.
 
 _Service Instance Binding Credentials_
 
-If the Operator has configured the Spring Cloud Services tile to secure service instance credentials using CredHub, the Worker, when requesting a service binding, relies on the runtime CredHub to generate an OAuth 2.0 client secret for securing a service instance's backing application(s). Because the GUID used in the credential name is generated at the time of the service instance binding request, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the Worker has permissions to view this credential in the runtime CredHub.
+If the Operator has configured the Spring Cloud Services tile to secure service instance credentials using CredHub, the Worker, when requesting a service binding, relies on the runtime CredHub to generate an OAuth 2.0 client secret for securing a service instance's backing app(s). Because the GUID used in the credential name is generated at the time of the service instance binding request, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the Worker has permissions to view this credential in the runtime CredHub.
 
 After CredHub generates the credential and passes it to the Worker, the Worker does not access the credential unless and until the service instance binding is deleted. If the service binding is deleted, the Worker deletes the credential from CredHub.
 
@@ -272,7 +272,7 @@ This user is a Space Developer in the "p-spring-cloud-services" org, "instances"
 
 #### <a id="app-config-server"></a>Config Server
 
-The Config Server CF Application is a backing application for a Config Server service instance. This application is responsible for handling requests for configuration values from bound applications.
+The Config Server CF Application is a backing app for a Config Server service instance. This app is responsible for handling requests for configuration values from bound apps.
 
 #### Deployment Details
 
@@ -290,13 +290,13 @@ The following entry points are defined by [Spring Cloud Config Server](http://cl
 
 *GET /{application}/{profile}[/{label}]*
 
-This returns configuration values for a requesting application. The request must be authenticated with an OAuth 2 Bearer token issued by the Spring Cloud Services Identity Zone. The following claims are checked:
+This returns configuration values for a requesting app. The request must be authenticated with an OAuth 2 Bearer token issued by the Spring Cloud Services Identity Zone. The following claims are checked:
 
 * ```aud```: must equal ```config-server-[guid]```
 * ```iss```: must equal ```https://p-spring-cloud-services.uaa.domain.com/oauth/token```
 * ```scope```: must equal ```config-server-[guid].read```
 
-The GUID in the ```aud``` and ```scope``` values must match the ```SERVICE_INSTANCE_ID``` environment variable that is set in the Config Server application at provision time.
+The GUID in the ```aud``` and ```scope``` values must match the ```SERVICE_INSTANCE_ID``` environment variable that is set in the Config Server app at provision time.
 
 *GET /health*
 
@@ -381,7 +381,7 @@ The endpoint may also be accessed anonymously, in which case it will only return
 
 *OAuth 2 Clients for Bound Applications*
 
-To provide access to bound applications, each SB bind request creates the following OAuth 2 client:
+To provide access to bound apps, each SB bind request creates the following OAuth 2 client:
 
 <dl>
 <dd><strong>Client ID</strong>: p-config-server-[bindingId]</dd>
@@ -392,11 +392,11 @@ To provide access to bound applications, each SB bind request creates the follow
 <dd><strong>Token expiry</strong>: 30 seconds</dd>
 </dl>
 
-The client ID and client secret for this client are provided to the bound application via the binding credentials in the ```VCAP_SERVICES``` environment variable. Only a Space Developer in the space that contains the bound application would have access to this.
+The client ID and client secret for this client are provided to the bound app via the binding credentials in the ```VCAP_SERVICES``` environment variable. Only a Space Developer in the space that contains the bound app would have access to this.
 
 *No Application-Level Access Control*
 
-Other than checking for the claims mentioned in the previous section, no other attributes are considered when making an access control decision. Because of this, any application bound to the service instance will be able to access any configuration served by this Config Server.
+Other than checking for the claims mentioned in the previous section, no other attributes are considered when making an access control decision. Because of this, any app bound to the service instance will be able to access any configuration served by this Config Server.
 
 **Actuator Endpoints**
 
@@ -424,13 +424,13 @@ The Config Server accesses the ```/token_key``` endpoint on UAA to retrieve the 
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
-The ```uaa.resource``` authority allows the config-server application to access the token verification endpoints on UAA. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the config-server application via environment variables set at provision time, and are only visible to the Operator.
+The ```uaa.resource``` authority allows the config-server app to access the token verification endpoints on UAA. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the config-server app via environment variables set at provision time, and are only visible to the Operator.
 
 ### <a id="service-registry-service-instances"></a>Service Registry Service Instances
 
 #### <a id="app-eureka"></a>Eureka
 
-The Eureka CF Application is a backing application for Service Registry service instances. This application hosts a REST API for the Service Registry and a dashboard UI for viewing the status of the Service Registry.
+The Eureka CF Application is a backing app for Service Registry service instances. This app hosts a REST API for the Service Registry and a dashboard UI for viewing the status of the Service Registry.
 
 #### Deployment Details
 
@@ -500,7 +500,7 @@ The Eureka server enforces ownership of Instance Records to prevent binding cred
 
 <a id="service-registry-application-name-ownership"></a>*Application Name Ownership*
 
-The Eureka server enforces the ownership of Eureka Application Names within a cluster. For a given Eureka cluster, possibly comprised of peers spanning multiple PCF installations, only one service instance in a PCF installation may register instances with a particular Eureka Application Name. This is enforced to ensure that CF Applications in other spaces cannot register and draw traffic away from a given application, as a form of [man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack). However, a service instance in a different PCF installation can still register the same Eureka Application Name. This is allowed so that CF Applications in other PCF installations can be used for failover, in case all instances with a given Eureka Application Name in a particular PCF are down. 
+The Eureka server enforces the ownership of Eureka Application Names within a cluster. For a given Eureka cluster, possibly comprised of peers spanning multiple PCF installations, only one service instance in a PCF installation may register instances with a particular Eureka Application Name. This is enforced to ensure that CF Applications in other spaces cannot register and draw traffic away from a given app, as a form of [man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack). However, a service instance in a different PCF installation can still register the same Eureka Application Name. This is allowed so that CF Applications in other PCF installations can be used for failover, in case all instances with a given Eureka Application Name in a particular PCF are down. 
 
 To enforce Eureka Application Name ownership, the URI of the Eureka server that registers the Instance Record is recorded under the metadata key ```registrar_uri```. A portion of this URI is used to identity the PCF installation that hosts the Eureka server. When a CF Application registers with the server by submitting an Instance Record, all other Instance Records with the same Eureka Application Name are inspected. If an Instance Record already exists in the same PCF installation as the server receiving the registration request, and this Instance Record's ```registrar_uri``` does not match the server's, the registration request is rejected.
 
@@ -508,7 +508,7 @@ The ownership of Eureka Application Names by a service instance parallels the ow
 
 *Eureka Application Name Ownership Example*
 
-PCF West is a PCF installation with Service Registry service instances in different organizations. These service instances are configured for peer replication with one another. One space hosts a CF Application ```accounting``` and the other hosts a CF Application ```inventory```. They both register with Eureka Application Names ```accounting``` and ```inventory``` as underlined, respectively.
+PCF West is a PCF installation with Service Registry service instances in different orgs. These service instances are configured for peer replication with one another. One space hosts a CF Application ```accounting``` and the other hosts a CF Application ```inventory```. They both register with Eureka Application Names ```accounting``` and ```inventory``` as underlined, respectively.
 
 <%= image_tag("app-id-ownership-before.png") %>
 
@@ -522,7 +522,7 @@ PCF East comes online, and provides failover for ```accounting``` and ```invento
 
 *OAuth 2 Clients for Bound Applications*
 
-To provide access to the Eureka REST API for bound applications, each SB bind request creates the following OAuth 2 client:
+To provide access to the Eureka REST API for bound apps, each SB bind request creates the following OAuth 2 client:
 
 <dl>
 <dd><strong>Client ID</strong>: p-service-registry-[bindingId]</dd>
@@ -533,7 +533,7 @@ To provide access to the Eureka REST API for bound applications, each SB bind re
 <dd><strong>Token expiry</strong>: 30 seconds</dd>
 </dl>
 
-The client ID and client secret for this client is provided to the bound application via the binding credentials in the ```VCAP_SERVICES``` environment variable. Only a Space Developer in the space that contains the bound application would have access to this.
+The client ID and client secret for this client is provided to the bound app via the binding credentials in the ```VCAP_SERVICES``` environment variable. Only a Space Developer in the space that contains the bound app would have access to this.
 
 **Eureka Dashboard**
 
@@ -566,7 +566,7 @@ The SB communicates to the CC via HTTPS to perform permission checks using the c
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
-This client is used for Dashboard SSO with UAA. The scopes allow the Eureka application to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the Eureka application to access the token verification endpoints on UAA. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the Eureka application via environment variables set at provision time.
+This client is used for Dashboard SSO with UAA. The scopes allow the Eureka app to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the Eureka app to access the token verification endpoints on UAA. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the Eureka app via environment variables set at provision time.
 
 **eureka-{guid}**
 
@@ -578,13 +578,13 @@ This client is used for Dashboard SSO with UAA. The scopes allow the Eureka appl
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
-The ```uaa.resource``` authority allows the Eureka application to access the token verification endpoints on UAA. The other authorities allow it to access other members of the cluster. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the Eureka application via environment variables set at provision time. The credentials are the same as the [corresponding client](#service-registry-oauth-client-uaa) in the UAA Identity Zone.
+The ```uaa.resource``` authority allows the Eureka app to access the token verification endpoints on UAA. The other authorities allow it to access other members of the cluster. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the Eureka app via environment variables set at provision time. The credentials are the same as the [corresponding client](#service-registry-oauth-client-uaa) in the UAA Identity Zone.
 
 ### <a id="circuit-breaker-dashboard-service-instances"></a>Circuit Breaker Dashboard Service Instances
 
 #### <a id="app-hystrix"></a>Hystrix
 
-The Hystrix application is one of two backing applications for a Circuit Breaker Dashboard service instance. This application is derived from the [Netflix Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
+The Hystrix app is one of two backing apps for a Circuit Breaker Dashboard service instance. This app is derived from the [Netflix Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
 
 #### Deployment Details
 
@@ -608,17 +608,17 @@ Actuator endpoints require the same [Actuator SSO](#sb-entry-point-actuator-endp
 
 **Turbine**
 
-The Hystrix Dashboard UI uses an EventSource in the browser to listen to [Server Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) emitted by the Turbine application. Because the Turbine application's origin differs from the Hystrix application, and EventSources do not support CORS, the Hystrix application must handle the EventSource request and proxy this request to the Turbine application.
+The Hystrix Dashboard UI uses an EventSource in the browser to listen to [Server Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) emitted by the Turbine app. Because the Turbine app's origin differs from the Hystrix app, and EventSources do not support CORS, the Hystrix app must handle the EventSource request and proxy this request to the Turbine app.
 
-The Turbine application must authenticate this request, so the Hystrix application includes the token in the proxy request. The proxy request is handled on Hystrix via the endpoint ```/proxy.stream?origin=[turbine url]```. This endpoint on open-source Hystrix can be used as an open proxy, so to protect the token from being leaked, the Turbine URL in the origin query parameter must match the ```TURBINE_URL``` environment variable of the Hystrix application. This variable is set at provision time, always begins with ```https://```, and can only be modified by the Operator.
+The Turbine app must authenticate this request, so the Hystrix app includes the token in the proxy request. The proxy request is handled on Hystrix via the endpoint ```/proxy.stream?origin=[turbine url]```. This endpoint on open-source Hystrix can be used as an open proxy, so to protect the token from being leaked, the Turbine URL in the origin query parameter must match the ```TURBINE_URL``` environment variable of the Hystrix app. This variable is set at provision time, always begins with ```https://```, and can only be modified by the Operator.
 
 **UAA**
 
-The Hystrix application accesses the ```/token_key``` endpoint on UAA to retrieve the token verification key. This key material is used to verify the JWT signature of the token in order to authenticate the request.
+The Hystrix app accesses the ```/token_key``` endpoint on UAA to retrieve the token verification key. This key material is used to verify the JWT signature of the token in order to authenticate the request.
 
 **The Cloud Controller**
 
-The Hystrix application communicates to the CC via HTTPS to perform permission checks using the current user's token, as described in the Entry Points section, and to derive URIs for UAA. The URI to the CC is set by the [Worker](#spring-cloud-broker-worker) at provision time in the application's environment variables, under the name ```CF_TARGET```. The environment variable can only be modified by the Operator.
+The Hystrix app communicates to the CC via HTTPS to perform permission checks using the current user's token, as described in the Entry Points section, and to derive URIs for UAA. The URI to the CC is set by the [Worker](#spring-cloud-broker-worker) at provision time in the app's environment variables, under the name ```CF_TARGET```. The environment variable can only be modified by the Operator.
 
 #### OAuth Clients
 
@@ -632,11 +632,11 @@ The Hystrix application communicates to the CC via HTTPS to perform permission c
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
-This client is used for SSO with UAA. The scopes allow the Hystrix application to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the Hystrix application to access the token verification endpoints on UAA. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the Hystrix application via environment variables set at provision time.
+This client is used for SSO with UAA. The scopes allow the Hystrix app to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the Hystrix app to access the token verification endpoints on UAA. The client is created by the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client at provision time. The client ID and client secret are made available to the Hystrix app via environment variables set at provision time.
 
 #### <a id="app-turbine"></a>Turbine
 
-The Turbine application is the other backing application for a Circuit Breaker Dashboard service instance. This application is derived from [Netflix Turbine](https://github.com/Netflix/Turbine), which aggregates Hystrix AMQP messages and emits them as a Server Sent Event stream.
+The Turbine app is the other backing app for a Circuit Breaker Dashboard service instance. This app is derived from [Netflix Turbine](https://github.com/Netflix/Turbine), which aggregates Hystrix AMQP messages and emits them as a Server Sent Event stream.
 
 #### Deployment Details
 
@@ -650,22 +650,22 @@ The Turbine application is the other backing application for a Circuit Breaker D
 
 <a id="circuit-breaker-entry-point-turbine-stream"></a>**GET /turbine.stream**
 
-This emits the Server Sent Event stream and is the only HTTP-based entry point. To authenticate the request, the Turbine application uses the Authorization header of the incoming request (containing the OAuth 2 Bearer token) to make a request to the CC API to check permissions on the service instance being accessed, as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#checking-user-permissions). The service instance ID used in the permission check is supplied by an environment variable set at provision time by the [Worker](#spring-cloud-broker-worker). This check is done once per SSE request, and because there is no session involved, it is not cached. However, SSE requests are kept alive until the browser window is closed, so the permission check will happen infrequently.
+This emits the Server Sent Event stream and is the only HTTP-based entry point. To authenticate the request, the Turbine app uses the Authorization header of the incoming request (containing the OAuth 2 Bearer token) to make a request to the CC API to check permissions on the service instance being accessed, as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#checking-user-permissions). The service instance ID used in the permission check is supplied by an environment variable set at provision time by the [Worker](#spring-cloud-broker-worker). This check is done once per SSE request, and because there is no session involved, it is not cached. However, SSE requests are kept alive until the browser window is closed, so the permission check will happen infrequently.
 
 **Hystrix AMQP messages**
 
-The Turbine application listens for AMQP messages posted by applications bound to the Circuit Breaker Dashboard service instance. Applications bound to the Circuit Breaker Dashboard receive credentials to the [p-rabbitmq](https://network.pivotal.io/products/pivotal-rabbitmq-service) service instance in order to post these messages. All bound applications receive the same credentials.
+The Turbine app listens for AMQP messages posted by apps bound to the Circuit Breaker Dashboard service instance. Applications bound to the Circuit Breaker Dashboard receive credentials to the [p-rabbitmq](https://network.pivotal.io/products/pivotal-rabbitmq-service) service instance in order to post these messages. All bound apps receive the same credentials.
 
 #### External Dependencies
 
 <a id="app-turbine-p-rabbitmq"></a>**p-rabbitmq**
 
-As described earlier, bound applications use an instance of [p-rabbitmq](https://network.pivotal.io/products/pivotal-rabbitmq-service) to post circuit breaker metrics. The Turbine application listens to these messages, aggregates the metrics, and emits a Server Sent Event stream. The credentials for the p-rabbitmq service instance are provided to the Turbine application though service instance binding. These same credentials are provided to applications bound to the Circuit Breaker Dashboard service instance, and would be visible to any user that is able to bind to the service instance. These credentials can be used for admin access to the RabbitMQ.
+As described earlier, bound apps use an instance of [p-rabbitmq](https://network.pivotal.io/products/pivotal-rabbitmq-service) to post circuit breaker metrics. The Turbine app listens to these messages, aggregates the metrics, and emits a Server Sent Event stream. The credentials for the p-rabbitmq service instance are provided to the Turbine app though service instance binding. These same credentials are provided to apps bound to the Circuit Breaker Dashboard service instance, and would be visible to any user that is able to bind to the service instance. These credentials can be used for admin access to the RabbitMQ.
 
-Since this RabbitMQ is only used for collecting and disseminating ```@HystrixCommand``` metrics from bound applications, one risk here is breaking the ability for metrics to be gathered and reported in the Hystrix dashboard. Doing this would not affect the operation of any application bound to the service instance.
+Since this RabbitMQ is only used for collecting and disseminating ```@HystrixCommand``` metrics from bound apps, one risk here is breaking the ability for metrics to be gathered and reported in the Hystrix dashboard. Doing this would not affect the operation of any app bound to the service instance.
 
 **The Cloud Controller**
 
-The Turbine application communicates to the CC via HTTPS to perform permission checks using the current user's token, as described in the [section on the Server Sent Event stream](#circuit-breaker-entry-point-turbine-stream). The URI to the CC is set by the [Worker](#spring-cloud-broker-worker) at provision time in the application's environment variables, under the name ```CF_TARGET```. The environment variable can only be modified by the Operator.
+The Turbine app communicates to the CC via HTTPS to perform permission checks using the current user's token, as described in the [section on the Server Sent Event stream](#circuit-breaker-entry-point-turbine-stream). The URI to the CC is set by the [Worker](#spring-cloud-broker-worker) at provision time in the app's environment variables, under the name ```CF_TARGET```. The environment variable can only be modified by the Operator.
 
 
