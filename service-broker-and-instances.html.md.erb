@@ -22,7 +22,7 @@ The service broker's functionality is divided between the following two Spring B
 * spring-cloud-broker ("the SB"): Implements the Service Broker API.
 * spring-cloud-broker-worker ("the Worker"): Acts on provision, deprovision, bind, and unbind requests.
 
-The broker relies on two other Pivotal Cloud Foundry products, [MySQL for Pivotal Cloud Foundry](https://network.pivotal.io/products/p-mysql) and [RabbitMQ&reg; for Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-rabbitmq-service), for the following service instances.
+The broker relies on two other Pivotal Cloud Foundry products, [MySQL for PCF v2](https://network.pivotal.io/products/pivotal-mysql) (or [MySQL for PCF v1](https://network.pivotal.io/products/p-mysql)) and [RabbitMQ&reg; for PCF](https://network.pivotal.io/products/pivotal-rabbitmq-service), for the following service instances.
 
 * **spring-cloud-broker-db**: A MySQL database used by the SB.
 * **spring-cloud-broker-rmq**: A RabbitMQ queue used for communication between the SB and the Worker.

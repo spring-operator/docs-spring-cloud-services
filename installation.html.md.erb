@@ -18,7 +18,7 @@ owner: Spring Cloud Services
 
 Ensure that you have or have completed all items listed in <a href="/spring-cloud-services/index.html#requirements">Requirements</a>. Then follow the below steps to install Spring Cloud Services.
 
-<p class="note"><strong>Important: </strong> Spring Cloud Services requires one of the <a href="https://network.pivotal.io/products/p-mysql">MySQL for PCF</a> or <a href="https://network.pivotal.io/products/pivotal-mysql">MySQL for PCF v2</a> products. Install one of these products before installing Spring Cloud Services.</p>
+<p class="note"><strong>Important: </strong> Spring Cloud Services requires either <a href="https://network.pivotal.io/products/pivotal-mysql">MySQL for PCF v2</a> (recommended) or <a href="https://network.pivotal.io/products/p-mysql">MySQL for PCF v1</a>. Install one of these products before installing Spring Cloud Services.</p>
 
 ## Installation Steps
 
@@ -45,7 +45,7 @@ Ensure that you have or have completed all items listed in <a href="/spring-clou
 
     <%= image_tag("./images/installation/service-settings.png") %>
 
-    The **Persistence store service** and **Persistence store service plan** settings set the service and service plan for the service broker's MySQL database. This must be a service that provides a MySQL-compatible database (to use MySQL for PCF for the persistence store service, enter `p-mysql`, or to use MySQL for PCF v2, enter `p.mysql`). The **Message bus service** and **Message bus service plan** settings set the service and service plan for the broker's message bus.
+    The **Persistence store service** and **Persistence store service plan** settings set the service and service plan for the service broker's MySQL database. This must be a service that provides a MySQL-compatible database (to use MySQL for PCF v2 for the persistence store service, enter `p.mysql`, or to use MySQL for PCF v1, enter `p-mysql`). The **Message bus service** and **Message bus service plan** settings set the service and service plan for the broker's message bus.
 <br /><br />These settings should be configured only during the Spring Cloud Services tile installation process. If you have already completed the tile installation process, do not alter these settings.
 
     <p class="note warning"><strong>WARNING: </strong> Configuring the service broker's dependent services after installing the tile can cause corruption or loss of the broker's service instance data.</p>
