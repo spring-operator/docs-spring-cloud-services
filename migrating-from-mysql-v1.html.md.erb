@@ -1,0 +1,18 @@
+---
+title: Migrating from MySQL for PCF v1
+owner: Spring Cloud Services
+---
+
+<strong><%= modified_date %></strong>
+
+The MySQL for PCF v1 tile has been deprecated. Although Spring Cloud Services 2.0 supports MySQL for PCF v1, Pivotal recommends that operators now switch to MySQL for PCF v2 for use with Spring Cloud Services. See below for information about migrating your installation of Spring Cloud Services for PCF from use of the MySQL for PCF v1 tile.
+
+<p class='note'><strong>Note</strong>: Ops Manager administrators can use Role-Based Access Control (RBAC) to manage which operators can make deployment changes, view credentials, and manage user roles in Ops Manager. Therefore, your role permissions might not allow you to perform every procedure in this operator guide. For more information about roles in Ops Manager, see <a href="https://docs.pivotal.io/pivotalcf/2-0/opsguide/config-rbac.html#about">Understand Roles in Ops Manager</a>.</p>
+
+In the `system` org and `p-spring-cloud-services` space, the Spring Cloud Services broker uses one (1) MySQL service instance, called **spring-cloud-broker-db**, to store information about Spring Cloud Services service instances.
+
+1. Install the [MySQL for PCF v2](https://network.pivotal.io/products/pivotal-mysql) tile.
+
+1. Following the instructions in [Migrating Data from MySQL for PCF v1 to v2](http://docs.pivotal.io/p-mysql/2-3/migrate-to-v2.html), migrate the Spring Cloud Services broker's data to a MySQL for PCF v2 service instance.
+
+1. Use the [Service Instances dashboard](./service-instances.html#service-instances-dashboard) to verify that the migration succeeded. The Spring Cloud Services service broker will now use MySQL for PCF v2 to store service instance information.
