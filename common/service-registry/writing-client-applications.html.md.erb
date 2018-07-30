@@ -188,19 +188,14 @@ The Greeter application can now use container networking to access the Message G
 
 The Spring Cloud Services Starter for Service Registry has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
 
-If you do not yet want to address application security, you may turn off Basic authentication by setting the `security.basic.enabled` property to `false`. In `application.yml` or `bootstrap.yml`:
+If you do not yet want to address application security, you can disable Basic authentication. See below for information about doing this in your app's version of Spring Boot.
 
-```yml
-security:
-  basic:
-    enabled: false
-```
+### Using Spring Boot 1.5
 
-You might make this setting specific to a profile (such as the `dev` profile if you want Basic authentication disabled only for development):
+If you are using Spring Boot 1.5, you can disable HTTP Basic authentication by setting the `security.basic.enabled` property to `false` in <a href="https://github.com/spring-cloud-services-samples/greeting/blob/1.5.x/greeter/src/main/resources/bootstrap.yml#L17-L23">`bootstrap.yml`</a> or `application.yml`. You might make this setting specific to a profile (such as the `dev` profile if you want Basic authentication disabled only for development):
 
 ```yml
 ---
-
 spring:
   profiles: dev
 
@@ -209,4 +204,51 @@ security:
     enabled: false
 ```
 
-For more information, see ["Security" in the Spring Boot Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
+For more information, see ["Security" in the Spring Boot 1.5 Reference Guide](https://docs.spring.io/spring-boot/docs/1.5.x/reference/htmlsingle/#boot-features-security).
+
+<p class='note'><strong>Note</strong>: Because of the Spring Security dependency, HTTPS Basic authentication will also be enabled for Spring Boot Actuator endpoints. If you wish to disable that as well, you must also set the <code>management.security.enabled</code> property to <code>false</code>. See <a href="https://docs.spring.io/spring-boot/docs/1.5.x/reference/htmlsingle/#production-ready-customizing-management-server-port">"Customizing the management server port" in the Spring Boot 1.5 Reference Guide</a>.</p>
+
+### Using Spring Boot 2.0
+
+If you are using Spring Boot 2.0, you can disable HTTP Basic authentication using a class that extends Spring Security's `WebSecurityConfigurerAdapter` and is annotated with the Spring `@Configuration` annotation. To do so, you must include the Spring Boot Security starter in your build file.
+
+Using Maven:
+
+```
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+Using Gradle:
+
+```
+compile("org.springframework.boot:spring-boot-starter-security")
+```
+
+The following class disables all default security for the `development` profile only, using the `@Profile` annotation:
+
+```java
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@Configuration
+@Profile("development")
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.authorizeRequests().anyRequest().permitAll()
+				.and()
+				.httpBasic().disable()
+				.csrf().disable();
+	}
+
+}
+```
+
+For more information, see ["Security" in the Spring Boot 2.0 Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
