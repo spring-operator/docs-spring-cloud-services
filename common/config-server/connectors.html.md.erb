@@ -68,7 +68,7 @@ vault:
 
 ### <a id="hashicorp-vault-property-source-redaction"></a>HashiCorp Vault Property Source Redaction
 
-In the Spring Boot Actuator `/env` endpoint, property names and values from a HashiCorp Vault property source are redacted for security. By default, the connector redacts properties whose names begin with `configService:vault:`, and they are displayed in the output of `/env` as shown in the following example:
+In the Spring Boot Actuator `env` endpoint, property names and values from a HashiCorp Vault property source are redacted for security. By default, the connector redacts properties whose names begin with `configService:vault:`, and they are displayed in the output of `env` as shown in the following example:
 
 ```
 "configService:vault:game": {
