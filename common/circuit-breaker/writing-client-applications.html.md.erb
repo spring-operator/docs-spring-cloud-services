@@ -54,7 +54,7 @@ If you wish, you may also annotate fallback methods themselves with ```@HystrixC
 
 ### <a id="use-a-circuit-breaker-with-a-feign-client"></a>Use a Circuit Breaker with a Feign Client
 
-If you want to use the [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/) support for Hystrix circuit breakers, you must set the `feign.hystrix.enabled` property to `true`. In the Feign version of the Agency app, this property is configured [in `application.yml`](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/resources/application.yml#L8-L10):
+If you want to use Feign with Hystrix circuit breakers, set the `feign.hystrix.enabled` property to `true`. In the Feign version of the Agency app, this property is configured [in `application.yml`](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/resources/application.yml#L8-L10):
 
 ```yml
 feign:
