@@ -54,68 +54,41 @@ If you wish, you may also annotate fallback methods themselves with ```@HystrixC
 
 ### <a id="use-a-circuit-breaker-with-a-feign-client"></a>Use a Circuit Breaker with a Feign Client
 
-You cannot apply `@HystrixCommand` directly to a [Feign](https://github.com/Netflix/feign)</a> client interface at this time. Instead, you can call Feign client methods from a service class that is autowired as a Spring bean (either through the <a href="http://docs.spring.io/autorepo/docs/spring-framework/current/javadoc-api/org/springframework/stereotype/Service.html"><code>@Service</code></a> or <a href="http://docs.spring.io/autorepo/docs/spring-framework/current/javadoc-api/org/springframework/stereotype/Component.html"><code>@Component</code></a> annotations or by being declared as a <code>@Bean</code> in a configuration class) and then annotate the service class methods with `@HystrixCommand`.
+If you want to use the [Spring Cloud OpenFeign](https://cloud.spring.io/spring-cloud-openfeign/) support for Hystrix circuit breakers, you must set the `feign.hystrix.enabled` property to `true`. In the Feign version of the Agency app, this property is configured [in `application.yml`](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/resources/application.yml#L8-L10):
 
-In the [Feign version of the Agency application](https://github.com/spring-cloud-services-samples/traveler/tree/1.5.x/feign-agency), the `AgencyApplication` class is [annotated with `@EnableFeignClients`](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/java/agency/AgencyApplication.java#L10-L17).
+```yml
+feign:
+  hystrix:
+    enabled: true
+```
+
+To provide a circuit breaker on a Feign client, you must specify a fallback class using a `fallback` attribute in the `@FeignClient` annotation on the client interface. Fallback methods must be Spring beans. In the Feign version of the Agency app, the [`CompanyClient` interface uses a `CompanyFallback` class](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/java/agency/CompanyClient.java#L9-L21), which is annotated with `@Component`:
 
 ```java
-//...
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+@FeignClient(name = "company", fallback = CompanyClient.CompanyFallback.class)
+public interface CompanyClient {
+  @RequestMapping(method = GET, value="/available")
+  String availableGuide();
 
+@Component
+  public static class CompanyFallback implements CompanyClient {
+    @Override
+    public String availableGuide() {
+      return "None available!";
+    }
+  }
+}
+```
+
+The `AgencyApplication` class is [annotated with `@EnableFeignClients`](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/java/agency/AgencyApplication.java#L10-L14):
+
+```java
 @SpringBootApplication
 @EnableDiscoveryClient
-@RestController
 @EnableCircuitBreaker
 @EnableFeignClients
 public class AgencyApplication {
-    // ...
+	//...
 ```
 
-The application has a Feign client called [`CompanyClient`](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/java/agency/CompanyClient.java).
-
-```java
-package agency;
-
-import org.springframework.stereotype.Component;
-import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-@FeignClient("https://company")
-interface CompanyClient {
-  @RequestMapping(value="/available", method = GET)
-  String availableGuide();
-}
-```
-
-The [`TravelAgent` class](https://github.com/spring-cloud-services-samples/traveler/blob/1.5.x/feign-agency/src/main/java/agency/TravelAgent.java) is annotated as a `@Service` class. The `CompanyClient` class is injected through autowiring, and the `getGuide()` method uses the `CompanyClient` to access the Company application. `@HystrixCommand` is applied to the service method:
-
-```java
-package agency;
-
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-
-@Service
-public class TravelAgent {
-
-    @Autowired
-    CompanyClient company;
-
-    @HystrixCommand(fallbackMethod = "getBackupGuide")
-    public String getGuide() {
-        return company.availableGuide();
-    }
-
-    String getBackupGuide() {
-        return "None available! Your backup guide is: Cookie";
-    }
-
-}
-```
-
-If the Company application becomes unavailable or if the Agency application cannot access it, calls to `getGuide()` will fail. When successive failures build up to the threshold, Hystrix will open the circuit, and subsequent calls will be redirected to the `getBackupGuide()` method until the Company application is accessible again and the circuit is closed.
-
+If the Company app becomes unavailable or if the Agency app cannot access it, calls to the Company app through the client's `availableGuide()`  method will fail. When successive failures build up to the threshold, Hystrix will open the circuit, and subsequent calls will be redirected to the fallback class's method until the Company app is accessible again and the circuit is closed.
