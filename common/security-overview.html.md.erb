@@ -123,7 +123,7 @@ This endpoint gets or modifies environment variables for the service instance's 
 
 *GET /dashboard/instance/{serviceInstanceId}/health*
 
-This endpoint returns the response of the ```/health``` endpoint on the backing application. The ```/health``` endpoint is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
+This endpoint returns the response of the ```/health``` endpoint on the backing application. While this dashboard endpoint requires an authenticated session to allow access, as all dashboard endpoints do, the underlying ```/health``` endpoint of the backing application is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information, or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
 
 <a id="sb-entry-point-caching-si-permission-check"></a>*Caching the Service Instance Permission Check*
 
