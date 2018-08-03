@@ -121,9 +121,9 @@ This endpoint returns service instance details such as service name, plan ID, or
 
 This endpoint gets or modifies environment variables for the service instance's backing app. Environment variables that can be viewed or modified with this endpoint must be whitelisted; this whitelisting can only be modified by the Operator or the developers of Spring Cloud Services. Each service type has its own whitelist, and the only service type with whitelisted environment variables is Config Server. The Config Server's whitelisted environment variables specify the repository type, the URI of the repository, and the username and password used to access the repository. Any POST to this endpoint will result in a restart of the backing app, regardless of whether any environment variables were actually modified.
 
-*GET /dashboard/instance/{serviceInstanceId}/actuator/health*
+*GET /dashboard/instance/{serviceInstanceId}/health*
 
-This endpoint returns the response of the ```/actuator/health``` endpoint on the backing app. This endpoint is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
+This endpoint returns the response of the ```/actuator/health``` endpoint on the backing app. While this dashboard endpoint requires an authenticated session to allow access, as all dashboard endpoints do, the underlying ```/actuator/health``` endpoint of the backing app is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information, or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
 
 <a id="sb-entry-point-caching-si-permission-check"></a>*Caching the Service Instance Permission Check*
 
