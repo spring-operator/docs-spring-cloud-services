@@ -167,14 +167,14 @@ If the Operator has configured the Spring Cloud Services tile to [secure service
 
 <dl>
 <dd><strong>Identity Zone</strong>: UAA</dd>
-<dd><strong>Grant Type</strong>: Authorization Code</dd>
+<dd><strong>Grant Type</strong>: Authorization Code, Client Credentials</dd>
 <dd><strong>Redirect URI</strong>: https://spring-cloud-broker.domain.com/dashboard/login</dd>
-<dd><strong>Scopes</strong>: <code>cloud_controller.read</code>, <code>cloud_controller.write</code>, <code>cloud_controller_service_permissions.read</code>, <code>openid</code></dd>
-<dd><strong>Authorities</strong>: <code>uaa.resource</code></dd>
+<dd><strong>Scopes</strong>: <code>cloud_controller.read</code>, <code>cloud_controller.admin</code>, <code>cloud_controller_service_permissions.read</code>, <code>openid</code></dd>
+<dd><strong>Authorities</strong>: <code>uaa.resource</code>, <code>credhub.read</code>, <code>credhub.write</code></dd>
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
-This client is used for SSO with UAA. The scopes allow the SB to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the SB to access the token verification endpoints on UAA. The client ID and client secret are made available to the SB via environment variables, which are set at installation time and are stored in encrypted form in the CC DB.
+This client is used for SSO with UAA. The scopes allow the SB to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the SB to access the token verification endpoints on UAA. The ```credhub.read``` and ```credhub.write``` authorities are only granted if the operator has configured the Spring Cloud Services tile to [secure service instance credentials](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html) using CredHub, and allow the SB to store service binding credentials in CredHub securely. The SB's own OAuth2 client credentials are also stored in and retrieved from CredHub in this configuration. If the secure service instance credentials feature is not enabled, the SB's client ID and client secret are instead made available to the SB via environment variables, which are set at installation time and are stored in encrypted form in the CC DB.
 
 ### <a id="spring-cloud-broker-worker"></a>Spring Cloud Service Broker Worker
 
@@ -206,7 +206,7 @@ The Worker uses a Pivotal RabbitMQ service instance to receive messages from the
 
 **The Cloud Controller**
 
-The Worker communicates to the CC via HTTPS to carry out management tasks for service instance backing apps. All backing apps reside in the "p-spring-cloud-services" org, "instances" space. The Worker uses its own [user credentials](#worker-user-p-spring-cloud-services) to obtain a token for accessing the CC API and acts as a Space Developer in the "instances" space.
+The Worker communicates to the CC via HTTPS to carry out management tasks for service instance backing apps. All backing apps reside in the "p-spring-cloud-services" org, "instances" space. The Worker uses its own [client credentials](#worker-oauth-client-uaa) to obtain a token for accessing the CC API.
 
 The URI to the CC is set at installation time in the Worker's environment variables, under the name ```CF_TARGET```, which is set at installation time and can only be modified by the Operator.
 
@@ -232,14 +232,14 @@ After CredHub generates the credential and passes it to the Worker, the Worker d
 
 #### OAuth Clients
 
-**p-spring-cloud-services-worker**
+<a id="worker-oauth-client-uaa"></a>**p-spring-cloud-services-worker**
 
 <dl>
 <dd><strong>Identity Zone</strong>: UAA</dd>
 <dd><strong>Grant Type</strong>: Client Credentials</dd>
 <dd><strong>Redirect URI</strong>: https://spring-cloud-broker.domain.com/dashboard/login</dd>
-<dd><strong>Scopes</strong>: <code>cloud_controller.read</code>, <code>cloud_controller_service_permissions.read</code>, <code>openid</code></dd>
-<dd><strong>Authorities</strong>: <code>clients.write</code></dd>
+<dd><strong>Scopes</strong>: <code>cloud_controller.read</code>, <code>cloud_controller.admin</code>, <code>cloud_controller_service_permissions.read</code>, <code>openid</code></dd>
+<dd><strong>Authorities</strong>: <code>cloud_controller.read</code>, <code>cloud_controller.admin</code>, <code>cloud_controller_service_permissions.read</code>, <code>clients.read</code>, <code>clients.write</code>, <code>credhub.read</code>, <code>credhub.write</code></dd>
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
@@ -247,7 +247,7 @@ This client is used to create and delete SSO clients for each Service Registry a
 
 While arbitrary clients cannot be created via this client, this client is able to delete any client in the UAA Identity Zone due to the ```clients.write``` authority.
 
-The client ID and client secret are made available to the SB via environment variables, which are set at installation time and are stored in encrypted form in the CC DB. The credentials are only visible to the Operator.
+The ```credhub.read``` and ```credhub.write``` authorities are only granted if the operator has configured the Spring Cloud Services tile to [secure service instance credentials](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html) using CredHub, and allow the Worker to store service backing app credentials in CredHub securely. The Worker's own OAuth2 client credentials are also stored in and retrieved from CredHub in this configuration. If the secure service instance credentials feature is not enabled, the Worker's client ID and client secret are instead made available to the Worker via environment variables, which are set at installation time and are stored in encrypted form in the CC DB. The credentials are only visible to the Operator.
 
 <a id="worker-oauth-client-scs"></a>**p-spring-cloud-services-worker**
 
@@ -261,12 +261,6 @@ The client ID and client secret are made available to the SB via environment var
 This client is used to create and delete clients in the Spring Cloud Services Identity Zone for each Config Server and Service Registry service instance. The grant type is Client Credentials, which allows the Worker to act on its own. The ```uaa.admin``` authority allows the Worker to create and delete clients in the Spring Cloud Services Identity Zone without any limitations, unlike the corresponding client in the UAA Identity Zone. However, these privileges do not extend into the UAA Identity Zone.
 
 The client ID and client secret are the same as the corresponding client in the UAA Identity Zone.
-
-#### Users
-
-<a id="worker-user-p-spring-cloud-services"></a>**p-spring-cloud-services**
-
-This user is a Space Developer in the "p-spring-cloud-services" org, "instances" space. The user has no other roles. The username and password are made available to the Worker via environment variables, which are set at installation time and are stored in encrypted form in the CC DB. The credentials are only visible to the Operator.
 
 ### <a id="config-server-service-instances"></a>Config Server Service Instances
 
