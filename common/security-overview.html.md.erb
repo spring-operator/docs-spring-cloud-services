@@ -117,9 +117,9 @@ The service instance ID used in the permission check is the first GUID that is p
 
 This endpoint returns service instance details such as service name, plan ID, org, and space, as well as credentials that need to be propagated to apps bound to this service instance. Because the service instance permission check is performed, this endpoint is only accessible to Space Developers who can bind apps to this service instance. Once an app is bound to this service instance, a Space Developer can see the same credentials returned by this endpoint in the bound app's binding credentials (for example via Pivotal Cloud Foundry Applications Manager.)
 
-<a id="sb-entry-point-dashboard-env"></a>*GET|POST /dashboard/instance/{serviceInstanceId}/env*
+<a id="sb-entry-point-dashboard-parameters"></a>*GET /dashboard/instance/{serviceInstanceId}/parameters*
 
-This endpoint gets or modifies environment variables for the service instance's backing app. Environment variables that can be viewed or modified with this endpoint must be whitelisted; this whitelisting can only be modified by the Operator or the developers of Spring Cloud Services. Each service type has its own whitelist, and the only service type with whitelisted environment variables is Config Server. The Config Server's whitelisted environment variables specify the repository type, the URI of the repository, and the username and password used to access the repository. Any POST to this endpoint will result in a restart of the backing app, regardless of whether any environment variables were actually modified.
+This endpoint returns configuration parameters for the service instance with the given ID. The returned response is used to populate the service instance configuration page of the dashboard.
 
 *GET /dashboard/instance/{serviceInstanceId}/health*
 
@@ -127,7 +127,7 @@ This endpoint returns the response of the ```/actuator/health``` endpoint on the
 
 <a id="sb-entry-point-caching-si-permission-check"></a>*Caching the Service Instance Permission Check*
 
-The service instance permission check is cached in session (if available). The cache is used only during GET, HEAD, and OPTIONS requests, with the exception of the ```/instances/{service_instance_guid}/env``` endpoint. Any request for this endpoint does not use the cache, because this endpoint exposes app environment variables---and, in the case of Config Server, the username and password used to access the Config Server's backing repository.
+The service instance permission check is cached in session (if available). The cache is used only during GET, HEAD, and OPTIONS requests, with the exception of the ```/instance/{service_instance_guid}/parameters``` endpoint. Any request for this endpoint does not use the cache, because this endpoint exposes app environment variables---and, in the case of Config Server, the username and password used to access the Config Server's backing repository.
 
 Caching the permission check in this manner avoids the load and extra round trip to the CC for doing the permission check, while still checking permissions before performing any critical operation.
 
@@ -214,7 +214,7 @@ The Worker listens for messages posted to the Pivotal RabbitMQ service instance.
 
 **Pivotal RabbitMQ**
 
-The Worker uses a Pivotal RabbitMQ service instance to receive messages from the SB. The messages received originate from the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html), as well as from the ```/dashboard/instance/{serviceInstanceId}/env``` endpoint. The credentials for accessing the Pivotal RabbitMQ service instance are provided through the Worker's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
+The Worker uses a Pivotal RabbitMQ service instance to receive messages from the SB. The messages received originate from the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html), as well as from the ```/dashboard/instance/{serviceInstanceId}/parameters``` endpoint. The credentials for accessing the Pivotal RabbitMQ service instance are provided through the Worker's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
 
 **The Cloud Controller**
 
@@ -412,7 +412,7 @@ Other than checking for the claims mentioned in the previous section, no other a
 
 **Git repository**
 
-The actual configurations are stored in a Git repository and retrieval of these configurations by the Config Server is subject to the Git repository's security requirements. The URI and the username and password (if applicable) are set by the Space Developer that configures the service instance. The UI gets and sets these credentials through the Service Broker's [```/dashboard/instances/{guid}/env```](#sb-entry-point-dashboard-env) endpoint, so that the credentials are made available to the Config Server via environment variables (and hence stored encrypted in the CC DB).
+The actual configurations are stored in a Git repository and retrieval of these configurations by the Config Server is subject to the Git repository's security requirements. The URI and the username and password (if applicable) are set by the Space Developer that configures the service instance. The UI gets these credentials through the Service Broker's [```/dashboard/instances/{guid}/parameters```](#sb-entry-point-dashboard-parameters) endpoint, and they can be updated via the Service Broker API. This results in the credentials being made available to the Config Server via environment variables (and hence stored encrypted in the CC DB).
 
 **UAA**
 
