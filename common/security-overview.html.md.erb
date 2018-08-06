@@ -131,6 +131,18 @@ The service instance permission check is cached in session (if available). The c
 
 Caching the permission check in this manner avoids the load and extra round trip to the CC for doing the permission check, while still checking permissions before performing any critical operation.
 
+<a id="sb-entry-point-cli-plugin"></a>**Spring Cloud Services CLI Plugin Endpoints**
+
+The Service Broker has dedicated endpoints to support features of the [Spring Cloud Services CF CLI plugin](https://github.com/pivotal-cf/spring-cloud-services-cli-plugin), which operate on individual service instances. All CLI endpoints require OAuth2 authentication with management permission on the target service instance.
+
+*GET /cli/instances/{instanceId}*
+
+This endpoint returns a JSON object containing detailed information on the backing apps for the service instance with the given ID. The cf plugin extracts information from this JSON response to render the ```cf spring-cloud-service-view``` output.
+
+*PUT /cli/instances/{instanceId}/command*
+
+This endpoint accepts PUT requests containing the service instance ID plus an identifier for the operation to be carried out on the service instance (stop, start, restart, restage)
+
 <a id="sb-entry-point-actuator-endpoints"></a>**Actuator Endpoints**
 
 [Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and an authenticated session. The token is obtained from UAA via the OAuth 2 Authorization Code flow as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#oauth2-flow); the token is then used to make a request to the [CC ```/v2/apps/:guid/env``` endpoint](https://apidocs.cloudfoundry.org/219/apps/get_the_env_for_an_app.html), which can only be accessed by Space Developers in the space that hosts the SB. The GUID used in the request is extracted from the ```VCAP_APPLICATION``` environment variable, whose value is given by the CC. The only user that can access these endpoints is the Operator.
