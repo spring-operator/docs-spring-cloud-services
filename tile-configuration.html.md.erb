@@ -89,6 +89,6 @@ The Spring Cloud Services tile includes four lifecycle errands. You can view the
 
 Spring Cloud Services includes three post-deploy errands and one pre-delete errand. In PCF 2.1 and earlier, these errands can be individually set to run conditionally (**When Changed**), to always run (**On**), or to never run (**Off**). In PCF 2.2 and later, they can be set to always run (**On**) or to never run (**Off**).
 
-<p class='note'><strong>Important</strong>: To ensure that your PCF installation receives important updates to the tile, Pivotal recommends that all Spring Cloud Services lifecycle errands be set to <strong>On</strong>.</p>
+<p class='note'><strong>Important</strong>: To ensure that your PCF foundation receives important updates to the tile, Pivotal recommends that all Spring Cloud Services lifecycle errands be set to <strong>On</strong>.</p>
 
 In the post-deploy errands, **Broker Deployer** pushes the Spring Cloud Services service broker and worker apps to PCF. **Broker Registrar** registers the service broker with the Cloud Controller and makes its service plans available to all orgs. **Smoke Tests** runs several tests to ensure service availability and correct configuration. The pre-delete errand, **Broker Deregistrar**, deletes all orgs and spaces specific to Spring Cloud Services and deregisters the broker from the Cloud Controller.

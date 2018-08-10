@@ -24,7 +24,7 @@ If the broker fails to provision a service instance and the logs for the `spring
 java.util.concurrent.TimeoutException: Execution took longer than 180000 MILLISECONDS
 ```
 
-This is due to a problem encountered during app deployments to your PCF deployment. Verify that you can deploy apps without issues to your PCF deployment (see ["Starting or staging an application results in an InsufficientResources error"](https://community.pivotal.io/s/article/Starting-or-Staging-an-Application-Results-in-an-Insufficient-Resources-Error) in the PCF Knowledge Base).
+This is due to a problem encountered during app deployments to your PCF foundation. Verify that you can deploy apps without issues to your PCF foundation (see ["Starting or staging an application results in an InsufficientResources error"](https://community.pivotal.io/s/article/Starting-or-Staging-an-Application-Results-in-an-Insufficient-Resources-Error) in the PCF Knowledge Base).
 
 ## <a id="service-registry-authentication-failed"></a>Service Registry: "Authentication Failed: Could not obtain access token"
 
@@ -38,7 +38,7 @@ with the following text:
 
 > Authentication Failed: Could not obtain access token
 
-If your PCF deployment is using a self-signed certificate, ensure that it includes all of the domains listed in [Requirements](./common/index.html#requirements). If you update the certificate, you will need to either restart the service instance's backing app(s) or recreate the service instance. Otherwise you may continue to see this message and be unable to access the Service Registry dashboard.
+If your PCF foundation is using a self-signed certificate, ensure that it includes all of the domains listed in [Requirements](./common/index.html#requirements). If you update the certificate, you will need to either restart the service instance's backing app(s) or recreate the service instance. Otherwise you may continue to see this message and be unable to access the Service Registry dashboard.
 
 ## <a id="no-san-matching"></a>"No subject alternative DNS name matching p-spring-cloud-services.uaa.example.com found"
 
@@ -91,7 +91,7 @@ $ cf bind-service spring-cloud-broker-worker spring-cloud-broker-rmq
 $ cf restage spring-cloud-broker-worker
 </pre>
 
-If the PCF environment is newly restored and the RabbitMQ service instance's queues are empty, you may also unbind the RabbitMQ service instance from the broker apps, delete it, create a new instance, and then bind that instance to the Spring Cloud Services broker apps.
+If the PCF foundation is newly restored and the RabbitMQ service instance's queues are empty, you may also unbind the RabbitMQ service instance from the broker apps, delete it, create a new instance, and then bind that instance to the Spring Cloud Services broker apps.
 
 <p class="note warning"><strong>WARNING: </strong> Deleting and replacing the RabbitMQ service instance will destroy the original instance's virtual host and any data in the instance's queues. If the RabbitMQ service instance contains messages and is on a production system, unbind and rebind it instead.</p>
 

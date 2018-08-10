@@ -53,7 +53,7 @@ All components in SCS force HTTPS for all inbound requests. Because SSL terminat
 
 All outbound HTTP requests made by SCS components are also made over HTTPS. These requests nearly always contain credentials, and are made to other components within the Cloud Foundry environment. In an environment that uses self-signed certificates in the HA proxy configuration, outbound HTTPS requests to other components would fail because the self-signed certificate would not be trusted by the JVM's default truststore (for example ```cacerts```). To get around this, all components use the [cloudfoundry-certificate-truster](http://central.maven.org/maven2/io/pivotal/spring/cloud/cloudfoundry-certificate-truster/1.0.1.RELEASE/) to add the CF environment's SSL certificate to the JVM's truststore on app startup.
 
-The SSL certificate used by the CF environment must also include Subject Alternative Names (SANs) for domain wildcards ```*.login.domain.com``` and ```*.uaa.domain.com```. This is needed for the correct operation [of Multi-tenant UAA](http://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html), which relies on subdomains of UAA.
+The SSL certificate used by the CF environment must also include Subject Alternative Names (SANs) for domain wildcards ```*.login.domain.com``` and ```*.uaa.domain.com``` (see [Requirements](./index.html#requirements)). This is needed for the correct operation [of Multi-tenant UAA](http://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html), which relies on subdomains of UAA.
 
 ## <a id="multi-tenant-uaa"></a>A Note on Multi-Tenant UAA
 
@@ -79,7 +79,7 @@ Before continuing, you should familiarize yourself with the following diagram, w
 
 ### <a id="installation-file"></a>The Installation File
 
-The installation file is the ```.pivotal``` file that contains the Spring Cloud Services product.
+The installation file (sometimes referred to as "the Spring Cloud Services tile") is the ```.pivotal``` file that contains the Spring Cloud Services product. It is available from [Pivotal Network](https://network.pivotal.io/products/p-spring-cloud-services).
 
 The installation file is generated from source code repositories hosted on ```github.com```. The repositories are can only be accessed by authorized persons and cannot be accessed over a non-encrypted channel. No credentials are stored in any source repository used by Spring Cloud Services.
 
@@ -306,7 +306,7 @@ The GUID in the ```aud``` and ```scope``` values must match the ```SERVICE_INSTA
 
 *GET /health*
 
-This is used by the Dashboard UI for checking if the Config Server is configured properly. Requests sent to this endpoint using an OAuth 2 Bearer token receive a JSON object response containing health details for each configuration source. The following example shows a typical response from an authenticated request to a health endpoint; in this example, the Config Server is using a Git confoguration source:
+This is used by the Dashboard UI for checking if the Config Server is configured properly. Requests sent to this endpoint using an OAuth 2 Bearer token receive a JSON object response containing health details for each configuration source. The following example shows a typical response from an authenticated request to a health endpoint; in this example, the Config Server is using a Git configuration source:
 
 ```json
 {
@@ -462,11 +462,11 @@ For an incoming request to be identified as coming from a Node, the request must
 
 **Peer**
 
-When a Service Registry is configured for [peer replication](http://docs.pivotal.io/spring-cloud-services/service-registry/creating-an-instance.html#peer-replication-across-pcf-deployments) with other service instances, the Peer role represents one of the Eureka servers of a configured peer service instance.
+When a Service Registry is configured for [peer replication](http://docs.pivotal.io/spring-cloud-services/service-registry/enabling-peer-replication.html) with other service instances, the Peer role represents one of the Eureka servers of a configured peer service instance.
 
 For an incoming request to be identified as coming from a Peer, the request must contain a token with the following claims:
 
-* ```iss```: must be the issuer as reported by the peer's ```/info``` endpoint
+* ```iss```: must be the issuer as reported by the peer's ```/actuator/info``` endpoint
 * ```sub```: must be the hostname portion of the configured peer's FQDN
 * ```scope```: must equal ```p-service-registry-[peer-guid].read```, ```p-service-registry-[peer-guid].write```, where ```[peer-guid]``` is the GUID contained in the peer's hostname
 
@@ -484,7 +484,7 @@ For an incoming request to be identified as coming from a Bound Application, the
 
 **Eureka REST endpoints**
 
-*GET /info*
+*GET /actuator/info*
 
 This endpoint returns basic information about the server's configuration as part of the handshake process before a Peer can replicate state with the service instance. Authentication is not required to access this endpoint. The endpoint returns the URIs of the service instance's configured peers, the URI of the service instance's token issuer, the service instance's node count, and the service instance's version.
 
@@ -506,23 +506,23 @@ The Eureka server enforces ownership of Instance Records to prevent binding cred
 
 <a id="service-registry-application-name-ownership"></a>*Application Name Ownership*
 
-The Eureka server enforces the ownership of Eureka Application Names within a cluster. For a given Eureka cluster, possibly comprised of peers spanning multiple PCF installations, only one service instance in a PCF installation may register instances with a particular Eureka Application Name. This is enforced to ensure that CF Applications in other spaces cannot register and draw traffic away from a given app, as a form of [man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack). However, a service instance in a different PCF installation can still register the same Eureka Application Name. This is allowed so that CF Applications in other PCF installations can be used for failover, in case all instances with a given Eureka Application Name in a particular PCF are down. 
+The Eureka server enforces the ownership of Eureka Application Names within a cluster. For a given Eureka cluster, possibly comprised of peers spanning multiple PCF foundations, only one service instance in a PCF foundation may register instances with a particular Eureka Application Name. This is enforced to ensure that CF Applications in other spaces cannot register and draw traffic away from a given app, as a form of [man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack). However, a service instance in a different PCF foundation can still register the same Eureka Application Name. This is allowed so that CF Applications in other PCF foundations can be used for failover, in case all instances with a given Eureka Application Name in a particular PCF are down. 
 
-To enforce Eureka Application Name ownership, the URI of the Eureka server that registers the Instance Record is recorded under the metadata key ```registrar_uri```. A portion of this URI is used to identity the PCF installation that hosts the Eureka server. When a CF Application registers with the server by submitting an Instance Record, all other Instance Records with the same Eureka Application Name are inspected. If an Instance Record already exists in the same PCF installation as the server receiving the registration request, and this Instance Record's ```registrar_uri``` does not match the server's, the registration request is rejected.
+To enforce Eureka Application Name ownership, the URI of the Eureka server that registers the Instance Record is recorded under the metadata key ```registrar_uri```. A portion of this URI is used to identity the PCF foundation that hosts the Eureka server. When a CF Application registers with the server by submitting an Instance Record, all other Instance Records with the same Eureka Application Name are inspected. If an Instance Record already exists in the same PCF foundation as the server receiving the registration request, and this Instance Record's ```registrar_uri``` does not match the server's, the registration request is rejected.
 
 The ownership of Eureka Application Names by a service instance parallels the ownership of routes by a space in CF. However, Eureka Application Names cannot be reserved by a service instance at this time, in contrast to the creation of a route in a space, where the route is not yet bound to a CF Application. If one service instance were to register Instance Records with a particular Eureka Application Name and then all such Instance Records became de-registered (through either planned or unplanned outages), another CF Application in a different space could register with that same Eureka Application Name by binding with a peer service instance. This would prevent the original CF Application(s) from registering again when they came back online.
 
 *Eureka Application Name Ownership Example*
 
-PCF West is a PCF installation with Service Registry service instances in different orgs. These service instances are configured for peer replication with one another. One space hosts a CF Application ```accounting``` and the other hosts a CF Application ```inventory```. They both register with Eureka Application Names ```accounting``` and ```inventory``` as underlined, respectively.
+PCF West is a PCF foundation with Service Registry service instances in different orgs. These service instances are configured for peer replication with one another. One space hosts a CF Application ```accounting``` and the other hosts a CF Application ```inventory```. They both register with Eureka Application Names ```accounting``` and ```inventory``` as underlined, respectively.
 
 <%= image_tag("app-id-ownership-before.png") %>
 
-Later on, the ```accounting-west/production``` space wants to deploy ```accounting``` using a Blue/Green deployment strategy. The ```accounting``` CF Application is renamed ```accounting-blue```, but its Eureka Application Name stays the same. Then ```accounting-green``` is pushed, bound to the Service Registry service instance, and started. On startup it successully registers with the Eureka Application Name ```accounting```. This is allowed because there are no other service instances in this cluster, in PCF West, that have registered the Eureka Application Name ```accounting```.
+Later on, the ```accounting-west/production``` space wants to deploy ```accounting``` using a Blue/Green deployment strategy. The ```accounting``` CF Application is renamed ```accounting-blue```, but its Eureka Application Name stays the same. Then ```accounting-green``` is pushed, bound to the Service Registry service instance, and started. On startup it successfully registers with the Eureka Application Name ```accounting```. This is allowed because there are no other service instances in this cluster, in PCF West, that have registered the Eureka Application Name ```accounting```.
 
 <%= image_tag("app-id-ownership-after.png") %>
 
-A space developer with access to the ```inventory-west/production``` space wishes to deploy a CF Application ```accounting-red``` in that space and register it with the Eureka Application Name ```accounting```. When ```accounting-red``` starts up, it tries to register but its registration requests are rejected. This is because the Eureka Application Name ```accounting``` has already been registered with another service instance in the cluster, in the same PCF installation. 
+A space developer with access to the ```inventory-west/production``` space wishes to deploy a CF Application ```accounting-red``` in that space and register it with the Eureka Application Name ```accounting```. When ```accounting-red``` starts up, it tries to register but its registration requests are rejected. This is because the Eureka Application Name ```accounting``` has already been registered with another service instance in the cluster, in the same PCF foundation. 
 
 PCF East comes online, and provides failover for ```accounting``` and ```inventory``` apps. This is allowed because there are no other service instances in this cluster, in PCF East, that have registered the Eureka Application Names ```accounting``` or ```inventory```.
 
@@ -567,7 +567,7 @@ The SB communicates to the CC via HTTPS to perform permission checks using the c
 <dd><strong>Identity Zone</strong>: UAA</dd>
 <dd><strong>Grant Type</strong>: Authorization Code</dd>
 <dd><strong>Redirect URI</strong>: https://eureka-{guid}.domain.com/dashboard/login</dd>
-<dd><strong>Scopes</strong>: <code>openid</code>, <code>cloud_controller.read</code>, <code>cloud_controller_service_permissions.read</code></dd>
+<dd><strong>Scopes</strong>: <code>openid</code>, <code>cloud_controller.admin</code>, <code>cloud_controller.read</code>, <code>cloud_controller_service_permissions.read</code></dd>
 <dd><strong>Authorities</strong>: <code>uaa.resource</code></dd>
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
@@ -590,7 +590,7 @@ The ```uaa.resource``` authority allows the Eureka app to access the token verif
 
 #### <a id="app-hystrix"></a>Hystrix
 
-The Hystrix app is one of two backing apps for a Circuit Breaker Dashboard service instance. This app is derived from the [Netflix Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
+The Hystrix app is one of two backing apps for a Circuit Breaker Dashboard service instance. This app is derived from the Netflix Hystrix Dashboard.
 
 #### Deployment Details
 
@@ -616,11 +616,11 @@ Actuator endpoints require the same [Actuator SSO](#sb-entry-point-actuator-endp
 
 The Hystrix Dashboard UI uses an EventSource in the browser to listen to [Server Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) emitted by the Turbine app. Because the Turbine app's origin differs from the Hystrix app, and EventSources do not support CORS, the Hystrix app must handle the EventSource request and proxy this request to the Turbine app.
 
-The Turbine app must authenticate this request, so the Hystrix app includes the token in the proxy request. The proxy request is handled on Hystrix via the endpoint ```/proxy.stream?origin=[turbine url]```. This endpoint on open-source Hystrix can be used as an open proxy, so to protect the token from being leaked, the Turbine URL in the origin query parameter must match the ```TURBINE_URL``` environment variable of the Hystrix app. This variable is set at provision time, always begins with ```https://```, and can only be modified by the Operator.
+The Turbine app must authenticate this request, so the Hystrix app includes the token in the proxy request. The proxy request is handled on Hystrix via the endpoint `/proxy.stream?origin=[turbine url]`. This endpoint on open-source Hystrix can be used as an open proxy. The Turbine and Hystrix app hostnames are constructed using the same service instance ID, so to protect the token from being leaked, the Turbine hostname in the origin query parameter must match the Hystrix hostname, substituting `turbine` for `hystrix`.
 
 **UAA**
 
-The Hystrix app accesses the ```/token_key``` endpoint on UAA to retrieve the token verification key. This key material is used to verify the JWT signature of the token in order to authenticate the request.
+The Hystrix app accesses the ```/token_keys``` endpoint on UAA to retrieve the token verification key. This key material is used to verify the JWT signature of the token in order to authenticate the request.
 
 **The Cloud Controller**
 
@@ -634,7 +634,6 @@ The Hystrix app communicates to the CC via HTTPS to perform permission checks us
 <dd><strong>Identity Zone</strong>: UAA</dd>
 <dd><strong>Grant Type</strong>: Authorization Code</dd>
 <dd><strong>Scopes</strong>: <code>openid</code>, <code>cloud_controller.read</code>, <code>cloud_controller_service_permissions.read</code></dd>
-<dd><strong>Authorities</strong>: <code>uaa.resource</code></dd>
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 

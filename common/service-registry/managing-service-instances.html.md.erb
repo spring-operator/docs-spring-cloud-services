@@ -25,7 +25,7 @@ General parameters used to configure the Service Registry are listed below.
 |----------------------|--------------------------------------------------------------------------------------------|----------------------------------|
 | <code>count</code>   | The number of nodes to provision: 1 by default, more for running in high-availability mode | <code>'{"count": 3}'</code>      |
 
-A Service Registry service instance can also be configured to replicate its registry with peer Service Registry service instances in other PCF deployments, orgs, or spaces. For more information on the configuration parameters used to enable peer replication, see [Enabling Peer Replication](./enabling-peer-replication.html).
+A Service Registry service instance can also be configured to replicate its registry with peer Service Registry service instances in other PCF foundations, orgs, or spaces. For more information on the configuration parameters used to enable peer replication, see [Enabling Peer Replication](./enabling-peer-replication.html).
 
 To create an instance with the default of a single node, run:
 
@@ -68,7 +68,7 @@ General parameters accepted for the Service Registry are listed below.
 | <code>upgrade</code>    | Whether to upgrade the instance                                                                                                                        | <code>'{"upgrade": true}'</code> |
 | <code>force</code>      | When `upgrade` is set to `true`, whether to force an upgrade of the instance, even if the instance is already at the latest available service version  | <code>'{"force": true}'</code>   |
 
-A Service Registry service instance can also be configured to replicate its registry with peer Service Registry service instances in other PCF deployments, orgs, or spaces. For more information on the configuration parameters used to enable peer replication, see [Enabling Peer Replication](./enabling-peer-replication.html).
+A Service Registry service instance can also be configured to replicate its registry with peer Service Registry service instances in other PCF foundations, orgs, or spaces. For more information on the configuration parameters used to enable peer replication, see [Enabling Peer Replication](./enabling-peer-replication.html).
 
 To update a service instance and set the count of nodes for running in high-availability mode, run:
 
