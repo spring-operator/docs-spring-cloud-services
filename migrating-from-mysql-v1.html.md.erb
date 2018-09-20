@@ -17,4 +17,8 @@ In the `system` org and `p-spring-cloud-services` space, the Spring Cloud Servic
 
 1. Following the instructions in [Migrating Data from MySQL for PCF v1 to v2](http://docs.pivotal.io/p-mysql/2-3/migrate-to-v2.html), migrate the Spring Cloud Services broker's data to a MySQL for PCF v2 service instance. Pivotal recommends using a small plan (such as the provided `db-small` plan) to create a MySQL for PCF v2 service instance for use by the Spring Cloud Services service broker.
 
-1. Use the [Service Instances dashboard](./service-instances.html#service-instances-dashboard) to verify that the migration succeeded. The Spring Cloud Services service broker will now use MySQL for PCF v2 to store service instance information.
+1. Use the [Service Instances dashboard](./service-instances.html#service-instances-dashboard) to verify that the migration succeeded.
+
+1. In the Spring Cloud Services [tile configuration](./tile-configuration.html), update the settings for the service broker's backing MySQL service (see [Configure Service Broker Dependent Services](./tile-configuration.html#configure-service-broker-dependent-services)), using MySQL for PCF v2 values. Apply your changes.
+
+The Spring Cloud Services service broker will now use MySQL for PCF v2 to store service instance information.
