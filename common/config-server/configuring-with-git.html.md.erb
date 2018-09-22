@@ -207,10 +207,10 @@ spring:
 
 Passwords are masked in the Config Server dashboard.
 
-To configure a Config Server service instance with a default repository and a repository specific to an app named "cook", use the following command:
+To configure a Config Server service instance with a default repository that uses a `refreshRate` of 30 seconds and a repository specific to an app named "cook", use the following command:
 
 ```
-cf create-service p-config-server standard config-server -c '{"git": { "uri": "https://github.com/spring-cloud-services-samples/fortune-teller", "searchPaths": "configuration", "repos": { "cookie": { "pattern": "cook", "uri": "https://github.com/spring-cloud-services-samples/cook-config" } } } }'
+cf create-service p-config-server standard config-server -c '{"git": { "uri": "https://github.com/spring-cloud-services-samples/fortune-teller", "refreshRate": 30, "searchPaths": "configuration", "repos": { "cookie": { "pattern": "cook", "uri": "https://github.com/spring-cloud-services-samples/cook-config" } } } }'
 ```
 
 To configure a Config Server service instance with a default repository and a repository specific to apps using the `dev` profile, use the following command:
