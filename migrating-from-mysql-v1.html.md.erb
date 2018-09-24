@@ -19,6 +19,12 @@ In the `system` org and `p-spring-cloud-services` space, the Spring Cloud Servic
 
 1. Use the [Service Instances dashboard](./service-instances.html#service-instances-dashboard) to verify that the migration succeeded.
 
-1. In the Spring Cloud Services [tile configuration](./tile-configuration.html), update the settings for the service broker's backing MySQL service (see [Configure Service Broker Dependent Services](./tile-configuration.html#configure-service-broker-dependent-services)), using MySQL for PCF v2 values. Apply your changes.
+1. In the Spring Cloud Services [tile configuration](./tile-configuration.html), update the settings for the service broker's backing MySQL service (see [Configure Service Broker Dependent Services](./tile-configuration.html#configure-service-broker-dependent-services)), using MySQL for PCF v2 values.
+
+1. Return to the Installation Dashboard.
+
+1. If you are using Ops Manager v2.3 or later, click **Review Pending Changes**. For more information about this Ops Manager page, see [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).
+
+1. Click **Apply Changes**.
 
 The Spring Cloud Services service broker will now use MySQL for PCF v2 to store service instance information.
