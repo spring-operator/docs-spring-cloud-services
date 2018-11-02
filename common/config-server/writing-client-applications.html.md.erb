@@ -331,9 +331,26 @@ The `CookController` has a [`dessertMenu()` method](https://github.com/spring-cl
 
 ## <a id="use-a-hashicorp-vault-server"></a>Use a HashiCorp Vault Server
 
-You can configure the Config Server to use a HashiCorp Vault server as a configuration source, as described in [Configuring with Vault](./configuring-with-vault.html). To consume configuration from the Vault server via the service instance, your client app must be given a Vault token. You can give the token to an app by setting the `SPRING_CLOUD_CONFIG_TOKEN` environment variable on the app. The Spring Cloud Services Connectors for Config Server will automatically renew the app's token for as long as the app is running.
+You can configure the Config Server to use a HashiCorp Vault server as a configuration source, as described in [Configuring with Vault](./configuring-with-vault.html). To consume configuration from the Vault server via the service instance, your client app must enable Spring's scheduled task execution support and be given a Vault token. The Spring Cloud Services Connectors for Config Server will automatically renew the app's token for as long as the app is running.
 
 <p class='note'><strong>Important</strong>: If the app is entirely stopped (i.e., no instances continue to run) and its Vault token expires, you will need to create a new token for the app and re-set the <code>SPRING_CLOUD_CONFIG_TOKEN</code> environment variable.</p>
+
+To enable Spring scheduled task support, add the Spring `@EnableScheduling` annotation to a configuration class in your app:
+
+```java
+package cook;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@EnableScheduling
+@SpringBootApplication
+public class CookApplication {
+
+	public static void main(String[] args) {
+	//...
+```
 
 To generate a token for use in the app, you can run the `vault token-create` command, providing a Time To Live (TTL) that is long enough for the app to be restaged after you have set the environment variable. The following command creates a token with a TTL of one hour:
 
