@@ -11,7 +11,14 @@ To find the dashboard, navigate in <%=vars.scs_platform_name%> Apps Manager to t
 
 If you are using version 6.8.0 or later of the Cloud Foundry Command Line Interface (cf CLI), you can also use `cf service SERVICE_NAME`, where `SERVICE_NAME` is the name of the Circuit Breaker Dashboard service instance:
 
-<%= partial vars.scs_cbd_creating_instance_service %>
+<pre class="terminal">
+$ cf service circuit-breaker-dashboard
+
+Service instance: circuit-breaker-dashboard
+Service: p-circuit-breaker-dashboard
+[...]
+Dashboard: https://spring-cloud-broker.apps.wise.com/dashboard/p-circuit-breaker-dashboard/97869d78-5d4e-410b-9c71-bb622ca49f7d
+</pre>
 
 Visit the URL given for "Dashboard".
 

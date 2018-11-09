@@ -295,9 +295,6 @@ After making the key available to the app and installing the JCE policy files in
 
 <pre class="terminal">
 $ cf set-env cook SPRING_PROFILES_ACTIVE development,encryption
-Setting env variable 'SPRING_PROFILES_ACTIVE' to 'development,encryption' for app cook in org myorg / space development as user...
-OK
-TIP: Use 'cf restage' to ensure your env variable changes take effect
 
 $ cf restage cook
 </pre>
@@ -362,9 +359,6 @@ After generating the token, set the environment variable on your client app and 
 
 <pre class="terminal">
 $ cf set-env cook SPRING_CLOUD_CONFIG_TOKEN c3432ef5-6a78-8673-ea23-5528c26849e4
-Setting env variable 'SPRING_CLOUD_CONFIG_TOKEN' to 'c3432ef5-6a78-8673-ea23-5528c26849e4' for app cook in org myorg / space development as user...
-OK
-TIP: Use 'cf restage cook' to ensure your env variable changes take effect
 
 $ cf restage cook
 </pre>
@@ -381,14 +375,14 @@ Run `cf env`, giving the name of an app that is bound to the service instance:
 
 <pre class="terminal">
 $ cf services
-Getting services in org myorg / space development as admin...
+Getting services in org myorg / space development as user...
 OK
 
 name             service           plan        bound apps   last operation
 config-server    p-config-server   standard    vault-app    create succeeded
 
 $ cf env vault-app
-Getting env variables for app vault-app in org myorg / space development as admin...
+Getting env variables for app vault-app in org myorg / space development as user...
 OK
 
 System-Provided:

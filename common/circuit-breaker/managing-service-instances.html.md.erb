@@ -11,20 +11,43 @@ See below for information about managing Circuit Breaker Dashboard service insta
 
 Begin by targeting the correct org and space.
 
-<%= partial vars.scs_cbd_creating_instance_target %>
+<pre class="terminal">
+$ cf target -o myorg -s development
+</pre>
 
 If desired, view plan details for the Circuit Breaker Dashboard product using
 `cf marketplace -s`.
 
-<%= partial vars.scs_cbd_creating_instance_marketplace %>
+<pre class="terminal">
+$ cf marketplace -s p-circuit-breaker-dashboard
+Getting service plan information for service p-circuit-breaker-dashboard as user...
+OK
+
+service plan   description     free or paid
+standard       Standard Plan   free
+</pre>
 
 Run `cf create-service`, specifying the service, plan name, and instance name.
 
-<%= partial vars.scs_cbd_creating_instance_create %>
+<pre class="terminal">
+$ cf create-service p-circuit-breaker-dashboard standard circuit-breaker-dashboard
+</pre>
 
-As the command output suggests, you can use the `cf services` or `cf service` commands to check the status of the service instance. When the service instance is ready, the `cf service` command will give a status of `create succeeded`:
+You can use the `cf services` or `cf service` commands to check the status of the service instance. When the service instance is ready, the `cf service` command will give a status of `create succeeded`:
 
-<%= partial vars.scs_cbd_creating_instance_service %>
+<pre class="terminal">
+$ cf service circuit-breaker-dashboard
+
+Service instance: circuit-breaker-dashboard
+Service: p-circuit-breaker-dashboard
+Bound apps:
+Tags:
+
+[...]
+
+Last Operation
+Status: create succeeded
+</pre>
 
 <%= vars.scs_creating_instance_discrepancy %>
 
@@ -36,11 +59,6 @@ To update a Circuit Breaker Dashboard service instance's settings, target the or
 
 <pre class="terminal">
 $ cf target -o myorg -s development
-
-API endpoint:   https://api.cf.wise.com (API version: 2.43.0)
-User:           user
-Org:            myorg
-Space:          development
 </pre>
 
 Then run `cf update-service SERVICE_NAME -c '{ "PARAMETER": "VALUE" }'`, where `SERVICE_NAME` is the name of the service instance, `PARAMETER` is a supported parameter, and `VALUE` is the value for the parameter. For information about supported parameters, see the next section.
@@ -58,13 +76,9 @@ To update a service instance so that it is upgraded to the latest available serv
 
 <pre class="terminal">
 $ cf update-service circuit-breaker-dashboard -c '{"upgrade": true}'
-Updating service instance circuit-breaker-dashboard as user...
-OK
-
-Update in progress. Use 'cf services' or 'cf service circuit-breaker-dashboard' to check operation status.
 </pre>
 
-As the command output suggests, you can use the `cf services` or `cf service` commands to check the status of the service instance. When the update is complete, the `cf service` command will give a status of `update succeeded`:
+You can use the `cf services` or `cf service` commands to check the status of the service instance. When the update is complete, the `cf service` command will give a status of `update succeeded`:
 
 <pre class="terminal">
 $ cf service circuit-breaker-dashboard
@@ -73,16 +87,11 @@ Service instance: circuit-breaker-dashboard
 Service: p-circuit-breaker-dashboard
 Bound apps: agency
 Tags:
-Plan: standard
-Description: Circuit Breaker Dashboard for Spring Cloud Applications
-Documentation url: http://docs.pivotal.io/spring-cloud-services/
-Dashboard: https://spring-cloud-broker.apps.wise.com/dashboard/p-circuit-breaker-dashboard/9397f120-484d-45ef-a7bd-20661e98b643
+
+[...]
 
 Last Operation
 Status: update succeeded
-Message:
-Started: 2017-06-16T18:18:14Z
-Updated: 2017-06-16T18:20:17Z
 </pre>
 
 The service instance is now updated and ready to be used. For an example of using a circuit breaker in an app, see <a href="./writing-client-applications.html">Writing Client Applications</a>.

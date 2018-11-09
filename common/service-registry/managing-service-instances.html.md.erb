@@ -11,11 +11,20 @@ See below for information about managing Service Registry service instances usin
 
 Target the correct org and space:
 
-<%= partial vars.scs_sr_creating_instance_target %>
+<pre class="terminal">
+$ cf target -o myorg -s development
+</pre>
 
 You can view plan details for the Config Server product by running `cf marketplace -s`.
 
-<%= partial vars.scs_sr_creating_instance_marketplace %>
+<pre class="terminal">
+$ cf marketplace -s p-service-registry
+Getting service plan information for service p-service-registry as user...
+OK
+
+service plan   description     free or paid
+standard       Standard Plan   free
+</pre>
 
 Run `cf create-service`, specifying the service, plan name, and instance name. Optionally, you may add the `-c` flag and provide a JSON object that specifies configuration parameters.
 
@@ -29,15 +38,33 @@ A Service Registry service instance can also be configured to replicate its regi
 
 To create an instance with the default of a single node, run:
 
-<%= partial vars.scs_sr_creating_instance_create_one_node %>
+<pre class="terminal">
+$ cf create-service p-service-registry standard service-registry
+</pre>
 
 To create an instance, specifying that three nodes should be provisioned, run:
 
-<%= partial vars.scs_sr_creating_instance_create_multiple_nodes %>
+<pre class="terminal">
+$ cf create-service p-service-registry standard service-registry -c '{"count": 3}'
+</pre>
 
 As the command output suggests, you can use the `cf services` or `cf service` commands to check the status of the service instance. When the Service Registry instance is ready to be used, the `cf service` command will give a status of `create succeeded`:
 
-<%= partial vars.scs_sr_creating_instance_service %>
+<pre class="terminal">
+$ cf service service-registry
+Showing info of service service-registry in org myorg / space development as user...
+
+name:            service-registry
+service:         p-service-registry
+bound apps:
+tags:
+
+[...]
+
+Showing status of last operation from service service-registry...
+
+status:    create succeeded
+</pre>
 
 <%= vars.scs_creating_instance_discrepancy %>
 
@@ -49,11 +76,6 @@ To update a Service Registry service instance's settings, target the org and spa
 
 <pre class="terminal">
 $ cf target -o myorg -s development
-api endpoint:   https://api.sys.example.com
-api version:    2.103.0
-user:           user
-org:            myorg
-space:          development
 </pre>
 
 Then run `cf update-service SERVICE_NAME -c '{ "PARAMETER": "VALUE" }'`, where `SERVICE_NAME` is the name of the service instance, `PARAMETER` is a supported parameter, and `VALUE` is the value for the parameter. For information about supported parameters, see the next section.
@@ -74,33 +96,24 @@ To update a service instance and set the count of nodes for running in high-avai
 
 <pre class="terminal">
 $ cf update-service service-registry -c '{"count": 3}'
-Updating service instance service-registry as admin...
-OK
-
-Update in progress. Use 'cf services' or 'cf service service-registry' to check operation status.
 </pre>
 
 As the command output suggests, you can use the `cf services` or `cf service` commands to check the status of the service instance. When the update is complete, the `cf service` command will give a status of `update succeeded`:
 
 <pre class="terminal">
 $ cf service service-registry
-Showing info of service service-registry in org myorg / space development as admin...
+Showing info of service service-registry in org myorg / space development as user...
 
 name:            service-registry
 service:         p-service-registry
 bound apps:
 tags:
-plan:            standard
-description:     Service Registry for Spring Cloud Applications
-documentation:
-dashboard:       https://spring-cloud-broker.apps.example.com/dashboard/p-service-registry/2fdf89e7-58f6-44a2-891a-1b7ad5036fa9
+
+[...]
 
 Showing status of last operation from service service-registry...
 
 status:    update succeeded
-message:
-started:   2018-07-16T17:10:35Z
-updated:   2018-07-16T17:12:45Z
 </pre>
 
 The service instance is now updated and ready to be used. For information about registering an app with a Service Registry service instance or calling an app which has been registered with a Service Registry service instance, see <a href="./writing-client-applications.html">Writing Client Applications</a>.
