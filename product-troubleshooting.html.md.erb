@@ -93,7 +93,7 @@ $ cf restage spring-cloud-broker-worker
 
 If the PCF foundation is newly restored and the RabbitMQ service instance's queues are empty, you may also unbind the RabbitMQ service instance from the broker apps, delete it, create a new instance, and then bind that instance to the Spring Cloud Services broker apps.
 
-<p class="note warning"><strong>WARNING: </strong> Deleting and replacing the RabbitMQ service instance will destroy the original instance's virtual host and any data in the instance's queues. If the RabbitMQ service instance contains messages and is on a production system, unbind and rebind it instead.</p>
+<p class="note warning"><strong>WARNING: </strong> Deleting and replacing the RabbitMQ service instance will destroy any data in the instance's queues. If the RabbitMQ service instance contains messages and is on a production system, unbind and rebind it instead.</p>
 
 To delete and replace the RabbitMQ service instance used by the Spring Cloud Services broker apps, run the following cf CLI commands:
 

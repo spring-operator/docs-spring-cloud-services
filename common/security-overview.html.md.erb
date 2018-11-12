@@ -153,11 +153,11 @@ This Actuator SSO flow is used by other components that already use [Dashboard S
 
 **Pivotal MySQL**
 
-The SB uses a Pivotal MySQL service instance to store information about SCS service instances. The most sensitive information stored here is credentials for the Pivotal RabbitMQ instances used for the Circuit Breaker service instances, which could be used to disable the Hystrix dashboard as described in [app turbine-{guid} > External Dependencies > Pivotal RabbitMQ](#app-turbine-pivotal-rabbitmq). The only way to access the data in this MySQL service instance is through the SB's binding credentials or directly from the filesystem, and these would only be accessible to the Operator.
+The SB uses a Pivotal MySQL service instance to store information about SCS service instances. The most sensitive information stored here is credentials for the RabbitMQ for PCF instances used for the Circuit Breaker service instances, which could be used to disable the Hystrix dashboard as described in [app turbine-{guid} > External Dependencies > RabbitMQ for PCF](#app-turbine-rabbitmq). The only way to access the data in this MySQL service instance is through the SB's binding credentials or directly from the filesystem, and these would only be accessible to the Operator.
 
-<a id="sb-dependency-pivotal-rabbitmq"></a>**Pivotal RabbitMQ**
+<a id="sb-dependency-rabbitmq"></a>**RabbitMQ for PCF**
 
-The SB uses a Pivotal RabbitMQ service instance to communicate with the spring-cloud-broker-worker app (the Worker). The messages passed propagate the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html) to the Worker, as well as getting and setting app environment variables for service instance backing apps in the "instances" space. The credentials for accessing the RabbitMQ service instance are provided through the SB's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
+The SB uses a RabbitMQ for PCF service instance to communicate with the spring-cloud-broker-worker app (the Worker). The messages passed propagate the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html) to the Worker, as well as getting and setting app environment variables for service instance backing apps in the "instances" space. The credentials for accessing the RabbitMQ for PCF service instance are provided through the SB's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
 
 <a id="sb-dependency-cloud-controller"></a>**The Cloud Controller**
 
@@ -202,9 +202,9 @@ The Spring Cloud Service Broker Worker (the Worker) is responsible for managing 
 
 #### Entry Points
 
-**The RabbitMQ Message Listener**
+**The RabbitMQ for PCF Message Listener**
 
-The Worker listens for messages posted to the Pivotal RabbitMQ service instance. The SB posts these messages as described in [Spring Cloud Service Broker > External Dependencies > Pivotal RabbitMQ](#sb-dependency-pivotal-rabbitmq). Only the Operator, the SB, and the Worker can access this instance of Pivotal RabbitMQ.
+The Worker listens for messages posted to the RabbitMQ for PCF service instance. The SB posts these messages as described in [Spring Cloud Service Broker > External Dependencies > RabbitMQ for PCF](#sb-dependency-rabbitmq). Only the Operator, the SB, and the Worker can access this instance of RabbitMQ for PCF.
 
 **Actuator Endpoints**
 
@@ -212,9 +212,9 @@ The Worker listens for messages posted to the Pivotal RabbitMQ service instance.
 
 #### External Dependencies
 
-**Pivotal RabbitMQ**
+**RabbitMQ for PCF**
 
-The Worker uses a Pivotal RabbitMQ service instance to receive messages from the SB. The messages received originate from the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html), as well as from the ```/dashboard/instance/{serviceInstanceId}/parameters``` endpoint. The credentials for accessing the Pivotal RabbitMQ service instance are provided through the Worker's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
+The Worker uses a RabbitMQ for PCF service instance to receive messages from the SB. The messages received originate from the provision, deprovision, bind, and unbind requests received by the [SB API](https://docs.cloudfoundry.org/services/api.html), as well as from the ```/dashboard/instance/{serviceInstanceId}/parameters``` endpoint. The credentials for accessing the RabbitMQ for PCF service instance are provided through the Worker's ```VCAP_SERVICES``` environment variable as a result of binding to the service instance. The credentials would only be visible to a Space Developer in the "p-spring-cloud-services" space, and only the Operator would have this access.
 
 **The Cloud Controller**
 
@@ -659,13 +659,13 @@ This emits the Server Sent Event stream and is the only HTTP-based entry point. 
 
 **Hystrix AMQP messages**
 
-The Turbine app listens for AMQP messages posted by apps bound to the Circuit Breaker Dashboard service instance. Applications bound to the Circuit Breaker Dashboard receive credentials to the Pivotal RabbitMQ service instance in order to post these messages. All bound apps receive the same credentials.
+The Turbine app listens for AMQP messages posted by apps bound to the Circuit Breaker Dashboard service instance. Applications bound to the Circuit Breaker Dashboard receive credentials to the RabbitMQ for PCF service instance in order to post these messages. All bound apps receive the same credentials.
 
 #### External Dependencies
 
-<a id="app-turbine-pivotal-rabbitmq"></a>**Pivotal RabbitMQ**
+<a id="app-turbine-rabbitmq"></a>**RabbitMQ for PCF**
 
-As described earlier, bound apps use an instance of Pivotal RabbitMQ to post circuit breaker metrics. The Turbine app listens to these messages, aggregates the metrics, and emits a Server Sent Event stream. The credentials for the Pivotal RabbitMQ service instance are provided to the Turbine app though service instance binding. These same credentials are provided to apps bound to the Circuit Breaker Dashboard service instance, and would be visible to any user that is able to bind to the service instance. These credentials can be used for admin access to the RabbitMQ.
+As described earlier, bound apps use an instance of RabbitMQ for PCF to post circuit breaker metrics. The Turbine app listens to these messages, aggregates the metrics, and emits a Server Sent Event stream. The credentials for the RabbitMQ for PCF service instance are provided to the Turbine app though service instance binding. These same credentials are provided to apps bound to the Circuit Breaker Dashboard service instance, and would be visible to any user that is able to bind to the service instance. These credentials can be used for admin access to the RabbitMQ.
 
 Since this RabbitMQ is only used for collecting and disseminating ```@HystrixCommand``` metrics from bound apps, one risk here is breaking the ability for metrics to be gathered and reported in the Hystrix dashboard. Doing this would not affect the operation of any app bound to the service instance.
 
