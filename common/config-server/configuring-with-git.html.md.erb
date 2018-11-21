@@ -91,8 +91,8 @@ If you wish to use public-key (or asymmetric) encryption, you may configure the 
 
 ```
 $ openssl genpkey -algorithm RSA -outform PEM -pkeyopt rsa_keygen_bits:2048 > server.key
-# Translate PEM encoded private key to a RSA private key and remove newlines from it
-$ openssl rsa -in server.key | tr -d '\n' > server_rsa.key
+# Translate PEM encoded private key to a RSA private key and escape newlines
+$ openssl rsa -in server.key | awk '{printf "%s\\n", $0}' > server_rsa.key
 ```
 
 To configure a Config Server service instance that can encrypt property values with an assymetric keypair, use the following JSON object, where the value of `key` is the content of the `server_rsa.key` file:
