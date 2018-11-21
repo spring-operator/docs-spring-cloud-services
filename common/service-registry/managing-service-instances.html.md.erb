@@ -117,3 +117,10 @@ status:    update succeeded
 </pre>
 
 The service instance is now updated and ready to be used. For information about registering an app with a Service Registry service instance or calling an app which has been registered with a Service Registry service instance, see <a href="./writing-client-applications.html">Writing Client Applications</a>.
+
+## <a id="sharing-a-service-registry"></a>Sharing a Service Registry
+
+A Service Registry service instance or its service registrations can be shared across PCF spaces in either of two situations:
+
+* **Across spaces on same PCF foundation**: Pivotal recommends [using Cloud Foundry service instance sharing](../service-instance-sharing.html) to share a Service Registry service instance across spaces on the same PCF foundation.
+* **Across spaces on different PCF foundations**: Pivotal recommends using Service Registry's [peer replication](./enabling-peer-replication.html) feature to share service registrations with a Service Registry service instance in a space on a different PCF foundation.
