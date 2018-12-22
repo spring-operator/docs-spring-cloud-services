@@ -115,6 +115,17 @@ $ cf scs-config cook-config-server
 
 * **Ignore dashboard error until tile is upgraded to a future patch release with fix** - It is an option to ignore the error on the Config Server service instance dashboard until the fix is deployed. We are working on the fix already and hope to have it out within weeks.
 
+## <a id="2-0-5"></a>2.0.5
+
+**Release Date: 21st December 2018**
+
+This release is based on the Ubuntu Xenial 97.x stemcell line.
+
+Enhancements included in this release:
+
+* Added support for installation of `2.0.5+` on PCF `2.4+`. All previous versions are not recommended for installation on PCF `2.4+`.
+* **IMPORTANT**: PCF `2.4` has released with a new CredHub API and is NOT supported by Spring Cloud Services. Please uncheck `Secure service instance credentials` in the `Spring Cloud Services` section in the [tile configuration](./tile-configuration.html#secure-service-instance-credentials-with-credhub) and apply changes before upgrading to PCF `2.4+`.
+
 ## <a id="2-0-4"></a>2.0.4
 
 **Release Date: 19th November 2018**
