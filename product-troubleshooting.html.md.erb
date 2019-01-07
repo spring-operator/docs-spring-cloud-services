@@ -16,6 +16,19 @@ owner: Spring Cloud Services
 
 See below for information about problems related to your [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF) platform configuration or Spring Cloud Services or other product installation.
 
+## <a id="rabbitmq-plan-missing"></a>"java.lang.IllegalArgumentException: Service plan standard not found"
+
+The `p-circuit-breaker-dashboard` service in Spring Cloud Services requires that [RabbitMQ for PCF](https://docs.pivotal.io/rabbitmq-cf/) is configured to deploy the [Pre-provisioned broker](https://docs.pivotal.io/rabbitmq-cf/1-15/index.html#pre-provisioned). If the `run_tests` errand or create and update service fails with a message similar to following:
+
+```
+Showing status of last operation from service test-p-circuit-breaker-dashboard-*********...
+
+status:    create failed
+message:   Error creating service instance: java.lang.IllegalArgumentException: Service plan standard not found
+```
+
+Enable the [Pre-provisioned broker](https://docs.pivotal.io/rabbitmq-cf/1-15/index.html#pre-provisioned) as described in the RabbitMQ for PCF documentation.
+
 ## <a id="timeout-exception-180000-ms"></a>"java.util.concurrent.TimeoutException: Execution took longer than 180000 MILLISECONDS"
 
 If the broker fails to provision a service instance and the logs for the `spring-cloud-broker-worker` app (see [Read Broker Application Logs](./service-broker.html#broker-application-logs)) contain the following:
