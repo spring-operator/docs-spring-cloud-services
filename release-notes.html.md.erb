@@ -61,7 +61,21 @@ For each Circuit Breaker Dashboard service instance, you must:
 
 ## Known Issues
 
-**Existing Config Server service instances created prior to SCS 2.0.x upgrade show false error on their dashboard user interfaces**
+**Spring Cloud Services not compatible with MySQL for PCF TLS configuration**
+
+Spring Cloud Services uses the MariaDB Java client for connecting it's service broker to a MySQL for PCF database instance. If your Spring Cloud Services installation uses MySQL for PCF and is being updated or installed with [TLS enabled connections](https://docs.pivotal.io/p-mysql/2-5/prepare-tls.html) by default, the service broker will not be able to communicate with the database.
+
+There is an issue with the MariaDB Java client not trusting the certificates loaded into the security provider:
+
+https://jira.mariadb.org/browse/CONJ-670
+
+We are working with the MariaDB Java client team to get this prioritized and resolved.
+
+To resolve this issue:
+
+For now, we recommend [disabling TLS communication in the MySQL for PCF tile](https://docs.pivotal.io/p-mysql/2-5/prepare-tls.html) by default.
+
+**Impacted versions `2.0.0`-`2.0.2`: Existing Config Server service instances created prior to SCS 2.0.x upgrade show false error on their dashboard user interfaces**
 
 An issue has been found in SCS when upgrading the tile from a `1.5.x` version up to `2.0.x` version. After upgrading, the dashboards for all existing Config Server service instances created before the upgrade will show the following error:
 
@@ -70,6 +84,8 @@ An issue has been found in SCS when upgrading the tile from a `1.5.x` version up
 The running Config Server service instance is not affected by the SCS tile upgrade to `2.0.x`. This error is only shown on the Config Server dashboard UI.
 
 To resolve this issue, there are a few options:
+
+* Upgrade to version `2.0.3+`. 
 
 * **Upgrade Config Server service instance** - If the Config Server service instance is upgraded then the error will go away. This can be done by executing the following command on the service instance:
 
