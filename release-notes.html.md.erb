@@ -61,7 +61,7 @@ For each Circuit Breaker Dashboard service instance, you must:
 
 ## <a id="known-issues"></a>Known Issues
 
-### Impacted version < 2.0.5: Spring Cloud Services not compatible with MySQL for PCF TLS configuration
+### Issues using Spring Cloud Services with MySQL for PCF TLS configuration
 
 Spring Cloud Services uses the MariaDB Java client for connecting it's service broker to a MySQL for PCF database instance. If your Spring Cloud Services installation uses MySQL for PCF and is being updated or installed with [TLS enabled connections](https://docs.pivotal.io/p-mysql/2-5/prepare-tls.html) by default, the service broker will not be able to communicate with the database.
 
@@ -73,7 +73,7 @@ We are working with the MariaDB Java client team to get this prioritized and res
 
 To resolve this issue:
 
-Upgrade to version 2.0.5.
+Upgrade MySQL for PCF to version `2.5.3` since this version has a workaround for the MariaDB Java client issue.
 
 ### Impacted versions 2.0.0-2.0.2: Existing Config Server service instances created prior to SCS 2.0.x upgrade show false error on their dashboard user interfaces
 
