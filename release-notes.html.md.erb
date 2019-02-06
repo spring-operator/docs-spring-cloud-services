@@ -24,5 +24,6 @@ Release notes for [Spring Cloud Services for Pivotal Cloud Foundry](https://netw
 
 Enhancements included in this release:
 
-* Enhancement 1
-* Enhancement 2
+* The Spring Cloud Services broker has been upgraded to Spring Boot 2.1.0.RELEASE and Spring Cloud Greenwich.RELEASE.
+* The Config Server now mirrors Git repositories local to the PCF foundation. This reduces communication required with external Git servers and improves data governance options for configuration values served by the Config Server from Git repositories, as well as increasing availability of the Config Server.
+* The Config Server now includes support for a CredHub backend, which can be used for secret management. The new backend removes the need to store secrets in encrypted form within Git for use by the Config Server and improves the security of secret management for Config Server client applications. (The Config Server continues to include support for a HashiCorp Vault backend.)
