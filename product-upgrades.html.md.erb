@@ -5,55 +5,9 @@ owner: Spring Cloud Services
 
 <strong><%= modified_date %></strong>
 
-## <a id="product-upgrade-steps"></a>Product Upgrade Steps
+Spring Cloud Services 3.0.x can be installed alongside the following earlier versions of Spring Cloud Services:
 
-Follow the below steps to upgrade the Spring Cloud Services product.
+* 2.0.x
+* 1.5.x
 
-1. Download the latest version of Spring Cloud Services from [Pivotal Network](https://network.pivotal.io/).
-
-1. In the Installation Dashboard of [Pivotal Cloud Foundry](https://network.pivotal.io/products/pivotal-cf) (PCF) Operations Manager, click **Import a Product** on the left sidebar to upload the `.pivotal` file.
-
-1. After uploading the file, click the **+** button beside the version number under **Spring Cloud Services** in the product list.
-
-1. Click the Spring Cloud Services tile. In the **Errands** tab, ensure that all of the Spring Cloud Services errands are set to **On**.
-
-    <%= image_tag("./images/operator-information/errands.png") %>
-
-    <p class='note'><strong>Important</strong>: The <strong>Broker Registrar</strong> post-deploy errand makes the Spring Cloud Services service broker's plans globally available (available to all orgs). This overrides any previous changes you have made to Spring Cloud Services service plan availability.</p>
-
-<%# removing for now
-1. If the **Stemcell** tab is highlighted in orange, click it. Then click **Import Stemcell** to import the correct stemcell.
-
-    upgrades/stemcell.png
-%>
-
-
-
-1. Return to the Installation Dashboard.
-
-1. If you are using Ops Manager v2.3 or later, click **Review Pending Changes**. For more information about this Ops Manager page, see [Reviewing Pending Product Changes](https://docs.pivotal.io/pivotalcf/customizing/review-pending-changes.html).
-
-1. Click **Apply Changes** to upgrade the tile.
-
-## <a id="service-instance-upgrade-steps"></a>Service Instance Upgrade Steps
-
-After upgrading the Spring Cloud Services product, you can follow the below steps to upgrade an individual service instance or to upgrade all service instances. You can also use the Cloud Foundry Command Line Interface tool (cf CLI) to upgrade an individual service instance; see [Service Instance Upgrades](./common/service-instance-upgrades.html) for more information.
-
-1. To see the current version of a service instance, visit the Service Instances dashboard. (See the [Service Instances Dashboard](./service-instances.html#service-instances-dashboard) section of [Service Instances](./service-instances.html).)
-
-    <%= image_tag("./images/upgrades/si-dashboard-pre-upgrade.png") %>
-
-1. Click **Upgrade** in the listing for the service instance. To upgrade all service instances which are not at the versions included in the currently-installed Spring Cloud Services product, you may also click **Upgrade Service Instances**.
-
-    <%= image_tag("./images/upgrades/si-dashboard-upgrade.png") %>
-
-    <%= image_tag("./images/upgrades/si-dashboard-upgrade-service-instances.png") %>
-
-1. Wait while any backing apps belonging to the service instance or instances are upgraded. The dashboard will show the `UPDATING` status for an instance while it is being upgraded.
-
-    <%= image_tag("./images/upgrades/si-dashboard-upgrading-instances.png") %>
-
-1. When the service instances have been upgraded, the dashboard will show the new versions.
-
-    <%= image_tag("./images/upgrades/si-dashboard-post-upgrade.png") %>
-
+Spring Cloud Services 3.0.x will not replace these earlier versions.
