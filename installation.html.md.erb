@@ -18,8 +18,6 @@ owner: Spring Cloud Services
 
 Ensure that you have or have completed all items listed in <a href="common/index.html#requirements">Requirements</a>. Then follow the below steps to install Spring Cloud Services.
 
-<p class="note"><strong>Important: </strong> Spring Cloud Services requires either <a href="https://network.pivotal.io/products/pivotal-mysql">MySQL for PCF v2</a> (recommended) or <a href="https://network.pivotal.io/products/p-mysql">MySQL for PCF v1</a>. Install one of these products before installing Spring Cloud Services.</p>
-
 ## Installation Steps
 
 1. Download Spring Cloud Services from [Pivotal Network](https://network.pivotal.io/).
@@ -32,13 +30,7 @@ Ensure that you have or have completed all items listed in <a href="common/index
 
     <%= image_tag("./images/installation/azs-and-networks.png") %>
 
-    Select the availability zones for the tile to use. In the **Network** section, select the Pivotal Application Service (or Elastic Runtime) network. When finished, click **Save**.
-
-1. Still in the **Settings** tab, click **Spring Cloud Services** to configure settings for Spring Cloud Services. For information about configuring these settings, see [Tile Configuration Options](./tile-configuration.html#tile-configuration-options).
-
-    <%= image_tag("./images/installation/settings.png") %>
-
-    After configuring the settings, click **Save**.
+    Select the availability zones for the tile to use. In the **Network** section, select the network used by Pivotal Application Service (or Elastic Runtime). When finished, click **Save**.
 
 <%# removing for now
 1. If the **Stemcell** tab is highlighted in orange, click it. Download the correct stemcell from [Pivotal Network](http://network.pivotal.io) and click **Import Stemcell** to import it.
