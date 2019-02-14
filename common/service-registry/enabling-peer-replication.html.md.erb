@@ -151,11 +151,3 @@ If you have configured a Service Registry service instance with a peer service i
 <%= image_tag(vars.scs_sr_replication_img_different_peer_list) %>
 
 Update the configuration for this Service Registry service instance or for the peer instance to give them consistent peer lists.
-
-### <a id="peer-version-difference"></a>Peer Service Instance Version Difference
-
-If you have configured a Service Registry service instance with a peer service instance that is at a different version (for example, that has not been upgraded after an upgrade of the Spring Cloud Services product), you may see the following message on the dashboard:
-
-<%= image_tag(vars.scs_sr_replication_img_version_difference) %>
-
-You can upgrade the older of the service instances so that the peers are at consistent versions. See [Service Instance Upgrades](../service-instance-upgrades.html) for more information.
