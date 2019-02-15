@@ -61,7 +61,7 @@ For each Circuit Breaker Dashboard service instance, you must:
 
 ## <a id="known-issues"></a>Known Issues
 
-### Issues using Spring Cloud Services with MySQL for PCF TLS configuration
+### Impacted versions < 2.0.6: Issues using Spring Cloud Services with MySQL for PCF TLS configuration
 
 Spring Cloud Services uses the MariaDB Java client for connecting it's service broker to a MySQL for PCF database instance. If your Spring Cloud Services installation uses MySQL for PCF and is being updated or installed with [TLS enabled connections](https://docs.pivotal.io/p-mysql/2-5/prepare-tls.html) by default, the service broker will not be able to communicate with the database.
 
@@ -130,6 +130,16 @@ $ cf scs-config cook-config-server
 ```
 
 * **Ignore dashboard error until tile is upgraded to a future patch release with fix** - It is an option to ignore the error on the Config Server service instance dashboard until the fix is deployed. We are working on the fix already and hope to have it out within weeks.
+
+## <a id="2-0-6"></a>2.0.6
+
+**Release Date: 15th February 2019**
+
+This release is based on the Ubuntu Xenial 97.x stemcell line.
+
+Enhancements included in this release:
+
+* Upgraded MariaDB Java client to version `2.4.0` that resolves [issue with MySQL for PCF TLS enabled service instances](https://jira.mariadb.org/browse/CONJ-670).
 
 ## <a id="2-0-5"></a>2.0.5
 
