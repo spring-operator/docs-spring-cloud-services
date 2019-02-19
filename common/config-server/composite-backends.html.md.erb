@@ -7,8 +7,7 @@ owner: Spring Cloud Services
 
 ## <a id="overview"></a>Overview
 
-The Spring Cloud Services Config Server provides the ability to serve configuration properties from a composite of multiple backends, such as from multiple GitHub repositories and a HashiCorp Vault server.
-This feature builds upon the <a href="http://cloud.spring.io/spring-cloud-static/spring-cloud-config/2.0.0.RELEASE/single/spring-cloud-config.html#composite-environment-repositories">Composite Environment Repositories</a> feature from the Dalston release of the Spring Cloud Config Server by enabling declaration of multiple Git servers together with (optionally) a Vault server to compose a unified configuration source.
+The Spring Cloud Services Config Server provides the ability to serve configuration properties from a composite of multiple backends, such as from multiple Git repositories and a HashiCorp Vault server. This feature builds upon the <a href="https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_server.html#composite-environment-repositories">Composite Environment Repositories</a> feature of Spring Cloud Config Server by enabling declaration of multiple Git servers together with (optionally) a Vault server to compose a unified configuration source.
 
 <p class='note'><strong>Note</strong>: The Spring Cloud Services Config Server cannot serve configuration properties from multiple Vault servers. A composite backend can contain only a single Vault server.</p>
 
@@ -36,14 +35,14 @@ See below for information about configuring a Config Server service instance to 
 
 ## <a id="general-configuration"></a>General Configuration
 
-Parameters used to configure configuration sources are part of a JSON array called `composite`. The `composite` array can contain one or more `git` JSON objects, each of which contains settings for a Git repository, and a `vault` object, which contains settings for a Vault server. For information about configuring a Git configuration source, see [Configuring with Git](./configuring-with-git.html). For information about configuring a Vault configuration source, see [Configuring with Vault](./configuring-with-vault.html).
+Parameters used to configure configuration sources are part of a JSON array called `composite`. The `composite` array contains one or more JSON objects which defines a `type` key, where the value of `type` is either `git` or `vault`. An object with a `type` of `git` contains settings for a Git repository, and an object with a `type` of `vault` contains settings for a Vault server. For information about configuring a Git configuration source, see [Configuring with Git](./configuring-with-git.html). For information about configuring a Vault configuration source, see [Configuring with Vault](./configuring-with-vault.html).
 
 Configuration properties from individual backends are given precedence based on the order in which they are provided to the Config Server. A backend specified later in the `composite` array is searched after backends specified earlier in the array.
 
 To configure a Config Server service instance to use a composite backend comprising two Git repositories and a Vault server, you might use the following:
 
 ```
-cf create-service p-config-server standard config-server -c '{ "composite": [ { "git": { "uri": "https://github.com/spring-cloud-services-samples/cook-config" } }, { "git": { "uri": "https://github.com/spring-cloud-samples/config-repo" } }, { "vault": { "host": "127.0.0.1", "port": 8200, "scheme": "https", "backend": "secret", "defaultKey": "application", "profileSeparator": "," } } ] }'
+cf create-service p.config-server standard config-server -c '{ "composite": [ { "type": "git", "uri": "https://github.com/spring-cloud-services-samples/cook-config" }, { "type": "git", "uri": "https://github.com/spring-cloud-samples/config-repo" }, { "type": "vault", "host": "127.0.0.1", "port": 8200, "scheme": "https", "backend": "secret", "defaultKey": "application", "profileSeparator": "," } ] }'
 ```
 
 In this example, configuration properties found in the Vault server are added to the response only if they are not found in either of the Git repositories specified before the Vault server.
@@ -51,7 +50,7 @@ In this example, configuration properties found in the Vault server are added to
 To configure a Config Server service instance to use a composite backend comprising a Vault server and a Git repository, use the following:
 
 ```
-cf create-service p-config-server standard config-server -c '{ "composite": [ { "vault": { "host": "127.0.0.1", "port": 8200, "scheme": "https", "backend": "secret", "defaultKey": "application", "profileSeparator": "," } }, { "git": { "uri": "https://github.com/spring-cloud-services-samples/cook-config" } } ] }'
+cf create-service p.config-server standard config-server -c '{ "composite": [ { "type": "vault", "host": "127.0.0.1", "port": 8200, "scheme": "https", "backend": "secret", "defaultKey": "application", "profileSeparator": "," }, { "type": "git", "uri": "https://github.com/spring-cloud-services-samples/cook-config" } ] }'
 ```
 
 In this example, the response consists of configuration properties found in the Vault server, plus any properties found only in the Git repository.
@@ -63,7 +62,7 @@ For information about using an app to access configuration values served by a Co
 Proxy server configuration must be defined for each item in the composite set. For example:
 
 ```
-cf create-service p-config-server standard config-server -c '{ "composite": [ { "git": { "uri": "https://github.com/spring-cloud-services-samples/cook-config", "proxy": { "http": { "host": "http://proxy1.com", "port": 3218 } } } }, { "git": { "uri": "https://github.com/spring-cloud-samples/config-repo", "proxy": { "http": { "host": "http://proxy2.com", "port": 3218 } } } }, { "vault": { "host": "127.0.0.1", "proxy": { "http": { "host": "http://proxy1.com", "port": 3218 } } } } ] }'
+cf create-service p.config-server standard config-server -c '{ "composite": [ { "type": "git", "uri": "https://github.com/spring-cloud-services-samples/cook-config", "proxy": { "http": { "host": "http://proxy1.com", "port": 3218 } } }, { "type": "git", "uri": "https://github.com/spring-cloud-samples/config-repo", "proxy": { "http": { "host": "http://proxy2.com", "port": 3218 } } }, { "type": "vault", "host": "127.0.0.1", "proxy": { "http": { "host": "http://proxy1.com", "port": 3218 } } } ] }'
 ```
 
 For detailed information about configuring proxy support, see the [HTTP(S) Proxy Repository Access](./configuring-with-git.html#proxy-repository-access) section of [Configuring with Git](./configuring-with-git.html) and the [HTTP(S) Proxy Repository Access](./configuring-with-vault.html#proxy-repository-access) section of [Configuring with Vault](./configuring-with-vault.html).
