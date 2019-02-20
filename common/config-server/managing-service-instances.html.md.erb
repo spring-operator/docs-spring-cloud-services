@@ -18,15 +18,15 @@ $ cf target -o myorg -s development
 You can view plan details for the Config Server product using `cf marketplace -s`.
 
 <pre class="terminal">
-$ cf marketplace -s p-config-server
-Getting service plan information for service p-config-server as user...
+$ cf marketplace -s p.config-server
+Getting service plan information for service p.config-server as user...
 OK
 
-service plan   description     free or paid
-standard       Standard Plan   free
+service plan   description       free or paid
+standard       A standard plan   free
 </pre>
 
-Create the service instance using `cf create-service`, using the `-c` flag to provide a JSON object that specifies the configuration parameters. For information about the parameters used to configure a Git configuration source, see [Configuring with Git](./configuring-with-git.html). For information about the parameters used to configure a HashiCorp Vault configuration source, see [Configuring with Vault](./configuring-with-vault.html).
+Create the service instance using `cf create-service`, using the `-c` flag to provide a JSON object that specifies the configuration parameters. For information about the parameters used to configure a Git backend, see [Configuring with Git](./configuring-with-git.html). For information about the parameters used to configure a HashiCorp Vault backend, see [Configuring with Vault](./configuring-with-vault.html).
 
 General parameters accepted for the Config Server are listed below.
 
@@ -34,23 +34,22 @@ General parameters accepted for the Config Server are listed below.
 |----------------------|--------------------------------------------------------------------------------------------|----------------------------------|
 | <code>count</code>   | The number of nodes to provision: 1 by default, more for running in high-availability mode | <code>'{"count": 3}'</code>      |
 
-To create an instance, specifying settings for Git configuration sources and that three nodes should be provisioned:
+To create an instance, specifying settings for a Git backend and that three nodes should be provisioned:
 
 <pre class="terminal">
-$ cf create-service -c '{"git": { "uri": "https://github.com/spring-cloud-samples/config-repo", "repos": { "cook": { "pattern": "cook*", "uri": "https://github.com/spring-cloud-services-samples/cook-config" } } }, "count": 3 }' p-config-server standard config-server
+$ cf create-service -c '{ "git": { "uri": "https://github.com/spring-cloud-samples/config-repo" }, "count": 3 }' p.config-server standard config-server
 </pre>
 
 You can use the `cf services` or `cf service` commands to check the status of the service instance. When the service instance is ready, the `cf service` command will give a status of `create succeeded`:
 
 <pre class="terminal">
 $ cf service config-server
-Showing info of service config-server in org myorg / space development as user...
+Showing info of service config-server in org myorg / space dev as user...
 
 name:            config-server
-service:         p-config-server
-bound apps:
+service:         p.config-server
 tags:
-
+plan:            standard
 [...]
 
 Showing status of last operation from service config-server...
@@ -58,9 +57,7 @@ Showing status of last operation from service config-server...
 status:    create succeeded
 </pre>
 
-<p class='note'><strong>Important</strong>: The <code>cf service</code> and <code>cf services</code> commands may report a <code>create succeeded</code> status even if the Config Server cannot initialize using the provided settings. For example, given an invalid URI for a configuration source, the service instance may still be created and have a <code>create succeeded</code> status. <br /> <br /> If the service instance does not appear to be functioning correctly, you can visit its dashboard to double-check that the provided settings are valid and accurate. See <a href="./using-the-dashboard.html">Using the Dashboard</a>.</p>
-
-<%= vars.scs_creating_instance_discrepancy %>
+<p class='note'><strong>Important</strong>: The <code>cf service</code> and <code>cf services</code> commands may report a <code>create succeeded</code> status even if the Config Server cannot initialize using the provided settings. For example, given an invalid URI for a Git backend, the service instance may still be created and have a <code>create succeeded</code> status.</p>
 
 ## <a id="updating"></a>Updating an Instance
 
@@ -72,20 +69,18 @@ To update a Config Server service instance's settings, target the org and space 
 $ cf target -o myorg -s development
 </pre>
 
-Then run `cf update-service SERVICE_NAME -c '{ "PARAMETER": "VALUE" }'`, where `SERVICE_NAME` is the name of the service instance, `PARAMETER` is a supported parameter, and `VALUE` is the value for the parameter. For information about the parameters used to configure a Git configuration source, see [Configuring with Git](./configuring-with-git.html). For information about the parameters used to configure a HashiCorp Vault configuration source, see [Configuring with Vault](./configuring-with-vault.html).
+Then run `cf update-service SERVICE_NAME -c '{ "PARAMETER": "VALUE" }'`, where `SERVICE_NAME` is the name of the service instance, `PARAMETER` is a supported parameter, and `VALUE` is the value for the parameter. For information about the parameters used to configure a Git backend, see [Configuring with Git](./configuring-with-git.html). For information about the parameters used to configure a HashiCorp Vault backend, see [Configuring with Vault](./configuring-with-vault.html).
 
 General parameters accepted for the Config Server are listed below.
 
-| Parameter            | Function                                                                                                                                               | Example                          |
-|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|
-| <code>count</code>   | The number of nodes to provision: 1 by default, more for running in high-availability mode                                                             | <code>'{"count": 3}'</code>      |
-| <code>upgrade</code> | Whether to upgrade the instance                                                                                                                        | <code>'{"upgrade": true}'</code> |
-| <code>force</code>   | When `upgrade` is set to `true`, whether to force an upgrade of the instance, even if the instance is already at the latest available service version  | <code>'{"force": true}'</code>   |
+| Parameter          | Function                                                                                   | Example                     |
+|--------------------|--------------------------------------------------------------------------------------------|-----------------------------|
+| <code>count</code> | The number of nodes to provision: 1 by default, more for running in high-availability mode | <code>'{"count": 3}'</code> |
 
-To update a service instance, setting Git configuration sources, run:
+To update a service instance, configuring a Git backend, run:
 
 <pre class="terminal">
-$ cf update-service config-server -c '{"git": { "uri": "https://github.com/spring-cloud-samples/config-repo", "repos": { "cook": { "pattern": "cook*", "uri": "https://github.com/spring-cloud-services-samples/cook-config" } } } }'
+$ cf update-service config-server -c '{"git": { "uri": "https://github.com/spring-cloud-samples/config-repo" } }'
 </pre>
 
 To update a service instance and set the count of instances for running in high-availability mode, run:
@@ -98,13 +93,12 @@ You can use the `cf services` or `cf service` commands to check the status of th
 
 <pre class="terminal">
 $ cf service config-server
-Showing info of service config-server in org myorg / space development as admin...
+Showing info of service config-server in org myorg / space dev as user...
 
 name:            config-server
-service:         p-config-server
-bound apps:
+service:         p.config-server
 tags:
-
+plan:            standard
 [...]
 
 Showing status of last operation from service config-server...
@@ -112,6 +106,6 @@ Showing status of last operation from service config-server...
 status:    update succeeded
 </pre>
 
-<p class='note'><strong>Important</strong>: The <code>cf service</code> and <code>cf services</code> commands may report an <code>update succeeded</code> status even if the Config Server cannot initialize using the provided settings. For example, given an invalid URI for a configuration source, the service instance may still be restarted and have an <code>update succeeded</code> status. <br /> <br /> If the service instance does not appear to be functioning correctly after an update, you can visit its dashboard to double-check that the provided settings are valid and accurate. See <a href="./using-the-dashboard.html">Using the Dashboard</a>.</p>
+<p class='note'><strong>Important</strong>: The <code>cf service</code> and <code>cf services</code> commands may report an <code>update succeeded</code> status even if the Config Server cannot initialize using the provided settings. For example, given an invalid URI for a Git backend, the service instance may still be restarted and have an <code>update succeeded</code> status.</p>
 
 The service instance is now updated and ready to be used. For information about using an app to access configuration values served by a Config Server service instance, see <a href="./writing-client-applications.html">Writing Client Applications</a>.
