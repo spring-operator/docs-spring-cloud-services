@@ -95,6 +95,8 @@ $ openssl genpkey -algorithm RSA -outform PEM -pkeyopt rsa_keygen_bits:2048 > se
 $ openssl rsa -in server.key | awk '{printf "%s\\n", $0}' > server_rsa.key
 ```
 
+<p class='note'><strong>Important</strong>: The key must be correctly formatted in order to be usable by the Config Server. Either use the above commands or ensure that you otherwise create a similar PEM-encoded keypair. The beginning of the key should include <code>BEGIN RSA PRIVATE KEY</code>.</p>
+
 To configure a Config Server service instance that can encrypt property values with an assymetric keypair, use the following JSON object, where the value of `key` is the content of the `server_rsa.key` file:
 
 ```
