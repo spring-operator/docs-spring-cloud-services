@@ -20,41 +20,6 @@ Release notes for [Spring Cloud Services for Pivotal Cloud Foundry](https://netw
 
 <p class='note'><strong>Important</strong>: The service broker applications in Spring Cloud Services 1.5 use the <code>system</code> org's system domain, and expect this domain to be a shared domain (the default setting). If you make the <code>system</code> org's system domain private, Spring Cloud Services 1.5 will fail to push applications to the <code>system</code> org.</p>
 
-## <a id="1-5-0-migrating-from-1-4-x"></a>Migrating from 1.4.x
-
-For each client application, you must:
-
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/1-5/common/client-dependencies.html))
-
-## <a id="1-5-0-migrating-from-1-3-x"></a>Migrating from 1.3.x
-
-For each client application, you must:
-
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/1-5/common/client-dependencies.html))
-
-## <a id="1-5-0-migrating-from-1-2-x"></a>Migrating from 1.2.x
-
-For each client application, you must:
-
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/1-5/common/client-dependencies.html))
-
-## <a id="1-5-0-migrating-from-1-1-x"></a>Migrating from 1.1.x
-
-For each client application, you must:
-
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/1-5/common/client-dependencies.html))
-
-## <a id="1-5-0-migrating-from-1-0-x"></a>Migrating from 1.0.x
-
-For each client application, you must:
-
-* Update the build file to use the new versions of the Spring Cloud Services client dependencies (see [Client Dependencies](/spring-cloud-services/1-5/common/client-dependencies.html))
-* Update the build file to use the Maven BOM dependencies for Spring Boot and Spring Cloud (see [Client Dependencies](/spring-cloud-services/1-5/common/client-dependencies.html))
-
-For each Circuit Breaker Dashboard service instance, you must:
-
-* Upgrade the service instance (see [Service Instance Upgrades](/spring-cloud-services/1-5/common/service-instance-upgrades.html)), then unbind, rebind, and restart each of the service instance's client applications (this is due to a change in how service instance credentials are managed)
-
 ## <a id="1-5-0-known-issues"></a>Known Issues
 
 See below for known issues in Spring Cloud Services 1.5.x.
