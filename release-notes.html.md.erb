@@ -26,6 +26,10 @@ For each client app, you must:
 
 ## <a id="known-issues"></a>Known Issues
 
+### Config Server from Spring Cloud Services 1.5.x using encryption key must be updated
+
+A Config Server service instance created in Spring Cloud Services 1.5.x using a key for encryption does not work when upgraded to Spring Cloud Services 2.0.x. Before upgrading the Spring Cloud Services product to version 2.0.x, you must update any such Config Server service instance, giving the encryption key with all newlines escaped. See [Spring Cloud Services 1.5.x Config Server using encryption key cannot be upgraded to 2.0.x](./product-troubleshooting.html#1-5-config-server-using-encryption) in the [Troubleshooting Spring Cloud&reg; Services for Pivotal Cloud Foundry](./product-troubleshooting.html) topic.
+
 ### Impacted versions < 2.0.6: Issues using Spring Cloud Services with MySQL for PCF TLS configuration
 
 Spring Cloud Services uses the MariaDB Java client for connecting it's service broker to a MySQL for PCF database instance. If your Spring Cloud Services installation uses MySQL for PCF and is being updated or installed with [TLS enabled connections](https://docs.pivotal.io/p-mysql/2-5/prepare-tls.html) by default, the service broker will not be able to communicate with the database.
