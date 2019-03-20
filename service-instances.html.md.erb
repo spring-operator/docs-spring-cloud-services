@@ -13,21 +13,11 @@ See below for information about Spring Cloud&reg; Services' deployment model and
 
 A service instance is backed by one or more Spring Boot apps deployed by the spring-cloud-broker-worker app in the "p-spring-cloud-services" org to the "instances" space.
 
-A service instance is assigned a GUID at provision time. Backing apps for services include the GUID in their names:
+A service instance is assigned a GUID at provision time. Backing apps for service instances include the GUID in their names:
 
 **Config Server**
 
 * config-[GUID]: A [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server app.
-
-**Service Registry**
-
-* eureka-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Eureka server app.
-
-**Circuit Breaker Dashboard**
-
-* hystrix-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Hystrix server app.
-* turbine-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Turbine app.
-* **rabbitmq-[GUID]**: A [RabbitMQ for PCF](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/ops1.png") %>
 
@@ -113,47 +103,74 @@ Visit the URI in a browser or request it from another client (for example curl a
 }
 ```
 
-The response may include additional fields depending on the service type, as in the following example for a Service Registry service instance:
-
-```
-{
-  "issuer": "https://p-spring-cloud-services.uaa.wise.com/oauth/token",
-  "version": "5",
-  "nodeCount": "1",
-  "git": {
-    "commit": {
-      "time": 1478639430000,
-      "id": "6e139ee"
-    },
-    "branch": "HEAD"
-  },
-  "peers": []
-}
-```
-
 In addition to the version of the service instance (`version`), this response includes the OAuth 2 token issuer URI for the service instance (`issuer`), the number of nodes provisioned for the service instance (`nodeCount`), the list of peer service instances, if any (`peers`), and information about the Spring Cloud Services Git repository at build time for the service instance (`git`).
 
 <p class='note'><strong>Note</strong>: Fields such as those for Git repository information are for diagnostic purposes and intended to provide <a href="https://pivotal.io/support">Pivotal Support</a> with information to help in troubleshooting.</p>
 
 ## <a id="uaa-identity-zones-and-clients"></a>UAA Identity Zones and Clients
 
-Spring Cloud Services uses the multi-tenancy capabilities of the Cloud Foundry User Account and Authentication server (UAA). It creates a new Identity Zone ("the Spring Cloud Services Identity Zone") for all authorization from Config Server and Service Registry service instances to client apps which have bindings to these service instances.
+Spring Cloud Services uses the multi-tenancy capabilities of the Cloud Foundry User Account and Authentication server (UAA). It creates a new Identity Zone ("the Spring Cloud Services Identity Zone") for all authorization from Config Server service instances to client apps which have bindings to these service instances.
 
 Within the platform Identity Zone ("the UAA Identity Zone"), Spring Cloud Services creates a `p-spring-cloud-services` UAA client for the spring-cloud-broker app and a `p-spring-cloud-services-worker` UAA client for the spring-cloud-broker-worker app. In the Spring Cloud Services Identity Zone, it creates a `p-spring-cloud-services-worker` UAA client for the spring-cloud-broker-worker app.
-
-In the UAA Identity Zone, it also creates the following clients, where `[GUID]` is the service instance's GUID:
-
-* A `eureka-[GUID]` UAA client per Service Registry service instance.
-* A `hystrix-[GUID]` UAA client per Circuit Breaker Dashboard service instance.
 
 In the Spring Cloud Services Identity Zone, it also creates the following clients, where `[GUID]` is the service instance's GUID:
 
 * A `config-server-[GUID]` UAA client per Config Server service instance.
-* A `eureka-[GUID]` UAA client per Service Registry service instance.
 
 ### <a id="get-access-token-for-direct-requests-to-a-service-instance"></a>Get Access Token for Direct Requests to a Service Instance
 
-<%= partial 'common/get_access_token_for_direct_requests_to_a_service_instance' %>
+To make requests directly against a Config Server service instance's Spring Cloud Config Server backing app, you must obtain an OAuth 2.0 client credentials token. You can do this using cURL, as described below.
+
+<p class='note'><strong>Note</strong>: The following procedure uses the <a href="https://stedolan.github.io/jq/">jq</a> command-line JSON processing tool.</p>
+
+Run `cf env`, giving the name of an app that is bound to the service instance:
+
+<pre class="terminal">
+$ cf services
+Getting services in org myorg / space development as admin...
+OK
+
+name             service           plan        bound apps   last operation
+config-server    p-config-server   standard    cook         create succeeded
+
+$ cf env cook
+Getting env variables for app cook in org myorg / space development as admin...
+OK
+
+System-Provided:
+{
+ "VCAP_SERVICES": {
+  "p-config-server": [
+   {
+    "credentials": {
+     "access_token_uri": "https://p-spring-cloud-services.uaa.cf.wise.com/oauth/token",
+     "client_id": "p-config-server-876cd13b-1564-4a9a-9d44-c7c8a6257b73",
+     "client_secret": "rU7dMUw6bQjR",
+     "uri": "https://config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com"
+    },
+[...]
+</pre>
+
+Then run the following Bash script, which fetches a token and uses the token to access an endpoint on a service instance backing app:
+
+<pre class="terminal">
+TOKEN=$(curl -k [ACCESS_TOKEN_URI] -u [CLIENT_ID]:[CLIENT_SECRET] -d grant_type=client_credentials | jq -r .access_token); \
+curl -k -H "Authorization: bearer $TOKEN" -H "Accept: application/json" [URI]/[ENDPOINT] | jq
+</pre>
+
+This script retrieves an access token using an OAuth 2 credential exchange with Cloud Foundry's UAA service. After being given an authorization token, it uses this token to make a call to the service instance's API endpoints.
+
+In this script, replace the following placeholders with values from the `cf env` command above:
+
+* `[ACCESS_TOKEN_URI]` with the value of `p-config-server.credentials.access_token_uri`
+* `[CLIENT_ID]` with the value of `p-config-server.credentials.client_id`
+* `[CLIENT_SECRET]` with the value of `p-config-server.credentials.client_secret`
+* `[URI]` with the value of `p-config-server.credentials.uri`
+
+Replace `[ENDPOINT]` with the relevant endpoint. For example, to get properties from a Config Server service instance, use `application/profile`, where:
+
+  * `application` is the `spring.application.name` of a client application
+  * `profile` is a profile that has a configuration file in the Config Server's repository
 
 ### <a id="using-credhub-for-service-instance-credentials"></a>Using CredHub for Service Instance Credentials
 
@@ -226,9 +243,6 @@ OK
 
 name                                           requested state   instances   memory   disk   urls
 config-86b38ce0-eed8-4c01-adb4-1a651a6178e2    started           1/1         1G       1G     config-86b38ce0-eed8-4c01-adb4-1a651a6178e2.apps.wise.com
-eureka-493b6b17-512a-4961-8f85-6178251fe2fa    started           1/1         1G       1G     eureka-493b6b17-512a-4961-8f85-6178251fe2fa.apps.wise.com
-hystrix-ff835bde-5b3a-4623-a57f-8d88028b6376   started           1/1         1G       1G     hystrix-ff835bde-5b3a-4623-a57f-8d88028b6376.apps.wise.com
-turbine-ff835bde-5b3a-4623-a57f-8d88028b6376   started           1/1         1G       1G     turbine-ff835bde-5b3a-4623-a57f-8d88028b6376.apps.wise.com
 </pre>
 
 Then you can use ```cf logs``` to tail logs for a backing app.
@@ -261,7 +275,7 @@ See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsi
 
 #### Invoking Actuator Endpoints
 
-The Service Registry's Eureka backing app, the Config Server's backing app, and the Circuit Breaker Dashboard's Hystrix backing app all use OAuth 2 authentication. To access Actuator endpoints on one of these apps, you must supply a valid OAuth 2 token in the request header.
+The Config Server's backing app uses OAuth 2 authentication. To access Actuator endpoints on this app, you must supply a valid OAuth 2 token in the request header.
 
 1. Log in to Apps Manager as an admin user and navigate to the relevant app, as described in the [Access Service Instance Backing Applications in Apps Manager](#access-service-instance-backing-applications-in-apps-manager) section.
 
@@ -292,7 +306,3 @@ Below are usage requirements of the apps backing a single service instance (SI) 
 | Service Type              | Memory Limit / SI   | Disk Limit / SI  |
 |---------------------------|---------------------|------------------|
 | Config Server             | 1 GB                | 1 GB             |
-| Service Registry          | 1 GB                | 1 GB             |
-| Circuit Breaker Dashboard | 2 GB                | 2 GB             |
-
-Spring Cloud Services service types may also be backed by non-SCS service instances. For example, a Circuit Breaker Dashboard service instance uses a [RabbitMQ for PCF](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance for communication between its two backing apps.
