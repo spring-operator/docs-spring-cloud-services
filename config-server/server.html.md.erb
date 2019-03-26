@@ -49,7 +49,7 @@ A path includes an _application_, a _profile_, and optionally a _label_.
 
 * **Application**: The name of the application. In a Spring application, this will be derived from `spring.application.name` or `spring.cloud.config.name`.
 
-* **Profile**: The name of a profile, or a comma-separated list of profile names. The Config Server's concept of a "profile" corresponds directly to that of the <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/annotation/Profile.html">Spring Profile</a>.
+* **Profile**: The name of a profile, or a comma-separated list of profile names. The Config Server's concept of a "profile" corresponds directly to that of the <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/annotation/Profile.html">Spring Profile</a>.
 
 * **Label**: The name of a version marker in the configuration source (the repository). This might be a branch name, a tag name, or a Git commit hash. The value given to the Config Server as a default label (the setting of `git.label`; see the table of the Config Server's [general configuration parameters](/spring-cloud-services/config-server/creating-an-instance.html#general-configuration-parameters)) can be overridden in a client application by setting the `spring.cloud.config.label` property.
 

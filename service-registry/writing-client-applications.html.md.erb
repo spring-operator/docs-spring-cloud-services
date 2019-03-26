@@ -126,7 +126,7 @@ dependencies {
 }
 ```
 
-<p class='note'><strong>Important</strong>: Because of a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud Services Starters for Service Registry will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
+<p class='note'><strong>Important</strong>: Because of a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud Services Starters for Service Registry will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
 
 ## <a id="self-signed-ssl-certificate"></a>Add Self-Signed SSL Certificate to JVM Truststore
 
@@ -289,7 +289,7 @@ The Message Generation application is registered with the Service Registry insta
 
 ## <a id="disable-http-basic-auth"></a>Disable HTTP Basic Authentication
 
-The Spring Cloud Services Starter for Service Registry has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
+The Spring Cloud Services Starter for Service Registry has a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
 
 If you do not yet want to address application security, you may turn off Basic authentication by setting the `security.basic.enabled` property to `false`. In `application.yml` or `bootstrap.yml`:
 
@@ -312,4 +312,4 @@ security:
     enabled: false
 ```
 
-For more information, see ["Security" in the Spring Boot Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
+For more information, see ["Security" in the Spring Boot Reference Guide](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
