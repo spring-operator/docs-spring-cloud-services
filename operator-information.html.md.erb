@@ -33,7 +33,7 @@ You can obtain the broker username and password from the Spring Cloud Services t
 
 The Spring Cloud Services product upgrade process checks before redeploying the service broker to see whether the broker applications' version has changed. If the version has not changed, the upgrade process will continue without redeploying either the SB or the Worker.
 
-The SB application and the Worker application are deployed using a [blue-green deployment strategy](http://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
+The SB application and the Worker application are deployed using a [blue-green deployment strategy](https://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
 
 #### <a id="access-broker-applications-in-apps-manager"></a>Access Broker Applications in Apps Manager
 
@@ -53,17 +53,17 @@ A service instance is assigned a GUID at provision time. Backing applications fo
 
 **Config Server**
 
-* config-[GUID]: A [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server application.
+* config-[GUID]: A [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server application.
 
 **Service Registry**
 
-* eureka-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Eureka server application.
+* eureka-[GUID]: A [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Eureka server application.
 
 **Circuit Breaker Dashboard**
 
-* hystrix-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Hystrix server application.
-* turbine-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Turbine application.
-* **rabbitmq-[GUID]**: A [RabbitMQ for PCF](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance.
+* hystrix-[GUID]: A [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Hystrix server application.
+* turbine-[GUID]: A [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Turbine application.
+* **rabbitmq-[GUID]**: A [RabbitMQ for PCF](https://docs.pivotal.io/rabbitmq-cf/index.html) service instance.
 
 ### <a id="access-service-instance-backing-applications-in-apps-manager"></a>Access Service Instance Backing Applications in Apps Manager
 
@@ -323,7 +323,7 @@ Connected, tailing logs for app config-7b76f84c-455c-4ee6-8687-dbd93d734406 in o
 
 ### <a id="access-actuator-endpoints"></a>Access Actuator Endpoints
 
-The SB and Worker applications, as well as backing applications for service instances, use [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds [a number of endpoints](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) to these applications; some of the added endpoints are summarized below.
+The SB and Worker applications, as well as backing applications for service instances, use [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds [a number of endpoints](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) to these applications; some of the added endpoints are summarized below.
 
 | ID                    | Function                                                                                                                                              |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -333,11 +333,11 @@ The SB and Worker applications, as well as backing applications for service inst
 | <code>mappings</code> | Displays list of <code>@RequestMapping</code> paths in the application                                                                                |
 | <code>shutdown</code> | Allows for graceful shutdown of the application. Disabled by default; not enabled in Spring Cloud Services broker or instance-backing applications    |
 
-See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
+See the <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
 
 #### Endpoints on SB, Worker, Service Registry, or Circuit Breaker Dashboard
 
-The SB application, the Worker application, the Service Registry's Eureka backing application, and the Circuit Breaker Dashboard's Hystrix backing application use [Dashboard SSO](http://docs.cloudfoundry.org/services/dashboard-sso.html). To access Actuator endpoints on one of these applications, you must be authenticated as a Space Developer in the application's space and have a current session with the application.
+The SB application, the Worker application, the Service Registry's Eureka backing application, and the Circuit Breaker Dashboard's Hystrix backing application use [Dashboard SSO](https://docs.cloudfoundry.org/services/dashboard-sso.html). To access Actuator endpoints on one of these applications, you must be authenticated as a Space Developer in the application's space and have a current session with the application.
 
 1. Log in to Apps Manager as an admin user and navigate to the relevant application: for the SB or Worker, access the SB application or Worker application as described in the [The Service Broker](#the-service-broker) section; for a Service Registry or Circuit Breaker Dashboard service instance, access the backing application as described in the [Service Instances](#service-instances) section.
 
@@ -399,5 +399,5 @@ Below are usage requirements of the applications backing a single service instan
 | Service Registry          | 1 GB                | 1 GB             |
 | Circuit Breaker Dashboard | 2 GB                | 2 GB             |
 
-Spring Cloud Services service types may also be backed by non-SCS service instances. For example, a Circuit Breaker Dashboard service instance uses a [RabbitMQ for Pivotal Cloud Foundry&reg;](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance for communication between its two backing applications.
+Spring Cloud Services service types may also be backed by non-SCS service instances. For example, a Circuit Breaker Dashboard service instance uses a [RabbitMQ for Pivotal Cloud Foundry&reg;](https://docs.pivotal.io/rabbitmq-cf/index.html) service instance for communication between its two backing applications.
 

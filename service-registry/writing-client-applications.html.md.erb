@@ -9,7 +9,7 @@ _Refer to the sample applications in the <a href="https://github.com/spring-clou
 
 To register your application with a Service Registry service instance or use it to consume a service that is registered with a Service Registry service instance, you must add the dependencies listed in the <a href="/spring-cloud-services/client-dependencies.html">Client Dependencies</a> topic to your application's build file. Be sure to include the dependencies for <a href="/spring-cloud-services/client-dependencies.html#service-registry">Service Registry</a> as well.
 
-<p class='note'><strong>Important</strong>: Because of a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud Services Starters for Service Registry will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
+<p class='note'><strong>Important</strong>: Because of a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud Services Starters for Service Registry will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
 
 ## <a id="self-signed-ssl-certificate"></a>Add Self-Signed SSL Certificate to JVM Truststore
 
@@ -71,7 +71,7 @@ Optionally, you may also specify the registration method that you wish to use fo
 * ```route```: The application will be registered using its Cloud Foundry route.
 * ```direct```: The application will be registered using its host IP and port.
 
-The default value for the ```registrationMethod``` property is ```route```. You may also provide configuration using properties under ```eureka.instance```, such as ```eureka.instance.hostname``` and ```eureka.instance.nonSecurePort``` (see the [Spring Cloud Netflix documentation](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html#_service_discovery_eureka_clients)); if you do, those properties will override the value of ```registrationMethod```.
+The default value for the ```registrationMethod``` property is ```route```. You may also provide configuration using properties under ```eureka.instance```, such as ```eureka.instance.hostname``` and ```eureka.instance.nonSecurePort``` (see the [Spring Cloud Netflix documentation](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html#_service_discovery_eureka_clients)); if you do, those properties will override the value of ```registrationMethod```.
 
 See below for information about the ```route``` and ```direct``` registration methods.
 
@@ -102,7 +102,7 @@ This registration method is compatible with all deployments of Pivotal Cloud Fou
 
 An application running on Pivotal Cloud Foundry&reg; is provided with an externally-accessible IP address and port, which are made available in two environment variables: ```CF_INSTANCE_IP``` and ```CF_INSTANCE_PORT```. If you specify the ```direct``` registration method, the application will be registered with the Service Registry instance using this IP address and port.
 
-Requests from client applications to this registered application will not go through the Pivotal Cloud Foundry&reg; Router. You can provide client-side load balancing using [Spring Cloud and Netflix Ribbon](http://projects.spring.io/spring-cloud/docs/1.0.3/spring-cloud.html#spring-cloud-ribbon).
+Requests from client applications to this registered application will not go through the Pivotal Cloud Foundry&reg; Router. You can provide client-side load balancing using [Spring Cloud and Netflix Ribbon](https://projects.spring.io/spring-cloud/docs/1.0.3/spring-cloud.html#spring-cloud-ribbon).
 
 This registration method is only compatible with Pivotal Cloud Foundry&reg; version 1.5 or higher. In Pivotal Cloud Foundry&reg; Operations Manager, in the **Pivotal Elastic Runtime** tile's **Application Containers**, the "Microservices: Enable cross-container traffic" option must be enabled.
 
@@ -179,7 +179,7 @@ The Message Generation application is registered with the Service Registry insta
     }
 ```
 
-<a href="https://github.com/spring-cloud-services-samples/greeting/blob/1.0.x/greeter/src/main/java/greeter/GreeterApplication.java#L43-L56">Greeter's `Greeting` class</a> uses Jackson's <a href="http://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonCreator.html">`@JsonCreator`</a> and <a href="http://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonProperty.html">`@JsonProperty`</a> to read in the JSON response from Message Generation.
+<a href="https://github.com/spring-cloud-services-samples/greeting/blob/1.0.x/greeter/src/main/java/greeter/GreeterApplication.java#L43-L56">Greeter's `Greeting` class</a> uses Jackson's <a href="https://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonCreator.html">`@JsonCreator`</a> and <a href="https://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonProperty.html">`@JsonProperty`</a> to read in the JSON response from Message Generation.
 
 ```java
     private static class Greeting {
@@ -201,10 +201,10 @@ The Message Generation application is registered with the Service Registry insta
 The Greeter application now responds with a customizable ```Greeting``` when you access its ```/hello``` endpoint.
 
 <pre class="terminal">
-$ curl http://greeter.wise.com/hello
+$ curl https://greeter.wise.com/hello
 Hello, Bob!
 
-$ curl http://greeter.wise.com/hello?name=John
+$ curl https://greeter.wise.com/hello?name=John
 Hello, John!
 </pre>
 
@@ -278,7 +278,7 @@ The Message Generation application is registered with the Service Registry insta
     }
 ```
 
-<a href="https://github.com/spring-cloud-services-samples/greeting/blob/1.0.x/feign-greeter/src/main/java/greeter/GreeterApplication.java#L37-L50">Greeter's `Greeting` class</a> uses Jackson's <a href="http://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonCreator.html">`@JsonCreator`</a> and <a href="http://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonProperty.html">`@JsonProperty`</a> to read in the JSON response from Message Generation.
+<a href="https://github.com/spring-cloud-services-samples/greeting/blob/1.0.x/feign-greeter/src/main/java/greeter/GreeterApplication.java#L37-L50">Greeter's `Greeting` class</a> uses Jackson's <a href="https://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonCreator.html">`@JsonCreator`</a> and <a href="https://fasterxml.github.io/jackson-annotations/javadoc/2.1.0/com/fasterxml/jackson/annotation/JsonProperty.html">`@JsonProperty`</a> to read in the JSON response from Message Generation.
 
 ```java
     private static class Greeting {
@@ -310,16 +310,16 @@ The Message Generation application is registered with the Service Registry insta
 Greeter now responds with a customizable ```Greeting``` when you access its ```/hello``` endpoint.
 
 <pre class="terminal">
-$ curl http://greeter.wise.com/hello
+$ curl https://greeter.wise.com/hello
 Hello, Bob!
 
-$ curl http://greeter.wise.com/hello?name=John
+$ curl https://greeter.wise.com/hello?name=John
 Hello, John!
 </pre>
 
 ## <a id="disable-http-basic-auth"></a>Disable HTTP Basic Authentication
 
-The Spring Cloud Services Starter for Service Registry has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
+The Spring Cloud Services Starter for Service Registry has a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
 
 If you do not yet want to address application security, you can turn off Basic authentication by setting the `security.basic.enabled` property to `false`. In `application.yml` or `bootstrap.yml`:
 
@@ -342,4 +342,4 @@ security:
     enabled: false
 ```
 
-For more information, see ["Security" in the Spring Boot Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
+For more information, see ["Security" in the Spring Boot Reference Guide](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
