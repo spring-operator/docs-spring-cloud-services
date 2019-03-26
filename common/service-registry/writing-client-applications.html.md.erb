@@ -251,7 +251,7 @@ The Greeter app can now use container networking to access the Messages app via 
 
 ## <a id="disable-http-basic-auth"></a>Disable HTTP Basic Authentication
 
-The Spring Cloud Services Starter for Service Registry has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your app has other security configuration, this will cause all app endpoints to be protected by HTTP Basic authentication.
+The Spring Cloud Services Starter for Service Registry has a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>. Unless your app has other security configuration, this will cause all app endpoints to be protected by HTTP Basic authentication.
 
 If you do not yet want to address application security, you may turn off Basic authentication using [a class that extends Spring Security's `WebSecurityConfigurerAdapter` and is annotated with the Spring `@Configuration` annotation](https://github.com/spring-cloud-services-samples/greeting/blob/master/greeter/src/main/java/greeter/SecurityConfiguration.java). The sample apps disable all default security for the `development` profile only, using the `@Profile` annotation:
 
@@ -272,4 +272,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
-For more information, see ["Security" in the Spring Boot Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
+For more information, see ["Security" in the Spring Boot Reference Guide](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
