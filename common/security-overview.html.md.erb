@@ -29,7 +29,7 @@ The following abbreviations, example values, and terms are used in this topic as
 
 * **CF Application**: An application in Cloud Foundry; the `application` in ```cf push application```.
 
-* **Dashboard SSO**: [Cloud Foundry's Dashboard Single Sign-On](http://docs.cloudfoundry.org/services/dashboard-sso.html).
+* **Dashboard SSO**: [Cloud Foundry's Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).
 
 * **domain.com**: The value configured by an administrator for the Cloud Foundry system domain.
 
@@ -45,15 +45,15 @@ The following abbreviations, example values, and terms are used in this topic as
 
 * **SCS**: Spring Cloud Services.
 
-* **UAA**: The [Cloud Foundry User Account and Authentication Server](http://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html).
+* **UAA**: The [Cloud Foundry User Account and Authentication Server](https://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html).
 
 ## <a id="https"></a>A Note on TLS/SSL
 
-All components in SCS force HTTPS for all inbound requests. Because SSL terminates at the load balancer, requests are deemed to originate over HTTPS by inspecting the ```X-Forwarded-For```, ```X-Forwarded-Proto```, and ```X-Forwarded-Port``` headers. More on how this is implemented can be found in the [Spring Boot documentation](http://docs.spring.io/spring-boot/docs/current/reference/html/howto-security.html#howto-enable-https).
+All components in SCS force HTTPS for all inbound requests. Because SSL terminates at the load balancer, requests are deemed to originate over HTTPS by inspecting the ```X-Forwarded-For```, ```X-Forwarded-Proto```, and ```X-Forwarded-Port``` headers. More on how this is implemented can be found in the [Spring Boot documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/howto-security.html#howto-enable-https).
 
 All outbound HTTP requests made by SCS components are also made over HTTPS. These requests nearly always contain credentials, and are made to other components within the Cloud Foundry environment. In an environment that uses self-signed certificates in the HA proxy configuration, outbound HTTPS requests to other components would fail because the self-signed certificate would not be trusted by the JVM's default truststore (e.g. ```cacerts```). To get around this, all components use the [cloudfoundry-certificate-truster](http://central.maven.org/maven2/io/pivotal/spring/cloud/cloudfoundry-certificate-truster/1.0.1.RELEASE/) to add the CF environment's SSL certificate to the JVM's truststore on application startup.
 
-The SSL certificate used by the CF environment must also include Subject Alternative Names (SANs) for domain wildcards ```*.login.domain.com``` and ```*.uaa.domain.com```. This is needed for the correct operation [of Multi-tenant UAA](http://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html), which relies on subdomains of UAA.
+The SSL certificate used by the CF environment must also include Subject Alternative Names (SANs) for domain wildcards ```*.login.domain.com``` and ```*.uaa.domain.com```. This is needed for the correct operation [of Multi-tenant UAA](https://docs.pivotal.io/pivotalcf/concepts/architecture/uaa.html), which relies on subdomains of UAA.
 
 ## <a id="multi-tenant-uaa"></a>A Note on Multi-Tenant UAA
 
@@ -61,7 +61,7 @@ SCS uses the multi-tenancy features of UAA to implement ["the principle of least
 
 Making admin-level credentials (e.g. the UAA admin client) accessible to an application is dangerous and should be avoided. For example, if one were to break into that application and get those credentials, the credentials could be used to affect the entire CF environment. This is why SCS operates in two UAA domains (also called Identity Zones).
 
-The platform Identity Zone (e.g. ```uaa.domain.com```) contains the users of SCS (e.g. Space Developers) and the [Dashboard SSO](http://docs.cloudfoundry.org/services/dashboard-sso.html) clients used by each Service Instance. An admin-level client is not required for creating and deleting SSO clients because the SSO client's scope values are fixed and only the most basic ```uaa.resource``` authority is needed by the SSO client.
+The platform Identity Zone (e.g. ```uaa.domain.com```) contains the users of SCS (e.g. Space Developers) and the [Dashboard SSO](https://docs.cloudfoundry.org/services/dashboard-sso.html) clients used by each Service Instance. An admin-level client is not required for creating and deleting SSO clients because the SSO client's scope values are fixed and only the most basic ```uaa.resource``` authority is needed by the SSO client.
 
 The other Identity Zone is specific to SCS (e.g. ```p-spring-cloud-services.uaa.domain.com```). This Identity Zone contains no users, but it contains the clients used by bound applications to access protected resources on SCS service instances. These clients require dynamic authority values, which can only be created by an admin-level actor. This admin-level actor (the [p-spring-cloud-services-worker](#worker-oauth-client-scs) client) also exists in the Spring Cloud Services Identity Zone, but because it exists in this Identity Zone, it cannot affect anything in the platform Identity Zone. If these credentials were leaked, the damage would be limited to SCS.
 
@@ -83,7 +83,7 @@ The installation file is the ```.pivotal``` file that contains the Spring Cloud 
 
 The installation file is generated from source code repositories hosted on ```github.com```. The repositories are can only be accessed by authorized persons and cannot be accessed over a non-encrypted channel. No credentials are stored in any source repository used by Spring Cloud Services.
 
-[Concourse](http://concourse.ci/) is used as the build pipeline to generate the installation file. The infrastructure that hosts Concourse can only be accessed from within the Pivotal network, using a username and password stored internally by Concourse. The build pipeline configuration contains credentials to the S3 bucket which hosts the installation file and intermediate artifacts, as well as the GitHub API key providing read/write access to the source code repositories. The resulting installation file built by the Concourse pipeline does not contain any credentials.
+[Concourse](https://concourse.ci/) is used as the build pipeline to generate the installation file. The infrastructure that hosts Concourse can only be accessed from within the Pivotal network, using a username and password stored internally by Concourse. The build pipeline configuration contains credentials to the S3 bucket which hosts the installation file and intermediate artifacts, as well as the GitHub API key providing read/write access to the source code repositories. The resulting installation file built by the Concourse pipeline does not contain any credentials.
 
 The installation file is downloaded from [https://network.pivotal.io](https://network.pivotal.io), can only be accessed by authorized persons, and cannot be accessed over a non-encrypted channel.
 
@@ -105,7 +105,7 @@ The Spring Cloud Service Broker is responsible for receiving Service Broker API 
 
 <a id="sb-entry-point-service-broker-api"></a>**The Service Broker API**
 
-[Service Broker API](http://docs.cloudfoundry.org/services/api.html) endpoints require HTTPS and Basic authentication. Valid credentials for Basic authentication are made available to the SB via environment variables, and are therefore stored in the CC database in encrypted form. The CC also makes Service Broker API requests, and the credentials used to make these API requests are stored in the CC DB in encrypted form as well.
+[Service Broker API](https://docs.cloudfoundry.org/services/api.html) endpoints require HTTPS and Basic authentication. Valid credentials for Basic authentication are made available to the SB via environment variables, and are therefore stored in the CC database in encrypted form. The CC also makes Service Broker API requests, and the credentials used to make these API requests are stored in the CC DB in encrypted form as well.
 
 <a id="sb-entry-point-service-broker-dashboard"></a>**Service Broker Dashboard**
 
@@ -123,7 +123,7 @@ This endpoint returns or modifies configuration parameters for the service insta
 
 *GET /dashboard/instance/{serviceInstanceId}/health*
 
-This endpoint returns the response of the ```/health``` endpoint on the backing application. While this dashboard endpoint requires an authenticated session to allow access, as all dashboard endpoints do, the underlying ```/health``` endpoint of the backing application is provided by [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information, or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
+This endpoint returns the response of the ```/health``` endpoint on the backing application. While this dashboard endpoint requires an authenticated session to allow access, as all dashboard endpoints do, the underlying ```/health``` endpoint of the backing application is provided by [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) and may be accessed anonymously for summary information, or using OAuth2 authentication for detailed information.  This is used by the Config Server configuration page to indicate if there are any problems with the Config Server's configuration.
 
 <a id="sb-entry-point-caching-si-permission-check"></a>*Caching the Service Instance Permission Check*
 
@@ -145,7 +145,7 @@ This endpoint accepts PUT requests containing the service instance ID plus an id
 
 <a id="sb-entry-point-actuator-endpoints"></a>**Actuator Endpoints**
 
-[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and an authenticated session. The token is obtained from UAA via the OAuth 2 Authorization Code flow as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#oauth2-flow); the token is then used to make a request to the [CC ```/v2/apps/:guid/env``` endpoint](https://apidocs.cloudfoundry.org/219/apps/get_the_env_for_an_app.html), which can only be accessed by Space Developers in the space that hosts the SB. The GUID used in the request is extracted from the ```VCAP_APPLICATION``` environment variable, whose value is given by the CC. The only user that can access these endpoints is the Operator.
+[Actuator endpoints](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and an authenticated session. The token is obtained from UAA via the OAuth 2 Authorization Code flow as documented [here](https://docs.cloudfoundry.org/services/dashboard-sso.html#oauth2-flow); the token is then used to make a request to the [CC ```/v2/apps/:guid/env``` endpoint](https://apidocs.cloudfoundry.org/219/apps/get_the_env_for_an_app.html), which can only be accessed by Space Developers in the space that hosts the SB. The GUID used in the request is extracted from the ```VCAP_APPLICATION``` environment variable, whose value is given by the CC. The only user that can access these endpoints is the Operator.
 
 This Actuator SSO flow is used by other components that already use [Dashboard SSO](#sb-entry-point-service-broker-dashboard), as no additional dependencies are required to enable this.
 
@@ -171,7 +171,7 @@ The SB communicates with UAA via HTTPS to enable Dashboard SSO. All requests to 
 
 <p class='note'><strong>Note</strong>: CredHub support requires Pivotal Application Service (PAS) 2.0 or later.</p>
 
-If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the SB uses the runtime CredHub to store the JSON payload generated for each service instance binding created. Because the binding GUID used in the credential name is generated at binding request time, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the SB and either the bound application or the Cloud Controller have the permissions to view this credential in the runtime CredHub.
+If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the SB uses the runtime CredHub to store the JSON payload generated for each service instance binding created. Because the binding GUID used in the credential name is generated at binding request time, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the SB and either the bound application or the Cloud Controller have the permissions to view this credential in the runtime CredHub.
 
 #### OAuth Clients
 
@@ -186,7 +186,7 @@ If the Operator has configured the Spring Cloud Services tile to [secure service
 <dd><strong>Token expiry</strong>: default (12 hours)</dd>
 </dl>
 
-This client is used for SSO with UAA. The scopes allow the SB to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the SB to access the token verification endpoints on UAA. The ```credhub.read``` and ```credhub.write``` authorities are only granted if the operator has configured the Spring Cloud Services tile to [secure service instance credentials](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html) using CredHub, and allow the SB to store service binding credentials in CredHub securely. The SB's client ID and client secret are made available to the SB via environment variables, which are set at installation time and are stored in encrypted form in the CC DB.
+This client is used for SSO with UAA. The scopes allow the SB to access the Cloud Controller API on the user's behalf, and are auto-approved. The ```uaa.resource``` authority allows the SB to access the token verification endpoints on UAA. The ```credhub.read``` and ```credhub.write``` authorities are only granted if the operator has configured the Spring Cloud Services tile to [secure service instance credentials](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html) using CredHub, and allow the SB to store service binding credentials in CredHub securely. The SB's client ID and client secret are made available to the SB via environment variables, which are set at installation time and are stored in encrypted form in the CC DB.
 
 ### <a id="spring-cloud-broker-worker"></a>Spring Cloud Service Broker Worker
 
@@ -208,7 +208,7 @@ The Worker listens for messages posted to the p-rabbitmq service instance. The S
 
 **Actuator Endpoints**
 
-[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and OAuth 2 authentication.
+[Actuator endpoints](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require HTTPS and OAuth 2 authentication.
 
 #### External Dependencies
 
@@ -232,7 +232,7 @@ The Worker uses the client management APIs of UAA to create and delete clients i
 
 _Service Instance Backing Application Credentials_
 
-If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the Worker, when creating a service instance, relies on the runtime CredHub to generate basic access authentication credentials or OAuth 2.0 credentials for a service instance's backing application(s). Because the GUID used in the credential name is generated at the time of the service instance creation request, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the Worker has permissions to view this credential in the runtime CredHub.
+If the Operator has configured the Spring Cloud Services tile to [secure service instance credentials using CredHub](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html), the Worker, when creating a service instance, relies on the runtime CredHub to generate basic access authentication credentials or OAuth 2.0 credentials for a service instance's backing application(s). Because the GUID used in the credential name is generated at the time of the service instance creation request, an attacker would be unable to predict the credential name and thus unable to identify the particular credential in CredHub. Only the Worker has permissions to view this credential in the runtime CredHub.
 
 After CredHub generates the credential and passes it to the Worker, the Worker does not access the credential unless and until the service instance backing application is deleted. If the application is deleted, the Worker deletes the credential from CredHub.
 
@@ -259,7 +259,7 @@ This client is used to create and delete SSO clients for each Service Registry a
 
 While arbitrary clients cannot be created via this client, this client is able to delete any client in the UAA Identity Zone due to the ```clients.write``` authority.
 
-The ```credhub.read``` and ```credhub.write``` authorities are only granted if the operator has configured the Spring Cloud Services tile to [secure service instance credentials](http://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html) using CredHub, and allow the Worker to store service backing app credentials in CredHub securely. The Worker's client ID and client secret are made available to the Worker via environment variables, which are set at installation time and are stored in encrypted form in the CC DB. The credentials are only visible to the Operator.
+The ```credhub.read``` and ```credhub.write``` authorities are only granted if the operator has configured the Spring Cloud Services tile to [secure service instance credentials](https://docs.pivotal.io/pivotalcf/2-0/opsguide/secure-si-creds.html) using CredHub, and allow the Worker to store service backing app credentials in CredHub securely. The Worker's client ID and client secret are made available to the Worker via environment variables, which are set at installation time and are stored in encrypted form in the CC DB. The credentials are only visible to the Operator.
 
 <a id="worker-oauth-client-scs"></a>**p-spring-cloud-services-worker**
 
@@ -298,7 +298,7 @@ The Config Server CF Application is a backing application for a Config Server se
 
 **Config Server REST endpoints**
 
-The following entry points are defined by [Spring Cloud Config Server](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_spring_cloud_config_server).
+The following entry points are defined by [Spring Cloud Config Server](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_spring_cloud_config_server).
 
 *GET /{application}/{profile}[/{label}]*
 
@@ -373,8 +373,8 @@ The overall health status can only be `UP` if all of the configuration source he
         "port": 8200,
         "host": "myvault.mycompany.com"
       },
-      "error": "Unable to contact Vault server at http://myvault.mycompany.com:8200/v1/sys/health",
-      "reason": "I/O error on GET request for \"http://myvault.mycompany.com:8200/v1/sys/health\": null; nested exception is org.apache.http.client.ClientProtocolException"
+      "error": "Unable to contact Vault server at https://myvault.mycompany.com:8200/v1/sys/health",
+      "reason": "I/O error on GET request for \"https://myvault.mycompany.com:8200/v1/sys/health\": null; nested exception is org.apache.http.client.ClientProtocolException"
     }
   },
   "diskSpace": {
@@ -412,7 +412,7 @@ Other than checking for the claims mentioned in the previous section, no other a
 
 **Actuator Endpoints**
 
-[Actuator endpoints](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require OAuth 2 authentication, with the exception of ```/health``` as described above; the ```health``` endpoint can also be accessed anonymously to receive less-detailed information.
+[Actuator endpoints](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints) are enabled and require OAuth 2 authentication, with the exception of ```/health``` as described above; the ```health``` endpoint can also be accessed anonymously to receive less-detailed information.
 
 #### External Dependencies
 
@@ -468,7 +468,7 @@ For an incoming request to be identified as coming from a Node, the request must
 
 **Peer**
 
-When a Service Registry is configured for [peer replication](http://docs.pivotal.io/spring-cloud-services/service-registry/creating-an-instance.html#peer-replication-across-pcf-deployments) with other service instances, the Peer role represents one of the Eureka servers of a configured peer service instance.
+When a Service Registry is configured for [peer replication](https://docs.pivotal.io/spring-cloud-services/service-registry/creating-an-instance.html#peer-replication-across-pcf-deployments) with other service instances, the Peer role represents one of the Eureka servers of a configured peer service instance.
 
 For an incoming request to be identified as coming from a Peer, the request must contain a token with the following claims:
 

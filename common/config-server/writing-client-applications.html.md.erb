@@ -15,7 +15,7 @@ Your app must also declare the Spring Cloud Services Config Server starter as a 
 
 <%= partial '../config-server-dependency' %>
 
-<p class='note'><strong>Important</strong>: Because of a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud&reg; Config Client starter will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
+<p class='note'><strong>Important</strong>: Because of a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud&reg; Config Client starter will by default cause all application endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
 
 <% if vars.product_name == 'PCF' %>
  <%= partial vars.scs_cs_self_signed_ssl %>
@@ -35,7 +35,7 @@ spring:
 
 This application will use a path with the application name `cook`, so the Config Server will look in its configuration source for files whose names begin with `cook`, and return configuration properties from those files.
 
-Now you can (for example) inject a configuration property value using the <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Value.html">`@Value`</a> annotation. <a href="https://github.com/spring-cloud-services-samples/cook/blob/1.5.x/src/main/java/cook/Menu.java">The Menu class</a> reads the value of `special` from the `cook.special` configuration property.
+Now you can (for example) inject a configuration property value using the <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Value.html">`@Value`</a> annotation. <a href="https://github.com/spring-cloud-services-samples/cook/blob/1.5.x/src/main/java/cook/Menu.java">The Menu class</a> reads the value of `special` from the `cook.special` configuration property.
 
 ```java
 @RefreshScope
@@ -121,7 +121,7 @@ As noted in the [Configuration Clients](/spring-cloud-services/config-server/bac
 
 ## <a id="view-client-application-configuration"></a>View Client Application Configuration
 
-<a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> adds an `env` endpoint to the application and maps it to `/env`. This endpoint displays the application's profiles and property sources from the Spring ```ConfigurableEnvironment```. (See ["Endpoints"](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) in the "Spring Boot Actuator" section of the Spring Boot Reference Guide.) In the case of an application which is bound to a Config Server service instance, `env` will display properties provided by the instance.
+<a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> adds an `env` endpoint to the application and maps it to `/env`. This endpoint displays the application's profiles and property sources from the Spring ```ConfigurableEnvironment```. (See ["Endpoints"](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) in the "Spring Boot Actuator" section of the Spring Boot Reference Guide.) In the case of an application which is bound to a Config Server service instance, `env` will display properties provided by the instance.
 
 To use Actuator, you must add the `spring-boot-starter-actuator` dependency to your project. If using Maven, <a href="https://github.com/spring-cloud-services-samples/cook/blob/1.5.x/pom.xml#L63-L66">add to `pom.xml`</a>:
 
@@ -141,7 +141,7 @@ compile("org.springframework.boot:spring-boot-starter-actuator")
 You can now visit `/env` to see the application environment's properties (the following shows an excerpt of an example response):
 
 <pre class="terminal">
-$ curl http://cookie.apps.wise.com/env
+$ curl https://cookie.apps.wise.com/env
 {
   "profiles":[
     "dev","cloud"
@@ -183,7 +183,7 @@ public class Menu {
 This means that after you change values in the configuration source repository, you can update the `special` on the `Application` class's `menu` with a refresh event triggered on the application:
 
 <pre class="terminal">
-$ curl http://cookie.apps.wise.com/restaurant
+$ curl https://cookie.apps.wise.com/restaurant
 Today's special is: Pickled Cactus
 
 $ git commit -am "new special"
@@ -192,10 +192,10 @@ $ git commit -am "new special"
 
 $ git push
 
-$ curl -X POST http://cookie.apps.wise.com/refresh
+$ curl -X POST https://cookie.apps.wise.com/refresh
 ["cook.special"]
 
-$ curl http://cookie.apps.wise.com/restaurant
+$ curl https://cookie.apps.wise.com/restaurant
 Today's special is: Birdfeather Tea
 </pre>
 
@@ -205,7 +205,7 @@ On the Config Server, the decryption features are disabled, so encrypted propert
 
 To use the decryption features in a client application, you must use a Java buildpack which contains the Java Cryptography Extension (JCE) Unlimited Strength policy files. These files are contained in the Cloud Foundry Java buildpack from version 3.7.1.
 
-<p class="tip">If you cannot use version 3.7.1 or later, you can add the JCE Unlimited Strength policy files to an earlier version of the Cloud Foundry Java buildpack. Fork the <a href="https://github.com/cloudfoundry/java-buildpack">buildpack on GitHub</a>, then download the policy files from Oracle and place them in the buildpack's <code>resources/open_jdk_jre/lib/security</code> directory. Follow the instructions in the <a href="http://docs.pivotal.io/pivotalcf/adminguide/buildpacks.html">Managing Custom Buildpacks</a> topic to add this buildpack to Pivotal Cloud Foundry. Be sure that it has the lowest position of all enabled Java buildpacks.</p>
+<p class="tip">If you cannot use version 3.7.1 or later, you can add the JCE Unlimited Strength policy files to an earlier version of the Cloud Foundry Java buildpack. Fork the <a href="https://github.com/cloudfoundry/java-buildpack">buildpack on GitHub</a>, then download the policy files from Oracle and place them in the buildpack's <code>resources/open_jdk_jre/lib/security</code> directory. Follow the instructions in the <a href="https://docs.pivotal.io/pivotalcf/adminguide/buildpacks.html">Managing Custom Buildpacks</a> topic to add this buildpack to Pivotal Cloud Foundry. Be sure that it has the lowest position of all enabled Java buildpacks.</p>
 
 You must also include [Spring Security RSA](https://github.com/dsyer/spring-security-rsa) as a dependency.
 
@@ -426,7 +426,7 @@ ttl                  997
 
 ## <a id="disable-http-basic-auth"></a>Disable HTTP Basic Authentication
 
-The Spring Cloud Config Client starter has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
+The Spring Cloud Config Client starter has a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>. Unless your application has other security configuration, this will cause all application endpoints to be protected by HTTP Basic authentication.
 
 If you do not yet want to address application security, you can disable Basic authentication. See below for information about doing this in your app's version of Spring Boot.
 
@@ -499,4 +499,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
-For more information, see ["Security" in the Spring Boot 2.0 Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
+For more information, see ["Security" in the Spring Boot 2.0 Reference Guide](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
