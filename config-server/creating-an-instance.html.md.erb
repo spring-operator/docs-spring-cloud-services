@@ -44,7 +44,7 @@ service plan   description     free or paid
 standard       Standard Plan   free
 </pre>
 
-Create the service instance using `cf create-service`, using the `-c` flag to provide a JSON object that specifies the configuration parameters. Parameters used to configure configuration sources are part of a JSON object called `git`, as in `{"git": { "uri": "http://example.com/config" } }`. For more information on the purposes of these fields, see the [The Config Server](/spring-cloud-services/config-server/server.html) topic.
+Create the service instance using `cf create-service`, using the `-c` flag to provide a JSON object that specifies the configuration parameters. Parameters used to configure configuration sources are part of a JSON object called `git`, as in `{"git": { "uri": "https://example.com/config" } }`. For more information on the purposes of these fields, see the [The Config Server](/spring-cloud-services/config-server/server.html) topic.
 
 <a id="general-configuration-parameters"></a>
 
@@ -114,7 +114,7 @@ Bound apps:
 Tags:
 Plan: standard
 Description: Config Server for Spring Cloud Applications
-Documentation url: http://docs.pivotal.io/spring-cloud-services/
+Documentation url: https://docs.pivotal.io/spring-cloud-services/
 Dashboard: https://spring-cloud-broker.apps.wise.com/dashboard/p-config-server/9281c950-9b07-495e-9af4-f9fbd277037d
 
 Last Operation
@@ -180,7 +180,7 @@ Each repository object also has a `pattern`, which is a comma-separated list of 
 '{"git": { "repos": { "cookie": { "pattern": "co*/dev*", "uri": "https://github.com/spring-cloud-services-samples/cook-config" } } } }'
 ```
 
-For more information about the pattern format, see ["Pattern Matching and Multiple Repositories"](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_pattern_matching_and_multiple_repositories) in the [Spring Cloud Config documentation](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html).
+For more information about the pattern format, see ["Pattern Matching and Multiple Repositories"](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_pattern_matching_and_multiple_repositories) in the [Spring Cloud Config documentation](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html).
 
 The parameters used to configure specific configuration sources for the Config Server are listed below.
 
@@ -260,7 +260,7 @@ A repository URI that enables use of one repository per profile might be express
 '{"git": { "uri": "https://github.com/spring-cloud-services-samples/config-{profile}"  } }'
 ```
 
-For more information about using placeholders, see ["Placeholders in Git URI"](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_placeholders_in_git_uri) in the [Spring Cloud Config documentation](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html).
+For more information about using placeholders, see ["Placeholders in Git URI"](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_placeholders_in_git_uri) in the [Spring Cloud Config documentation](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html).
 
 To create a Config Server service instance with a repository URI that enables one repository per application, run:
 
