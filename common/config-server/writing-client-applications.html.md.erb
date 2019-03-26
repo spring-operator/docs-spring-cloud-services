@@ -9,7 +9,7 @@ _Refer to the <a href="https://github.com/spring-cloud-services-samples/cook/tre
 
 To use a Spring Boot app as a client for a Config Server instance, you must add the dependencies listed in <a href="../client-dependencies.html">Client Dependencies</a> to your app's build file. Be sure to include the dependencies for <a href="../client-dependencies.html#config-server">Config Server</a> as well.
 
-<p class='note'><strong>Important</strong>: Because of a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud&reg; Config Client starter will by default cause all app endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
+<p class='note'><strong>Important</strong>: Because of a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>, the Spring Cloud&reg; Config Client starter will by default cause all app endpoints to be protected by HTTP Basic authentication. If you wish to disable this, please see <a href="#disable-http-basic-auth">Disable HTTP Basic Authentication</a> below.</p>
 
 <% if vars.product_name == 'PCF' %>
  <%= partial vars.scs_cs_self_signed_ssl %>
@@ -29,7 +29,7 @@ spring:
 
 This app will use a path with the application name `cook`, so the Config Server will look in its configuration source for files whose names begin with `cook`, and return configuration properties from those files.
 
-Now you can (for example) inject a configuration property value using the <a href="http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Value.html">`@Value`</a> annotation. <a href="https://github.com/spring-cloud-services-samples/cook/blob/master/src/main/java/cook/Menu.java">The Menu class</a> reads the value of `special` from the `cook.special` configuration property.
+Now you can (for example) inject a configuration property value using the <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/annotation/Value.html">`@Value`</a> annotation. <a href="https://github.com/spring-cloud-services-samples/cook/blob/master/src/main/java/cook/Menu.java">The Menu class</a> reads the value of `special` from the `cook.special` configuration property.
 
 ```java
 @RefreshScope
@@ -122,7 +122,7 @@ When the Config Server returns multiple values for a configuration property, the
 
 ## <a id="view-client-application-configuration"></a>View Client Application Configuration
 
-<a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> adds an `env` endpoint to the app and maps it to `/actuator/env`. This endpoint displays the app's profiles and property sources from the Spring ```ConfigurableEnvironment```. (See ["Endpoints"](http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) in the "Spring Boot Actuator" section of the Spring Boot Reference Guide.) In the case of an app which is bound to a Config Server service instance, `env` will display properties provided by the instance.
+<a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready">Spring Boot Actuator</a> adds an `env` endpoint to the app and maps it to `/actuator/env`. This endpoint displays the app's profiles and property sources from the Spring ```ConfigurableEnvironment```. (See ["Endpoints"](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) in the "Spring Boot Actuator" section of the Spring Boot Reference Guide.) In the case of an app which is bound to a Config Server service instance, `env` will display properties provided by the instance.
 
 To use Actuator, you must add the `spring-boot-starter-actuator` dependency to your project. If using Maven, <a href="https://github.com/spring-cloud-services-samples/cook/blob/master/pom.xml#L56-L59">add to `pom.xml`</a>:
 
@@ -142,7 +142,7 @@ compile("org.springframework.boot:spring-boot-starter-actuator")
 You can now visit `/actuator/env` to see the application environment's properties (the following shows an excerpt of an example response):
 
 <pre class="terminal">
-$ curl http://cookie.apps.wise.com/actuator/env
+$ curl https://cookie.apps.wise.com/actuator/env
 {
   "activeProfiles": [
   "development",
@@ -193,7 +193,7 @@ public class Menu {
 This means that after you change values in the configuration source Git repository, you can update the `special` on the `CookController` class's `menu` by creating a refresh event for the app:
 
 <pre class="terminal">
-$ curl http://cookie.apps.wise.com/restaurant
+$ curl https://cookie.apps.wise.com/restaurant
 Today's special is: Pickled Cactus
 
 $ git commit -am "new special"
@@ -202,10 +202,10 @@ $ git commit -am "new special"
 
 $ git push
 
-$ curl -X POST -d {} -H "Content-Type: application/json" http://cookie.apps.wise.com/actuator/refresh
+$ curl -X POST -d {} -H "Content-Type: application/json" https://cookie.apps.wise.com/actuator/refresh
 ["cook.special"]
 
-$ curl http://cookie.apps.wise.com/restaurant
+$ curl https://cookie.apps.wise.com/restaurant
 Today's special is: Birdfeather Tea
 </pre>
 
@@ -361,7 +361,7 @@ ttl                  997
 
 ## <a id="disable-http-basic-auth"></a>Disable HTTP Basic Authentication
 
-The Spring Cloud Config Client starter has a dependency on <a href="http://projects.spring.io/spring-security/">Spring Security</a>. Unless your app has other security configuration, this will cause all app endpoints to be protected by HTTP Basic authentication.
+The Spring Cloud Config Client starter has a dependency on <a href="https://projects.spring.io/spring-security/">Spring Security</a>. Unless your app has other security configuration, this will cause all app endpoints to be protected by HTTP Basic authentication.
 
 If you do not yet want to address application security, you may turn off Basic authentication using [a class that extends Spring Security's `WebSecurityConfigurerAdapter` and is annotated with the Spring `@Configuration` annotation](https://github.com/spring-cloud-services-samples/cook/blob/master/src/main/java/cook/SecurityConfiguration.java). The sample app disables all default security for the `development` profile only, using the `@Profile` annotation:
 
@@ -382,4 +382,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ```
 
-For more information, see ["Security" in the Spring Boot Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).
+For more information, see ["Security" in the Spring Boot Reference Guide](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security).

@@ -17,7 +17,7 @@ A service instance is assigned a GUID at provision time. Backing apps for servic
 
 **Config Server**
 
-* config-[GUID]: A [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server app.
+* config-[GUID]: A [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server app.
 
 <%= image_tag("/spring-cloud-services/images/operator-information/ops1.png") %>
 
@@ -76,7 +76,7 @@ Look for the backing app named as described above, with the prefix specific to t
 <a id="get-service-instance-information"></a>
 #### Get Service Instance Information
 
-Each backing app for a service instance has the [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/actuator/info`. You can obtain version and other information about a service instance by accessing this endpoint.
+Each backing app for a service instance has the [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/actuator/info`. You can obtain version and other information about a service instance by accessing this endpoint.
 
 Locate a backing app for a service instance as described in the [Access Service Instance Backing Applications in Apps Manager](#access-service-instance-backing-applications-in-apps-manager) section. In Apps Manager, on the page for the backing app, click the **Route** tab and copy the route for the app.
 
@@ -261,7 +261,7 @@ If the backing app is not running properly then detailed health information will
 
 ### <a id="access-actuator-endpoints"></a>Access Actuator Endpoints
 
-Service instance backing apps use [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these apps; some of the added endpoints are summarized below.
+Service instance backing apps use [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these apps; some of the added endpoints are summarized below.
 
 | Endpoint ID           | Endpoint Function                                                                    |
 |-----------------------|--------------------------------------------------------------------------------------|
@@ -271,7 +271,7 @@ Service instance backing apps use [Spring Boot Actuator](http://docs.spring.io/s
 | <code>mappings</code> | Displays list of <code>@RequestMapping</code> paths in the app                       |
 | <code>shutdown</code> | Gracefully shuts down the app (disabled in Spring Cloud Services)                    |
 
-See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
+See the <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
 
 #### Invoking Actuator Endpoints
 
