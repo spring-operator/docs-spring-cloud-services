@@ -25,7 +25,7 @@ The broker relies on two other Pivotal products, [MySQL for PCF](https://network
 
 The Spring Cloud Services product upgrade process checks before redeploying the service broker to see whether the broker apps' version has changed. If the version has not changed, the upgrade process will continue without redeploying either the spring-cloud-broker app or the spring-cloud-broker-worker app.
 
-The spring-cloud-broker and spring-cloud-broker-worker apps are deployed using a [blue-green deployment strategy](http://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
+The spring-cloud-broker and spring-cloud-broker-worker apps are deployed using a [blue-green deployment strategy](https://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
 
 ## <a id="access-broker-applications-in-apps-manager"></a>Access Broker Applications in Apps Manager
 
@@ -107,7 +107,7 @@ Connected, tailing logs for app spring-cloud-broker-worker in org system / space
 
 ### <a id="access-actuator-endpoints"></a>Access Actuator Endpoints
 
-The spring-cloud-broker and spring-cloud-broker-worker apps use [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these apps; some of the added endpoints are summarized below.
+The spring-cloud-broker and spring-cloud-broker-worker apps use [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these apps; some of the added endpoints are summarized below.
 
 | Endpoint ID           | Endpoint Function                                                                    |
 |-----------------------|--------------------------------------------------------------------------------------|
@@ -117,7 +117,7 @@ The spring-cloud-broker and spring-cloud-broker-worker apps use [Spring Boot Act
 | <code>mappings</code> | Displays list of <code>@RequestMapping</code> paths in the app                       |
 | <code>shutdown</code> | Gracefully shuts down the app (disabled in Spring Cloud Services)                    |
 
-See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
+See the <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
 
 #### Invoking Actuator Endpoints
 
