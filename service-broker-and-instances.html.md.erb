@@ -37,7 +37,7 @@ You can obtain the broker username and password from the Spring Cloud Services t
 
 The Spring Cloud Services product upgrade process checks before redeploying the service broker to see whether the broker applications' version has changed. If the version has not changed, the upgrade process will continue without redeploying either the SB or the Worker.
 
-The SB application and the Worker application are deployed using a [blue-green deployment strategy](http://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
+The SB application and the Worker application are deployed using a [blue-green deployment strategy](https://martinfowler.com/bliki/BlueGreenDeployment.html). During an upgrade of the service broker, the broker will continue processing requests to provision, deprovision, bind, and unbind service instances, without downtime.
 
 #### <a id="access-broker-applications-in-apps-manager"></a>Access Broker Applications in Apps Manager
 
@@ -57,17 +57,17 @@ A service instance is assigned a GUID at provision time. Backing applications fo
 
 **Config Server**
 
-* config-[GUID]: A [Spring Cloud Config](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server application.
+* config-[GUID]: A [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/spring-cloud-config.html) server application.
 
 **Service Registry**
 
-* eureka-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Eureka server application.
+* eureka-[GUID]: A [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Eureka server application.
 
 **Circuit Breaker Dashboard**
 
-* hystrix-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Hystrix server application.
-* turbine-[GUID]: A [Spring Cloud Netflix](http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Turbine application.
-* **rabbitmq-[GUID]**: A [RabbitMQ for PCF](http://docs.pivotal.io/rabbitmq-cf/index.html) service instance.
+* hystrix-[GUID]: A [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Hystrix server application.
+* turbine-[GUID]: A [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html) Turbine application.
+* **rabbitmq-[GUID]**: A [RabbitMQ for PCF](https://docs.pivotal.io/rabbitmq-cf/index.html) service instance.
 
 ### <a id="access-service-instance-backing-applications-in-apps-manager"></a>Access Service Instance Backing Applications in Apps Manager
 
@@ -124,7 +124,7 @@ Look for the backing application named as described above, with the prefix speci
 <a id="get-service-instance-information"></a>
 #### Get Service Instance Information
 
-Each backing application for a service instance has the [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/info`. You can obtain version and other information about a service instance by accessing this endpoint.
+Each backing application for a service instance has the [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready) `info` endpoint enabled and accessible at `/info`. You can obtain version and other information about a service instance by accessing this endpoint.
 
 Locate a backing application for a service instance as described in the [Access Service Instance Backing Applications in Apps Manager](#access-service-instance-backing-applications-in-apps-manager) section. In Apps Manager, on the page for the backing application, click the **Route** tab and copy the route for the application.
 
@@ -347,7 +347,7 @@ If the backing application is not running properly then detailed health informat
 
 ### <a id="access-actuator-endpoints"></a>Access Actuator Endpoints
 
-The SB and Worker applications, as well as backing applications for service instances, use [Spring Boot Actuator](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these applications; some of the added endpoints are summarized below.
+The SB and Worker applications, as well as backing applications for service instances, use [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready). Actuator adds a number of endpoints to these applications; some of the added endpoints are summarized below.
 
 | ID                    | Function                                                                                                                                              |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -357,7 +357,7 @@ The SB and Worker applications, as well as backing applications for service inst
 | <code>mappings</code> | Displays list of <code>@RequestMapping</code> paths in the application                                                                                |
 | <code>shutdown</code> | Allows for graceful shutdown of the application. Disabled by default; not enabled in Spring Cloud Services broker or instance-backing applications    |
 
-See the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
+See the <a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints">Endpoints</a> section of the Actuator documentation for the full list of endpoints.
 
 #### Invoking Actuator Endpoints
 

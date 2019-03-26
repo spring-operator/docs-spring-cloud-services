@@ -61,4 +61,4 @@ Deployment of backing applications for service instances may time out. The smoke
 Timed out waiting for service instance to provision: circuit-breaker
 ```
 
-Check the setting of the [Spring Cloud Services "App push timeout" tile configuration option](http://docs.pivotal.io/spring-cloud-services/tile-configuration.html#set-push-timeout-for-backing-applications). The default setting is 4 minutes. Change this to a value greater than the number of minutes required to provision a Spring Cloud Services service instance. For example, if you see that the smoke tests are requiring 7 minutes to provision a service instance, change this setting to 8 minutes.
+Check the setting of the [Spring Cloud Services "App push timeout" tile configuration option](https://docs.pivotal.io/spring-cloud-services/tile-configuration.html#set-push-timeout-for-backing-applications). The default setting is 4 minutes. Change this to a value greater than the number of minutes required to provision a Spring Cloud Services service instance. For example, if you see that the smoke tests are requiring 7 minutes to provision a service instance, change this setting to 8 minutes.
